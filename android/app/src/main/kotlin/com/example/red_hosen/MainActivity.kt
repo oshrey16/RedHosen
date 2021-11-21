@@ -1,4 +1,4 @@
-package com.example.red_hosen
+package com.foxloopdev.red_hosen
 
 import io.flutter.embedding.android.FlutterActivity
 
