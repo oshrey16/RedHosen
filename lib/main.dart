@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:red_hosen/login.dart';
 import 'dart:io' show Platform;
 
-const bool useEmulator = true;
+const bool useEmulator = false;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';

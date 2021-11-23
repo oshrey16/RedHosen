@@ -120,3 +120,5 @@ app.*.symbols
 # Firebase Hosting
 .firebaserc
 firebase-debug.log
+android/app/google-services.json
+*.json
