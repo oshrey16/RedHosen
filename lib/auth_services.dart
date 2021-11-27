@@ -9,7 +9,7 @@ class AuthService{
 
   Future<String> login(String email, String password) async {
     try{
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       print("login");
       return "Logged In";
     }

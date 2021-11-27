@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,17 +9,19 @@ import 'dart:io' show Platform;
 
 import 'package:red_hosen/welcome.dart';
 
-const bool useEmulator = false;
+const bool useEmulator = true;
 
 Future _connectToFirebaseEmulator() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  //WidgetsFlutterBinding.ensureInitialized();
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
+  FirebaseFirestore.instance.useFirestoreEmulator(localHostString, 8080);
+  FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   // FirebaseFirestore.instance.settings = Settings(
   //   host: '$localHostString:8080',
   //   sslEnabled: false,
   //   persistenceEnabled: false,
   // );
-  await FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
+   
 }
 
 void main() async {

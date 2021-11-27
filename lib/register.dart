@@ -31,7 +31,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     usertype = newValue!;
                   });
                 },
-                items: <String>['בחר', 'מטפל', 'מדווח']
+                items: <String>['בחר', 'מטפל', 'מדווח','צופה']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
