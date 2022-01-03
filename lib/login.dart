@@ -45,7 +45,11 @@ class _LoginPageState extends State<LoginPage> {
                           final String password =
                               _passwordController.text.trim();
                           if (email.isNotEmpty && password.isNotEmpty) {
-                            context.read<AuthService>().login(email, password);
+                            context.read<AuthService>().login(email, password).then((value){
+                              if(value != "Logged In"){
+                            showDialogMsg(context, MsgType.error, "שם משתמש או סיסמא לא נכונים");
+                              }
+                            });
                           } else {
                             if (email.isEmpty) {
                               showDialogMsg(

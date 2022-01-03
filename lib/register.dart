@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +21,10 @@ class _RegisterPageState extends State<RegisterPage> {
   final _phoneController = TextEditingController();
   final List<String> usertypes = ['בחר', 'מטפל', 'מדווח', 'עובד סוציאלי'];
   String selectedUsertype = 'בחר';
-  bool _passwordVisible = true;
+  PasswordVisible _p1 = PasswordVisible();
+  PasswordVisible _p2 = PasswordVisible();
+  //bool _passwordVisible = true;
+  //bool _passwordVisible2 = true;
   var mapvars = {};
   @override
   Widget build(BuildContext context) {
@@ -40,34 +41,34 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 15),
               loginRegline(_idController, "ת.ז"),
               const SizedBox(height: 15),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+                DropdownButton<String>(
+                    value: selectedUsertype,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedUsertype = newValue!;
+                      });
+                    },
+                    items:
+                        usertypes.map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList()),
+                const Text(" :סוג משתמש", style: TextStyle(fontSize: 16)),
+              ]),
+              const SizedBox(height: 15),
               loginRegline(_emailController, "דואר אלקטרוני"),
               const SizedBox(height: 15),
               loginRegline(_emailControllerValid, "אימות דואר אלקטרוני"),
               const SizedBox(height: 15),
-              loginReglinePassword(_passwordController, "סיסמא"),
+              loginReglinePassword(_passwordController, "סיסמא", _p1),
               const SizedBox(height: 15),
-              loginReglinePassword(_passwordControllerValid, "אימות סיסמא"),
+              loginReglinePassword(
+                  _passwordControllerValid, "אימות סיסמא", _p2),
               const SizedBox(height: 15),
               loginRegline(_phoneController, "מספר טלפון"),
-              const SizedBox(height: 15),
-              Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    DropdownButton<String>(
-                        value: selectedUsertype,
-                        onChanged: (String? newValue) {
-                          setState(() {
-                            selectedUsertype = newValue!;
-                          });
-                        },
-                        items: usertypes
-                            .map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList())
-                  ]),
               const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
@@ -79,25 +80,20 @@ class _RegisterPageState extends State<RegisterPage> {
                       'emailv': _emailControllerValid.text.trim(),
                       'password': _passwordController.text,
                       'passwordv': _passwordControllerValid.text,
-                      'phone' : _phoneController.text
+                      'phone': _phoneController.text,
+                      'usertype': selectedUsertype == "בחר"
+                          ? mapvars['usertype'] = 'בחר'
+                          : userTypedb(),
                     };
                     if (procvars()) {
                       context
                           .read<AuthService>()
-                          .signUp(mapvars['email'], mapvars['password'])
-                          .then((value) async {
-                        User? user = FirebaseAuth.instance.currentUser;
-                        if (user != null) {
-                          showDialogMsg(context, MsgType.ok, "ההרשמה התבצעה בהצלחה\nתוכל להתחבר למערכת לאחר אישור המנהל");
-                          await FirebaseFirestore.instance
-                              .collection("users")
-                              .doc(user.uid)
-                              .set({
-                            'uid': user.uid,
-                            'email': user.email,
-                            'permissions': _convertusertype(),
-                          });
-                        }
+                          .signUp(context, mapvars)
+                          .then((value) {
+                        showDialogMsg(context, MsgType.ok,
+                                "ההרשמה התבצעה בהצלחה\nתוכל להתחבר למערכת לאחר אישור המנהל")
+                            .then((value) => Navigator.pop(context));
+                        //Navigator.pop(context);
                       });
                     }
                   },
@@ -132,7 +128,8 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Widget loginReglinePassword(TextEditingController controller, String title) {
+  Widget loginReglinePassword(TextEditingController controller, String title,
+      PasswordVisible passwordVisible) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
@@ -146,21 +143,21 @@ class _RegisterPageState extends State<RegisterPage> {
               textAlignVertical: TextAlignVertical.center,
               controller: controller,
               autofocus: true,
-              obscureText: _passwordVisible,
+              obscureText: passwordVisible.value,
               decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   labelText: "הקלד " + title,
                   counterText: "",
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _passwordVisible
+                      passwordVisible.value
                           ? Icons.visibility
                           : Icons.visibility_off,
                       color: Colors.blue,
                     ),
                     onPressed: () {
                       setState(() {
-                        _passwordVisible = !_passwordVisible;
+                        passwordVisible.value = !passwordVisible.value;
                       });
                     },
                   )),
@@ -206,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
       e.add('טלפון');
     }
     //check selecteduser
-    if (selectedUsertype == "בחר") {
+    if (mapvars['usertype'] == "בחר") {
       e.add('סוג משתמש');
     }
 
@@ -301,5 +298,17 @@ class _RegisterPageState extends State<RegisterPage> {
     if (selectedUsertype == 'עובד סוציאלי') {
       return 'socialWorker';
     }
+    return 'erroruser';
   }
+
+  String userTypedb() {
+    String st = "Users";
+    st += _convertusertype();
+    return st;
+  }
+}
+
+class PasswordVisible {
+  bool value;
+  PasswordVisible({this.value = true});
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:red_hosen/auth_services.dart';
-import 'package:red_hosen/main.dart';
+import 'package:red_hosen/mytools.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -14,20 +12,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("מטפל - ראשי"),
-        centerTitle: true,
-      ),
-      body: Column(children: [const Text("login ok!"),
-      ElevatedButton(onPressed: () async {
-        context.read<AuthService>().logout();
-        await Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const AuthWrapper()));
-        },
-        child: const Text("התנתק"),
-        )
-      
-      ]),
-    );
+        appBar: AppBar(
+          title: const Text("מטפל - ראשי"),
+          centerTitle: true,
+        ),
+        body: Container(
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+            alignment: Alignment.center,
+            child: SingleChildScrollView(
+              child: Column(children: [
+                logoutButton(context),
+              ]),
+            )));
   }
 }

@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:red_hosen/login.dart';
-import 'package:red_hosen/adminhosen/welcome.dart' as adminpage;
+import 'package:red_hosen/adminHosen/welcome.dart' as admin_hosenpage;
+import 'package:red_hosen/adminSocial/welcome.dart' as admin_socialpage;
 import 'package:red_hosen/therapist/welcome.dart' as therapistpage;
+import 'package:red_hosen/socialWorker/welcome.dart' as socialpage;
 import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 import 'dart:io' show Platform;
 
@@ -16,6 +19,7 @@ Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
   FirebaseFirestore.instance.useFirestoreEmulator(localHostString, 8080);
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
+  FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   // FirebaseFirestore.instance.settings = Settings(
   //   host: '$localHostString:8080',
   //   sslEnabled: false,
@@ -78,22 +82,56 @@ Future _checkuser(BuildContext context) async {
   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
     if (user != null) {
       user.getIdTokenResult().then((value) async {
-        var role = value.claims?['role'];
-        if (role == 'admin') {
-          await Navigator.of(context).pushReplacement(MaterialPageRoute(
-              builder: (context) => const adminpage.HomePage()));
-        } else {
-          if (role == 'therapist') {
-            await Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const therapistpage.HomePage()));
-          } else {
-            if (role == 'reporter') {
-              await Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const reporterpage.HomePage()));
+        var securityrole = value.claims?['disabled'];
+        if (securityrole == false) {
+          final DocumentSnapshot snapHosen = await FirebaseFirestore.instance
+              .collection("Userstherapist")
+              .doc(user.uid)
+              .get();
+          final DocumentSnapshot snapSocial = await FirebaseFirestore.instance
+              .collection("UserssocialWorker")
+              .doc(user.uid)
+              .get();
+          final DocumentSnapshot snapReporter = await FirebaseFirestore.instance
+              .collection("UsersReporter")
+              .doc(user.uid)
+              .get();
+
+          user.getIdTokenResult().then((value) async {
+            var roleAdmin = value.claims?['isadmin'];
+            var roleTherapist = snapHosen.exists ? true : null;
+            var roleSocial = snapSocial.exists ? true : null;
+            var roleReporter = snapReporter.exists ? true : null;
+            if (roleTherapist != null) {
+              if (roleAdmin == true) {
+                await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const admin_hosenpage.HomePage()));
+              } else {
+                await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const therapistpage.HomePage()));
+              }
             } else {
-              //TODO
+              if (roleReporter != null) {
+                await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const reporterpage.HomePage()));
+              } else {
+                if (roleSocial != null) {
+                  if (roleAdmin == true) {
+                    await Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const admin_socialpage.HomePage()));
+                  } else {
+                    await Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context) => const socialpage.HomePage()));
+                  }
+                }
+              }
             }
-          }
+          });
+        } else {
+          context.read<AuthService>().logout();
         }
       });
     }

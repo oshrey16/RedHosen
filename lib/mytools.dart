@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:red_hosen/auth_services.dart';
+import 'package:red_hosen/main.dart';
 
 enum MsgType {
   error,
@@ -47,4 +50,38 @@ Future showDialogMsg(BuildContext context, MsgType title, String t) async {
       );
     },
   );
+}
+
+enum UserType {
+  hosen,
+  social,
+}
+
+extension UserTypeEx on UserType {
+  String get str {
+    switch (this) {
+      case UserType.hosen:
+        return "Userstherapist";
+      case UserType.social:
+        return "UserssocialWorker";
+    }
+  }
+}
+
+
+/////EorD - enabled or diabled
+enum EorD {
+  enabled,
+  disabled,
+}
+
+Widget logoutButton (BuildContext context) {
+  return ElevatedButton(
+          onPressed: () async {
+            context.read<AuthService>().logout();
+            await Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const AuthWrapper()));
+          },
+          child: const Text("התנתק"),
+        );
 }
