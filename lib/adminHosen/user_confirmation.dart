@@ -84,13 +84,13 @@ class _UserConfirmationState extends State<UserConfirmation> {
   }
 }
 
-class UserDeletePage extends StatefulWidget {
-  const UserDeletePage({Key? key}) : super(key: key);
+class UserrejectionPage extends StatefulWidget {
+  const UserrejectionPage({Key? key}) : super(key: key);
   @override
-  _UserDeletePageState createState() => _UserDeletePageState();
+  _UserrejectionPageState createState() => _UserrejectionPageState();
 }
 
-class _UserDeletePageState extends State<UserDeletePage> {
+class _UserrejectionPageState extends State<UserrejectionPage> {
   @override
   void initState() {
     super.initState();

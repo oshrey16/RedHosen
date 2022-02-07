@@ -21,8 +21,8 @@ class _RegisterPageState extends State<RegisterPage> {
   final _phoneController = TextEditingController();
   final List<String> usertypes = ['בחר', 'מטפל', 'מדווח', 'עובד סוציאלי'];
   String selectedUsertype = 'בחר';
-  PasswordVisible _p1 = PasswordVisible();
-  PasswordVisible _p2 = PasswordVisible();
+  final PasswordVisible _p1 = PasswordVisible();
+  final PasswordVisible _p2 = PasswordVisible();
   //bool _passwordVisible = true;
   //bool _passwordVisible2 = true;
   var mapvars = {};
@@ -290,13 +290,13 @@ class _RegisterPageState extends State<RegisterPage> {
 
   _convertusertype() {
     if (selectedUsertype == 'מטפל') {
-      return 'therapist';
+      return 'Therapist';
     }
     if (selectedUsertype == 'מדווח') {
-      return 'reporter';
+      return 'Reporter';
     }
     if (selectedUsertype == 'עובד סוציאלי') {
-      return 'socialWorker';
+      return 'SocialWorker';
     }
     return 'erroruser';
   }

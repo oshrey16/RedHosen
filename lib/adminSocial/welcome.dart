@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:red_hosen/adminSocial/user_confirmation.dart';
+import 'package:red_hosen/adminSocial/users_manage/social/user_confirmation.dart' as social_users;
+import 'package:red_hosen/adminSocial/users_manage/social/user_rejection.dart' as social_users;
+import 'package:red_hosen/adminSocial/users_manage/reporter/user_confirmation.dart' as reporter_users;
+import 'package:red_hosen/adminSocial/users_manage/reporter/user_rejection.dart' as reporter_users;
 import 'package:red_hosen/mytools.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,7 +32,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserConfirmation()),
+                            builder: (context) => const social_users.UserConfirmation()),
                       );
                     },
                     child: const Text("אישור עובדים סוציאלים במערכת"),
@@ -43,13 +46,40 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserDeletePage()),
+                            builder: (context) => const social_users.UserrejectionPage()),
                       );
                     },
                     child: const Text("מחיקת עובדים סוציאלים במערכת"),
                   ),
                 ),
                 const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const reporter_users.UserConfirmation()),
+                      );
+                    },
+                    child: const Text("אישור צח\"ש במערכת"),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const reporter_users.UserrejectionPage()),
+                      );
+                    },
+                    child: const Text("מחיקת צח\"ש במערכת"),
+                  ),
+                ),
                 logoutButton(context),
               ]),
             )));

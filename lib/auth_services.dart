@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -22,7 +21,7 @@ class AuthService {
   Future<String> signUp(
       BuildContext context, Map<dynamic, dynamic> mapvars) async {
     try {
-      await _auth
+      await FirebaseAuth.instance
           .createUserWithEmailAndPassword(
               email: mapvars['email'], password: mapvars['password'])
           .then((value) async {

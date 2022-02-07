@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const UserDeletePage()),
+                              builder: (context) => const UserrejectionPage()),
                         );
                       },
                       child: const Text("מחיקת מטפלים במערכת"),
