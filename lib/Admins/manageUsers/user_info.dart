@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
-import '../mytools.dart';
+import 'package:flutter/widgets.dart';
+import 'package:red_hosen/mytools.dart';
 
 class UserInfo extends StatefulWidget {
   @override
   _UserInfoState createState() => _UserInfoState();
   final String uid;
   final UserType userType;
-  const UserInfo({required this.uid,required this.userType,Key? key}) : super (key: key);
+  const UserInfo({required this.uid, required this.userType, Key? key})
+      : super(key: key);
 }
 
 class _UserInfoState extends State<UserInfo> {
@@ -44,6 +46,10 @@ class _UserInfoState extends State<UserInfo> {
                       onPressed: () {
                         if (mapvars['enabled'] == false) {
                           enableUser();
+                        } else {
+                          if (mapvars['enabled'] == true) {
+                            disableUser();
+                          }
                         }
                       },
                       child: mapvars['enabled'] == false
@@ -81,7 +87,9 @@ class _UserInfoState extends State<UserInfo> {
   void f() async {
     QuerySnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
         .instance
-        .collection(widget.userType.str)
+        .collection("Users")
+        .doc(widget.userType.collectionStr)
+        .collection(widget.userType.collectionStr)
         .where("uid", isEqualTo: widget.uid)
         .get();
     List<QueryDocumentSnapshot> docs = snapshot.docs;
@@ -96,13 +104,40 @@ class _UserInfoState extends State<UserInfo> {
   }
 
   Future<void> enableUser() async {
-    HttpsCallable enableuser = FirebaseFunctions.instance.httpsCallable('updateUserEnable');
-    await enableuser({"uid": widget.uid,"collection" : widget.userType.str}).then((value) async{
-      print(value.data);
-      if(value.data.result == 'success'){
-      showDialogMsg(context,MsgType.ok,"רישום בוצע בהצלחה");
-      Navigator.pop(context);
+    HttpsCallable enableuser =
+        FirebaseFunctions.instance.httpsCallable('updateUserEnable');
+    await enableuser(
+            {"uid": widget.uid, "collection": widget.userType.collectionStr})
+        .then((value) async {
+      if (value.data == 'success') {
+        showDialogMsg(context, MsgType.ok, "אישור משתמש בוצע בהצלחה")
+            .then((value) {
+          Navigator.pop(context);
+        });
       }
     });
+  }
+
+  Future<void> disableUser() async {
+    HttpsCallable disableuser =
+        FirebaseFunctions.instance.httpsCallable('updateUserDisable');
+    await disableuser(
+            {"uid": widget.uid, "collection": widget.userType.collectionStr})
+        .then((value) async {
+      if (value.data == 'success') {
+        showDialogMsg(context, MsgType.ok, "ביטול משתמש בוצע בהצלחה")
+            .then((value) {
+          Navigator.pop(context);
+        });
+      }
+    });
+    //     .then((value) async {
+    //   if (value.data.result == 'success') {
+    //     showDialogMsg(context, MsgType.ok, "רישום בוצע בהצלחה");
+    //     // Navigator.pop(context);
+    //   }
+    // }
+    // );
+    // print(s.data);
   }
 }

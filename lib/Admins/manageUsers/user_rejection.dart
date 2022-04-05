@@ -1,41 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:red_hosen/Admins/user_info.dart';
+import 'package:red_hosen/Admins/manageUsers/user_info.dart';
 import 'package:red_hosen/mytools.dart';
 
-class UserConfirmation extends StatefulWidget {
-  const UserConfirmation({Key? key}) : super(key: key);
-
+class UserRejectionPage extends StatefulWidget {
+  final UserType type;
+  const UserRejectionPage({required this.type, Key? key}) : super(key: key);
   @override
-  _UserConfirmationState createState() => _UserConfirmationState();
+  _UserRejectionPageState createState() => _UserRejectionPageState();
 }
 
-class _UserConfirmationState extends State<UserConfirmation> {
+class _UserRejectionPageState extends State<UserRejectionPage> {
   @override
   void initState() {
     super.initState();
-    disabledUsers = {};
-    loadDisabledUsers();
+    enabledUsers = {};
+    loadEnabledUsers();
   }
 
-  Map<String, String> disabledUsers = {};
-  //Map<String, String> disabledUsersRegDate = {};
+  Map<String, String> enabledUsers = {};
+  //Map<String, String> enabledUsersRegDate = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         resizeToAvoidBottomInset: true,
-        appBar: AppBar(
-            title: const Text('אישור עובדים סוציאלים במערכת'),
-            centerTitle: true),
+        appBar: AppBar(title: Text(setTitle()), centerTitle: true),
         body: Padding(
             padding: const EdgeInsets.all(7),
             child: Container(
                 padding: const EdgeInsets.all(25),
                 alignment: Alignment.center,
-                child: disabledUsers.isNotEmpty
+                child: enabledUsers.isNotEmpty
                     ? ListView.separated(
                         padding: const EdgeInsets.all(8),
-                        itemCount: disabledUsers.length,
+                        itemCount: enabledUsers.length,
                         itemBuilder: (BuildContext context, int index) {
                           return GestureDetector(
                               onTap: () {
@@ -43,18 +41,18 @@ class _UserConfirmationState extends State<UserConfirmation> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => UserInfo(
-                                            uid: disabledUsers.keys
+                                            uid: enabledUsers.keys
                                                 .elementAt(index),
-                                            userType: UserType.social,
+                                            userType: widget.type,
                                           )),
-                                );
+                                ).then((value) => refreshState());
                               },
                               child: Card(
                                 margin: const EdgeInsets.all(10),
                                 child: ListTile(
                                   title: Text(
-                                      disabledUsers.values.elementAt(index)),
-                                  //subtitle: Text("מספר: " + disabledUsersRegDate.values.elementAt(index)),
+                                      enabledUsers.values.elementAt(index)),
+                                  //subtitle: Text("מספר: " + enabledUsersRegDate.values.elementAt(index)),
                                   //isThreeLine: true,
                                 ),
                               ));
@@ -65,24 +63,45 @@ class _UserConfirmationState extends State<UserConfirmation> {
                     : const Text("לא קיימים משתמשים חדשים"))));
   }
 
-  void loadDisabledUsers() async {
+  void loadEnabledUsers() async {
     await FirebaseFirestore.instance.terminate();
     await FirebaseFirestore.instance.clearPersistence();
     FirebaseFirestore.instance
-        .collection("UserssocialWorker")
-        .where('enabled', isEqualTo: false)
+        .collection("Users")
+        .doc(widget.type.collectionStr)
+        .collection(widget.type.collectionStr)
+        .where('enabled', isEqualTo: true)
         .snapshots()
         .listen((event) {
       List<QueryDocumentSnapshot> docs = event.docs;
       for (var doc in docs) {
         if (doc.data() != null) {
           var data = doc.data() as Map<String, dynamic>;
-          disabledUsers.putIfAbsent(
+          enabledUsers.putIfAbsent(
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
       setState(() {});
     });
   }
-}
 
+  String setTitle() {
+    if (widget.type == UserType.hosen) {
+      return "מחיקת מטפלים במערכת";
+    }
+    if (widget.type == UserType.social) {
+      return "מחיקת עובדים סוציאליים במערכת";
+    }
+    if (widget.type == UserType.reporter) {
+      return "מחיקת מדווחים במערכת";
+    }
+    return "";
+  }
+  
+  refreshState() {
+    setState(() {
+      enabledUsers = {};
+      loadEnabledUsers();
+    });
+  }
+}

@@ -55,19 +55,21 @@ Future showDialogMsg(BuildContext context, MsgType title, String t) async {
 enum UserType {
   hosen,
   social,
+  reporter,
 }
 
 extension UserTypeEx on UserType {
-  String get str {
+  String get collectionStr {
     switch (this) {
       case UserType.hosen:
-        return "Userstherapist";
+        return "UsersTherapist";
       case UserType.social:
-        return "UserssocialWorker";
+        return "UsersSocialWorker";
+      case UserType.reporter:
+        return "UsersReporter";
     }
   }
 }
-
 
 /////EorD - enabled or diabled
 enum EorD {
@@ -75,13 +77,13 @@ enum EorD {
   disabled,
 }
 
-Widget logoutButton (BuildContext context) {
+Widget logoutButton(BuildContext context) {
   return ElevatedButton(
-          onPressed: () async {
-            context.read<AuthService>().logout();
-            await Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => const AuthWrapper()));
-          },
-          child: const Text("התנתק"),
-        );
+    onPressed: () async {
+      context.read<AuthService>().logout();
+      await Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const AuthWrapper()));
+    },
+    child: const Text("התנתק"),
+  );
 }

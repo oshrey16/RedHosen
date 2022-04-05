@@ -3,10 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthService {
-  final FirebaseAuth _auth;
-  AuthService(this._auth);
-
-  Stream<User?> get authStateChanges => _auth.idTokenChanges();
+  Stream<User?> get authStateChanges => FirebaseAuth.instance.idTokenChanges();
 
   Future<String> login(String email, String password) async {
     try {
@@ -53,7 +50,7 @@ class AuthService {
 
   Future<String> logout() async {
     try {
-      await _auth.signOut();
+      await FirebaseAuth.instance.signOut();
       return "Log Out";
     } catch (e) {
       return e.toString();

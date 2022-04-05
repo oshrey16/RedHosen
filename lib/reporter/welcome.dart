@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/reporter/report_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,6 +22,21 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             child: SingleChildScrollView(
                 child: Column(children: [
+              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const ReportPage()),
+                    );
+                  },
+                  child: const Text("צור דיווח"),
+                ),
+              ),
+              const SizedBox(height: 15),
               logoutButton(context),
             ]))));
   }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:red_hosen/adminHosen/user_confirmation.dart';
-
-import '../mytools.dart';
+import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
+import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
+import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/Admins/map.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -30,7 +31,8 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const UserConfirmation()),
+                              builder: (context) =>
+                                  const UserConfirmation(type: UserType.hosen)),
                         );
                       },
                       child: const Text("אישור מטפלים במערכת"),
@@ -43,10 +45,24 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const UserrejectionPage()),
+                              builder: (context) => const UserRejectionPage(
+                                  type: UserType.hosen)),
                         );
                       },
                       child: const Text("מחיקת מטפלים במערכת"),
+                    )),
+                const SizedBox(height: 15),
+                SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MapPage()),
+                        );
+                      },
+                      child: const Text("מפת הכאב"),
                     )),
                 const SizedBox(height: 15),
                 logoutButton(context),

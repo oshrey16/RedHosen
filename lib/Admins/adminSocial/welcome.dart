@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:red_hosen/adminSocial/users_manage/social/user_confirmation.dart' as social_users;
-import 'package:red_hosen/adminSocial/users_manage/social/user_rejection.dart' as social_users;
-import 'package:red_hosen/adminSocial/users_manage/reporter/user_confirmation.dart' as reporter_users;
-import 'package:red_hosen/adminSocial/users_manage/reporter/user_rejection.dart' as reporter_users;
+import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
+import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
 import 'package:red_hosen/mytools.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,7 +30,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const social_users.UserConfirmation()),
+                            builder: (context) => const UserConfirmation(type: UserType.social)),
                       );
                     },
                     child: const Text("אישור עובדים סוציאלים במערכת"),
@@ -46,7 +44,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const social_users.UserrejectionPage()),
+                            builder: (context) => const UserRejectionPage(type: UserType.social)),
                       );
                     },
                     child: const Text("מחיקת עובדים סוציאלים במערכת"),
@@ -60,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const reporter_users.UserConfirmation()),
+                            builder: (context) => const UserConfirmation(type:UserType.reporter)),
                       );
                     },
                     child: const Text("אישור צח\"ש במערכת"),
@@ -74,7 +72,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const reporter_users.UserrejectionPage()),
+                            builder: (context) => const UserRejectionPage(type:UserType.reporter)),
                       );
                     },
                     child: const Text("מחיקת צח\"ש במערכת"),

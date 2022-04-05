@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:red_hosen/login.dart';
-import 'package:red_hosen/adminHosen/welcome.dart' as admin_hosenpage;
-import 'package:red_hosen/adminSocial/welcome.dart' as admin_socialpage;
+import 'package:red_hosen/Admins/adminHosen/welcome.dart' as admin_hosenpage;
+import 'package:red_hosen/Admins/adminSocial/welcome.dart' as admin_socialpage;
+import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/therapist/welcome.dart' as therapistpage;
 import 'package:red_hosen/socialWorker/welcome.dart' as socialpage;
 import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
@@ -44,8 +45,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<AuthService>(
-            create: (_) => AuthService(FirebaseAuth.instance)),
+        Provider<AuthService>(create: (_) => AuthService()),
+        // create: (_) => AuthService(FirebaseAuth.instance)),
         StreamProvider(
             create: (context) => context.read<AuthService>().authStateChanges,
             initialData: null)
@@ -55,14 +56,6 @@ class MyApp extends StatelessWidget {
         home: AuthWrapper(),
       ),
     );
-    //   return MaterialApp(
-    //     title: 'Red Hosen',
-    //     theme: ThemeData(
-    //       primarySwatch: Colors.teal,
-    //     ),
-    //     home: const MyHomePage(title: 'Red Hosen'),
-    //   );
-    // }
   }
 }
 
@@ -85,23 +78,32 @@ Future _checkuser(BuildContext context) async {
         var securityrole = value.claims?['disabled'];
         if (securityrole == false) {
           final DocumentSnapshot snapHosen = await FirebaseFirestore.instance
-              .collection("Userstherapist")
+              .collection("Users")
+              .doc(UserType.hosen.collectionStr)
+              .collection(UserType.hosen.collectionStr)
               .doc(user.uid)
               .get();
           final DocumentSnapshot snapSocial = await FirebaseFirestore.instance
-              .collection("UserssocialWorker")
+              .collection("Users")
+              .doc(UserType.social.collectionStr)
+              .collection(UserType.social.collectionStr)
               .doc(user.uid)
               .get();
           final DocumentSnapshot snapReporter = await FirebaseFirestore.instance
-              .collection("UsersReporter")
+              .collection("Users")
+              .doc(UserType.reporter.collectionStr)
+              .collection(UserType.reporter.collectionStr)
               .doc(user.uid)
               .get();
 
           user.getIdTokenResult().then((value) async {
             var roleAdmin = value.claims?['isadmin'];
+            var test = value.claims?['type'];
+            print(test);
             var roleTherapist = snapHosen.exists ? true : null;
             var roleSocial = snapSocial.exists ? true : null;
             var roleReporter = snapReporter.exists ? true : null;
+            print(roleSocial);
             if (roleTherapist != null) {
               if (roleAdmin == true) {
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
