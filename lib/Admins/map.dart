@@ -3,7 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 class MapPage extends StatefulWidget {
-  MapPage({Key? key}) : super(key: key);
+  const MapPage({Key? key}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -13,6 +13,7 @@ class _MapPageState extends State<MapPage> {
   Completer<GoogleMapController> _controller = Completer();
 Set<Circle> circles = Set.from([Circle(
     circleId: CircleId("1"),
+    onTap: ()  {print("asd!!!");},
     center: LatLng(31.52959286958604, 34.60668357390962),
     fillColor: Colors.red.shade600.withOpacity(0.6),
     strokeColor: Colors.blue.shade600.withOpacity(0.1),
@@ -46,7 +47,7 @@ Circle(
           centerTitle: true,
         ),
         body: GoogleMap(
-        mapType: MapType.satellite,
+        mapType: MapType.normal,
         initialCameraPosition: _ShderotGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);

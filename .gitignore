@@ -125,3 +125,4 @@ android/app/google-services.json
 *.json
 **/myscripts/Gcloud
 **/myscripts/EmulatorState
+EmulatorState/
