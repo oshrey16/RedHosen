@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MapPage()),
+                              builder: (context) => const MapPage()),
                         );
                       },
                       child: const Text("מפת הכאב"),
