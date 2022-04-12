@@ -3,6 +3,9 @@ import 'package:intl/intl.dart' as intl;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'package:geocoding/geocoding.dart';
+import 'package:csv/csv.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -16,9 +19,13 @@ class _ReportPageState extends State<ReportPage> {
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _nameController = TextEditingController();
+  final _locationController = TextEditingController();
   // TODO @oshrey16 --> set vesion dynamic
   String _versionreport = "v1";
-  //
+  // List of Streets
+  late List<String> streetList;
+
+  //TextEditingControllers To inputs
   final Map<int, TextEditingController> _textControllers = {};
   // Present fields texts and types value
   Map<int, String> itemsText = {};
@@ -31,10 +38,11 @@ class _ReportPageState extends State<ReportPage> {
 
   @override
   void initState() {
-    super.initState();
+    loadAsset();
     setdatetime();
     setUserName();
     getformat();
+    super.initState();
   }
 
   @override
@@ -51,6 +59,9 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(height: 15),
               inputBoxState(_nameController, "שם מדווח", false),
               const SizedBox(height: 15),
+              inputBoxLocation(_locationController),
+              const SizedBox(height: 15),
+              AutoTest(),
               FutureBuilder(
                 future: getrowsText(),
                 builder: (context, snapshot) {
@@ -105,7 +116,6 @@ class _ReportPageState extends State<ReportPage> {
               value: checkboxsValue[item.key]?[i],
               onChanged: (bool? value) {
                 checkboxsValue[item.key]?[i] = value!;
-                print(checkboxsValue[item.key]![i]);
                 setState(() {});
               })
       // else if (itemstype[item.key] == "checkbox")
@@ -170,6 +180,63 @@ class _ReportPageState extends State<ReportPage> {
     ]);
   }
 
+  Widget inputBoxLocation(TextEditingController? controller) {
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+      Column(children: [
+        const Text(":מיקום", style: TextStyle(fontSize: 16)),
+        const SizedBox(height: 5),
+        SizedBox(
+          width: 200,
+          height: 45.0,
+          child: Directionality(
+            textDirection: TextDirection.ltr,
+            child: TextField(
+              maxLength: 60,
+              textAlignVertical: TextAlignVertical.center,
+              controller: controller,
+              autofocus: true,
+              decoration: const InputDecoration(
+                counterText: "",
+                border: OutlineInputBorder(),
+                labelText: "הקלד מיקום",
+              ),
+              onChanged: (value) async {
+                // TODO
+                // List<Location> locations = await locationFromAddress(value);
+                // print(locations[0].latitude);
+                print("OK");
+              },
+            ),
+          ),
+        ),
+      ])
+    ]);
+  }
+
+  loadAsset() async {
+    final myData = await rootBundle.loadString("assets/sderot_streets.csv");
+    List<List<dynamic>> csvTable = const CsvToListConverter().convert(myData);
+    // Convert List to 1D list (AutoComplete)
+    var list1d = csvTable.expand((x) => x).toList();
+    streetList = list1d.cast<String>();
+  }
+
+  Widget AutoTest() {
+    return Autocomplete<String>(
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+          return const Iterable<String>.empty();
+        }
+        return streetList.where((String option) {
+          return option.contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (String selection) {
+        debugPrint('You just selected $selection');
+      },
+    );
+  }
+
   void setdatetime() async {
     final DateTime now = DateTime.now();
     final intl.DateFormat dateformat = intl.DateFormat('dd-MM-yyyy');
@@ -206,7 +273,6 @@ class _ReportPageState extends State<ReportPage> {
         .then((value) {
       var data = value.data();
       if (data != null) {
-        print("ASD " + data.length.toString());
         int len = data.length;
         for (int i = 0; i < len; i++) {
           if (data[i.toString()] != null) {
@@ -242,6 +308,7 @@ class _ReportPageState extends State<ReportPage> {
       }
     });
   }
+
   Future getrowsCheckboxs() {
     return FirebaseFirestore.instance
         .collection("ReportTempletes")
