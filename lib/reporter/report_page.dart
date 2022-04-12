@@ -9,7 +9,9 @@ class ReportPage extends StatefulWidget {
   @override
   State<ReportPage> createState() => _ReportPageState();
 }
+
 Map<int, Map<int, bool>> checkboxsValue = {};
+
 class _ReportPageState extends State<ReportPage> {
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
@@ -17,13 +19,13 @@ class _ReportPageState extends State<ReportPage> {
   // TODO @oshrey16 --> set vesion dynamic
   String _versionreport = "v1";
   //
-  Map<int, TextEditingController> _textControllers = {};
+  final Map<int, TextEditingController> _textControllers = {};
   // Present fields texts and types value
   Map<int, String> itemsText = {};
   Map<int, String> itemstype = {};
   // Present checkbox texts and selected value
   Map<int, List<dynamic>> checkboxsText = {};
-  
+
   bool che = false;
   List c = [];
 
@@ -110,7 +112,7 @@ class _ReportPageState extends State<ReportPage> {
       // loginRegline(_textControllers[item.key], "MA", true)
     ]);
   }
-  
+
   Widget inputBox(
       TextEditingController? controller, String title, bool _enabled) {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
@@ -204,9 +206,16 @@ class _ReportPageState extends State<ReportPage> {
         .then((value) {
       var data = value.data();
       if (data != null) {
-        for (int i = 0; i < data.length; i++) {
-          var value = data[i.toString()];
-          itemsText[i] = value;
+        print("ASD " + data.length.toString());
+        int len = data.length;
+        for (int i = 0; i < len; i++) {
+          if (data[i.toString()] != null) {
+            itemsText[i] = data[i.toString()];
+          }
+          // deleted value will continue be field on firestore
+          else {
+            len += 1;
+          }
         }
       }
     });
@@ -222,14 +231,17 @@ class _ReportPageState extends State<ReportPage> {
         .then((value) {
       var data = value.data();
       if (data != null) {
-        for (int i = 0; i < data.length; i++) {
-          var value = data[i.toString()];
-          itemstype[i] = value;
+        int len = data.length;
+        for (int i = 0; i < len; i++) {
+          if (data[i.toString()] != null) {
+            itemstype[i] = data[i.toString()];
+          } else {
+            len += 1;
+          }
         }
       }
     });
   }
-
   Future getrowsCheckboxs() {
     return FirebaseFirestore.instance
         .collection("ReportTempletes")

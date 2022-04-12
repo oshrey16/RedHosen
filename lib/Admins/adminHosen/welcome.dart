@@ -3,6 +3,7 @@ import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
 import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/Admins/map.dart';
+import 'package:red_hosen/reporter/report_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -65,6 +66,21 @@ class _HomePageState extends State<HomePage> {
                       child: const Text("מפת הכאב"),
                     )),
                 const SizedBox(height: 15),
+                              SizedBox(
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              const ReportPage()),
+                    );
+                  },
+                  child: const Text("צור דיווח"),
+                ),
+              ),
+              const SizedBox(height: 15),
                 logoutButton(context),
               ]),
             )));
