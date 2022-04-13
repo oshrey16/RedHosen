@@ -13,9 +13,8 @@ class ReportPage extends StatefulWidget {
   State<ReportPage> createState() => _ReportPageState();
 }
 
-Map<int, Map<int, bool>> checkboxsValue = {};
-
 class _ReportPageState extends State<ReportPage> {
+  // Text Controllers
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
   final _nameController = TextEditingController();
@@ -31,10 +30,9 @@ class _ReportPageState extends State<ReportPage> {
   Map<int, String> itemsText = {};
   Map<int, String> itemstype = {};
   // Present checkbox texts and selected value
+  // {fieldIndex: {checkboxIndex:"TextValue"}}
   Map<int, List<dynamic>> checkboxsText = {};
-
-  bool che = false;
-  List c = [];
+  Map<int, Map<int, bool>> checkboxsValue = {};
 
   @override
   void initState() {
@@ -52,16 +50,15 @@ class _ReportPageState extends State<ReportPage> {
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
             child: Column(children: [
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               inputBoxState(_dateController, "תאריך", false),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               inputBoxState(_timeController, "שעה", false),
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
               inputBoxState(_nameController, "שם מדווח", false),
+              const SizedBox(height: 10),
+              SizedBox(width: 200, child: autoCompleteStreet()),
               const SizedBox(height: 15),
-              inputBoxLocation(_locationController),
-              const SizedBox(height: 15),
-              AutoTest(),
               FutureBuilder(
                 future: getrowsText(),
                 builder: (context, snapshot) {
@@ -94,6 +91,8 @@ class _ReportPageState extends State<ReportPage> {
             ])));
   }
 
+  // Build Report
+  // Create Widgets with ReportFormat loaded
   Widget buildReport() {
     return Column(children: [
       for (var item in itemsText.entries)
@@ -104,6 +103,7 @@ class _ReportPageState extends State<ReportPage> {
     ]);
   }
 
+  // Create checkboxes for Item in ReportTemplate
   Widget checkboxGrouper(MapEntry<int, String> item) {
     var checkboxitems = checkboxsText[item.key];
     return Column(children: [
@@ -118,11 +118,10 @@ class _ReportPageState extends State<ReportPage> {
                 checkboxsValue[item.key]?[i] = value!;
                 setState(() {});
               })
-      // else if (itemstype[item.key] == "checkbox")
-      // loginRegline(_textControllers[item.key], "MA", true)
     ]);
   }
 
+  // Create inputBox for Item in ReportTemplate
   Widget inputBox(
       TextEditingController? controller, String title, bool _enabled) {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
@@ -134,7 +133,7 @@ class _ReportPageState extends State<ReportPage> {
             width: 200,
             height: 45.0,
             child: Directionality(
-              textDirection: TextDirection.ltr,
+              textDirection: TextDirection.rtl,
               child: TextField(
                 enabled: _enabled,
                 maxLength: 45,
@@ -154,6 +153,7 @@ class _ReportPageState extends State<ReportPage> {
     ]);
   }
 
+  // inputBox - state fields in report
   Widget inputBoxState(
       TextEditingController? controller, String title, bool _enabled) {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
@@ -165,7 +165,7 @@ class _ReportPageState extends State<ReportPage> {
             width: 200,
             height: 45.0,
             child: Directionality(
-              textDirection: TextDirection.ltr,
+              textDirection: TextDirection.rtl,
               child: TextField(
                 enabled: _enabled,
                 maxLength: 45,
@@ -180,39 +180,8 @@ class _ReportPageState extends State<ReportPage> {
     ]);
   }
 
-  Widget inputBoxLocation(TextEditingController? controller) {
-    return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-      Column(children: [
-        const Text(":מיקום", style: TextStyle(fontSize: 16)),
-        const SizedBox(height: 5),
-        SizedBox(
-          width: 200,
-          height: 45.0,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: TextField(
-              maxLength: 60,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-              decoration: const InputDecoration(
-                counterText: "",
-                border: OutlineInputBorder(),
-                labelText: "הקלד מיקום",
-              ),
-              onChanged: (value) async {
-                // TODO
-                // List<Location> locations = await locationFromAddress(value);
-                // print(locations[0].latitude);
-                print("OK");
-              },
-            ),
-          ),
-        ),
-      ])
-    ]);
-  }
-
+  // Load StreetList
+  // TODO - Load it in main
   loadAsset() async {
     final myData = await rootBundle.loadString("assets/sderot_streets.csv");
     List<List<dynamic>> csvTable = const CsvToListConverter().convert(myData);
@@ -221,22 +190,29 @@ class _ReportPageState extends State<ReportPage> {
     streetList = list1d.cast<String>();
   }
 
-  Widget AutoTest() {
-    return Autocomplete<String>(
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '') {
-          return const Iterable<String>.empty();
-        }
-        return streetList.where((String option) {
-          return option.contains(textEditingValue.text.toLowerCase());
-        });
-      },
-      onSelected: (String selection) {
-        debugPrint('You just selected $selection');
-      },
-    );
+  // AutoComplete Street Widget
+  Widget autoCompleteStreet() {
+    return Column(children: [
+      const Text(":מיקום האירוע", style: TextStyle(fontSize: 16)),
+      Directionality(
+          textDirection: TextDirection.rtl,
+          child: Autocomplete<String>(
+            optionsBuilder: (TextEditingValue textEditingValue) {
+              if (textEditingValue.text == '') {
+                return const Iterable<String>.empty();
+              }
+              return streetList.where((String option) {
+                return option.contains(textEditingValue.text.toLowerCase());
+              });
+            },
+            onSelected: (String selection) {
+              _locationController.text = selection;
+            },
+          ))
+    ]);
   }
 
+  // Set Time To this report
   void setdatetime() async {
     final DateTime now = DateTime.now();
     final intl.DateFormat dateformat = intl.DateFormat('dd-MM-yyyy');
@@ -248,6 +224,7 @@ class _ReportPageState extends State<ReportPage> {
     _timeController.text = formattedtime;
   }
 
+  // Set Username To this report
   void setUserName() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -255,6 +232,7 @@ class _ReportPageState extends State<ReportPage> {
     }
   }
 
+  // Get Corrent Version Of Template
   void getformat() async {
     FirebaseFirestore.instance
         .collection("ReportTempletes")
@@ -263,6 +241,7 @@ class _ReportPageState extends State<ReportPage> {
         .then((value) => _versionreport = "v" + value.data()?["v"]);
   }
 
+  // Get Text(Translate) of fields From Report Template- FireStore
   Future getrowsText() {
     return FirebaseFirestore.instance
         .collection("ReportTempletes")
@@ -287,6 +266,7 @@ class _ReportPageState extends State<ReportPage> {
     });
   }
 
+  // Get Types of fields From Report Template- FireStore
   Future getrowstype() {
     return FirebaseFirestore.instance
         .collection("ReportTempletes")
@@ -309,6 +289,7 @@ class _ReportPageState extends State<ReportPage> {
     });
   }
 
+  // Get Checkboxs From Report Template- FireStore
   Future getrowsCheckboxs() {
     return FirebaseFirestore.instance
         .collection("ReportTempletes")
