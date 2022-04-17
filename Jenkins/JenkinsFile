@@ -8,6 +8,7 @@ pipeline {
         stage('Check') {
             steps {
                 bat '%flutterPATH% --version'
+            }
         }
         stage('PubGet') {
             steps {
