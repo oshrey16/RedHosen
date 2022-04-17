@@ -28,6 +28,10 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
 android {
+    // Add to build
+    lintOptions {
+        checkReleaseBuilds false
+    }
     // Change For: geocoding
     compileSdkVersion 31
     // compileSdkVersion 30
