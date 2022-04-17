@@ -1,13 +1,14 @@
 pipeline {
     agent any
-    environment {
-        ANDROID_HOME = "\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
-        flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
-    }
+    // environment {
+        // CMD = 
+        // ANDROID_HOME = "\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
+        // flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
+    // }
     stages {
         stage('Build') {
             steps {
-                bat '"%flutterPATH%" test'
+                powershell 'flutter test'
             }
         }
     }
