@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        PATH = "\\flutterSDK\\flutter\\bin\\flutter"
+        flutter = "\\flutterSDK\\flutter\\bin\\flutter"
     }
     stages {
         stage('Build') {
