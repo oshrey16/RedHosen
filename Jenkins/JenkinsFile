@@ -5,6 +5,10 @@ pipeline {
         dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
     }
     stages {
+        stage('Check') {
+            steps {
+                bat '--version'
+        }
         stage('PubGet') {
             steps {
                 bat '%dartPATH% pub get'
