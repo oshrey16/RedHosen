@@ -1,10 +1,10 @@
 pipeline {
     agent any
-    // environment {
+    environment {
         // CMD = 
         // ANDROID_HOME = "\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin"
-    // }
+    }
     stages {
         stage('Build') {
             steps {
