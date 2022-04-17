@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        flutter = "C:\\flutterSDK\\flutter\\bin\\flutter"
+        "C:\\WINDOWS\\SYSTEM32"
     }
     stages {
         stage('Build') {
