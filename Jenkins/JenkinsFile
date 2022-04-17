@@ -2,8 +2,15 @@ pipeline {
     agent any
     environment {
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
+        dartPATH = "\\C:\\flutterSDK\\flutter\\bin\\dart"
     }
+    dart pub get
     stages {
+        stage('PubGet') {
+            steps {
+                bat '%dartPATH% pub get'
+            }
+        }
         stage('Build') {
             steps {
                 bat '%flutterPATH% test'
