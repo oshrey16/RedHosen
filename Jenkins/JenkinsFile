@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo %WORKSPACE%
+                bat "echo %WORKSPACE%"
                 // cmd_exec 'echo 123'
                 // cmd_exec '%flutterPATH% test'
             }
