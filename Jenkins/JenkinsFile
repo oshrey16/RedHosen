@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        flutterPATH = "\\flutterSDK\\flutter\\bin"
+        flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
     }
     stages {
         stage('Build') {
             steps {
-                bat '%flutterPATH% flutter test'
+                bat '%flutterPATH% test'
             }
         }
     }
