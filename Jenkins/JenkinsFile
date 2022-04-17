@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                bat '"%flutterPATH%" flutter test'
+                bat '"%flutterPATH%" test'
             }
         }
     }
