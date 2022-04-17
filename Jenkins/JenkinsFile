@@ -4,7 +4,7 @@ pipeline {
         ANDROID_SDK_ROOT = "C:\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
         dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
-        HOME = "\\Users\\OshreyDell5590"
+        JENKINS_HOME = "\\Users\\OshreyDell5590"
     }
     stages {
         stage('Check') {
