@@ -24,7 +24,7 @@ pipeline {
         stage ('Flutter Build APK') {
             steps {
                 bat '''
-                    %flutterPATH% build apk
+                    %flutterPATH% build apk --stacktrace
                     echo %WORKSPACE%"
                 '''
             }
