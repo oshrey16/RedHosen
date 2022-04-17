@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        flutter = "C:\flutterSDK\flutter\bin\flutter"
+        flutter = "C:\flutterSDK\flutter\bin\flutter.bat"
     }
     stages {
         stage('Build') {
