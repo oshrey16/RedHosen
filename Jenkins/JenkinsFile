@@ -1,6 +1,7 @@
 pipeline {
     agent any
     environment {
+        ANDROID_SDK_ROOT = "\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
         dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
     }
