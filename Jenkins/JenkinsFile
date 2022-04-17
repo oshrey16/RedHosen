@@ -32,7 +32,7 @@ pipeline {
     }
     post {
         always {
-            bat '%flutterPATH% pub cache clean'
+            bat '%flutterPATH% clean'
         }
     }
 }
