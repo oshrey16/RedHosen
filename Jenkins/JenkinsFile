@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
-        dartPATH = "\\C:\\flutterSDK\\flutter\\bin\\dart"
+        dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
     }
     stages {
         stage('PubGet') {
