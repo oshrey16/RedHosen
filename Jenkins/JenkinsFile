@@ -1,12 +1,12 @@
 pipeline {
     agent any
     environment {
-        flutter = "/flutterSDK/flutter/bin/flutter"
+        flutter = "C:\flutterSDK\flutter\bin\flutter"
     }
     stages {
         stage('Build') {
             steps {
-                sh '$flutter test'
+                sh 'flutter test'
             }
         }
     }
