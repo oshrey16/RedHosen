@@ -29,8 +29,8 @@ pipeline {
                 '''
             }
         }
-        stage('Clean') {
-            steps {
+        post {
+            always {
                 bat '%flutterPATH% clean'
             }
         }
