@@ -29,10 +29,10 @@ pipeline {
                 '''
             }
         }
-        post {
-            always {
-                bat '%flutterPATH% clean'
-            }
+    }
+    post {
+        always {
+            bat '%flutterPATH% clean'
         }
     }
 }
