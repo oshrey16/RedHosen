@@ -13,7 +13,7 @@ pipeline {
         }
         stage('PubGet') {
             steps {
-                bat '%dartPATH% pub get'
+                bat '%flutterPATH% pub get'
             }
         }
         stage('Test') {
