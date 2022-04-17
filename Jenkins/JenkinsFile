@@ -15,9 +15,22 @@ pipeline {
                 bat '%dartPATH% pub get'
             }
         }
-        stage('Build') {
+        stage('Test') {
             steps {
                 bat '%flutterPATH% test'
+            }
+        }
+        stage ('Flutter Build APK') {
+            steps {
+                bat '''
+                    %flutterPATH% build apk
+                    echo %WORKSPACE%"
+                '''
+            }
+        }
+        stage('Clean') {
+            steps {
+                bat '%flutterPATH% clean'
             }
         }
     }
