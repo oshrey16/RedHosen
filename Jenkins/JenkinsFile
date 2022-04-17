@@ -4,7 +4,6 @@ pipeline {
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
         dartPATH = "\\C:\\flutterSDK\\flutter\\bin\\dart"
     }
-    dart pub get
     stages {
         stage('PubGet') {
             steps {
