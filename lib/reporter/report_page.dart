@@ -26,7 +26,7 @@ class _ReportPageState extends State<ReportPage> {
   late List<String> streetList;
 
   //TextEditingControllers To inputs
-  late Map<int, TextEditingController> _textControllers;
+  final Map<int, TextEditingController> _textControllers= {};
   // Present fields texts and types value
   Map<int, String> itemsText = {};
   Map<int, String> itemstype = {};
