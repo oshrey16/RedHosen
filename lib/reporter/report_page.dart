@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:geocoding/geocoding.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:red_hosen/reporter/report_class.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _ReportPageState extends State<ReportPage> {
   late List<String> streetList;
 
   //TextEditingControllers To inputs
-  final Map<int, TextEditingController> _textControllers = {};
+  late Map<int, TextEditingController> _textControllers;
   // Present fields texts and types value
   Map<int, String> itemsText = {};
   Map<int, String> itemstype = {};
@@ -80,15 +81,22 @@ class _ReportPageState extends State<ReportPage> {
                       const BoxConstraints.tightFor(width: 160, height: 40),
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Text("asd")),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => const Text("asd")),
+                      // );
+                      sendReport();
                     },
                     child: const Text("שלח דיווח"),
                   ))
             ])));
+  }
+
+  void sendReport() async {
+    // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
+    ReportClass d = ReportClass(_versionreport, _textControllers);
+    d.addReport();
   }
 
   // Build Report
@@ -97,7 +105,7 @@ class _ReportPageState extends State<ReportPage> {
     return Column(children: [
       for (var item in itemsText.entries)
         if (itemstype[item.key] == "string")
-          inputBox(_textControllers[item.key], item.value, true)
+          inputBox(item.key, item.value, true)
         else if (itemstype[item.key] == "checkbox")
           checkboxGrouper(item)
     ]);
@@ -122,8 +130,8 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // Create inputBox for Item in ReportTemplate
-  Widget inputBox(
-      TextEditingController? controller, String title, bool _enabled) {
+  Widget inputBox(int key, String title, bool _enabled) {
+    _textControllers[key] = TextEditingController();
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
       Column(
         children: [
@@ -138,7 +146,7 @@ class _ReportPageState extends State<ReportPage> {
                 enabled: _enabled,
                 maxLength: 45,
                 textAlignVertical: TextAlignVertical.center,
-                controller: controller,
+                controller: _textControllers[key],
                 autofocus: true,
                 decoration: InputDecoration(
                   counterText: "",
