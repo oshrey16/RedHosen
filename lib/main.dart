@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/auth_services.dart';
@@ -12,6 +13,7 @@ import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/therapist/welcome.dart' as therapistpage;
 import 'package:red_hosen/socialWorker/welcome.dart' as socialpage;
 import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
+
 import 'dart:io' show Platform;
 
 const bool useEmulator = true;
@@ -21,6 +23,7 @@ Future _connectToFirebaseEmulator() async {
   FirebaseFirestore.instance.useFirestoreEmulator(localHostString, 8080);
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
+  FirebaseDatabase.instance.useDatabaseEmulator(localHostString, 9000);
   // FirebaseFirestore.instance.settings = Settings(
   //   host: '$localHostString:8080',
   //   sslEnabled: false,
