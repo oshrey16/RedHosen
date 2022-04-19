@@ -87,3 +87,8 @@ Widget logoutButton(BuildContext context) {
     child: const Text("התנתק"),
   );
 }
+
+enum institution{
+  hosen,
+  social,
+}

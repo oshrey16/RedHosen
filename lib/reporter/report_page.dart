@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:red_hosen/reporter/report_class.dart';
+import 'package:red_hosen/mytools.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _ReportPageState extends State<ReportPage> {
   late List<String> streetList;
 
   //TextEditingControllers To inputs
-  final Map<int, TextEditingController> _textControllers= {};
+  final Map<int, TextEditingController> _textControllers = {};
   // Present fields texts and types value
   Map<int, String> itemsText = {};
   Map<int, String> itemstype = {};
@@ -34,6 +35,13 @@ class _ReportPageState extends State<ReportPage> {
   // {fieldIndex: {checkboxIndex:"TextValue"}}
   Map<int, List<dynamic>> checkboxsText = {};
   Map<int, Map<int, bool>> checkboxsValue = {};
+
+  // Report to Hosen/social
+  // institution - From MyTools File
+  Map<institution, bool> reportToValue = {
+    institution.hosen: false,
+    institution.social: false
+  };
 
   @override
   void initState() {
@@ -59,6 +67,8 @@ class _ReportPageState extends State<ReportPage> {
               inputBoxState(_nameController, "שם מדווח", false),
               const SizedBox(height: 10),
               SizedBox(width: 200, child: autoCompleteStreet()),
+              const SizedBox(height: 15),
+              checkboxReportTo(),
               const SizedBox(height: 15),
               FutureBuilder(
                 future: getrowsText(),
@@ -86,16 +96,19 @@ class _ReportPageState extends State<ReportPage> {
                       //   MaterialPageRoute(
                       //       builder: (context) => const Text("asd")),
                       // );
-                      sendReport();
+                      sendReport().then((value) {showDialogMsg(context, MsgType.ok,
+                                "הדיווח בוצע בהצלחה")
+                            .then((value) => Navigator.pop(context));});
                     },
                     child: const Text("שלח דיווח"),
                   ))
             ])));
   }
 
-  void sendReport() async {
+  Future sendReport() async {
     // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
-    ReportClass d = ReportClass(_versionreport, _textControllers);
+    ReportClass d =
+        ReportClass(_versionreport, _textControllers, reportToValue);
     d.addReport();
   }
 
@@ -185,6 +198,28 @@ class _ReportPageState extends State<ReportPage> {
           ),
         ],
       )
+    ]);
+  }
+
+  Widget checkboxReportTo() {
+    return Column(children: [
+      const Text("דיווח לגורם:", style: TextStyle(fontSize: 16)),
+      CheckboxListTile(
+          title: const Text("חוסן"),
+          checkColor: Colors.white,
+          value: reportToValue[institution.hosen],
+          onChanged: (bool? value) {
+            reportToValue[institution.hosen] = value!;
+            setState(() {});
+          }),
+      CheckboxListTile(
+          title: const Text("רווחה"),
+          checkColor: Colors.white,
+          value: reportToValue[institution.social],
+          onChanged: (bool? value) {
+            reportToValue[institution.social] = value!;
+            setState(() {});
+          })
     ]);
   }
 
