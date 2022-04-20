@@ -19,6 +19,8 @@ class _ReportPageState extends State<ReportPage> {
   // Text Controllers
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
+  // User Uid
+  late String useruid;
   final _nameController = TextEditingController();
   final _locationController = TextEditingController();
   // TODO @oshrey16 --> set vesion dynamic
@@ -107,8 +109,10 @@ class _ReportPageState extends State<ReportPage> {
 
   Future sendReport() async {
     // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
+    String strlocation = _locationController.text;
+    String time = _timeController.text;
     ReportClass d =
-        ReportClass(_versionreport, _textControllers, reportToValue);
+        ReportClass(_versionreport, _textControllers, reportToValue,useruid,strlocation,time);
     d.addReport();
   }
 
@@ -271,6 +275,7 @@ class _ReportPageState extends State<ReportPage> {
   void setUserName() {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
+      useruid = user.uid;
       _nameController.text = user.displayName ?? '';
     }
   }

@@ -8,12 +8,19 @@ class ReportClass {
   late String version;
   // final Map<institution,bool> reportToValue;
   late Map<String, bool> reportTo = {};
+  final String useruid; 
+  final String location;
+  final String time;
+
 
   ReportClass(this.version, Map<int, TextEditingController> textControllers,
-      reportToValue) {
+      reportToValue, this.useruid, this.location, this.time) {
     castControllers(textControllers);
     castReportTo(reportToValue);
     fields['version'] = version;
+    fields['useruid'] = useruid;
+    fields['location'] = location;
+    fields['time'] = time;
   }
 
   /// Cast Controllers To <string,dynamic>
