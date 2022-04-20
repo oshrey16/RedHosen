@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
-import 'package:red_hosen/all_reports_class.dart';
+import 'package:red_hosen/Reports/all_reports_class.dart';
 
 class ActiveReports extends StatefulWidget {
   const ActiveReports({Key? key}) : super(key: key);
