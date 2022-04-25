@@ -16,11 +16,25 @@ class ActiveReports extends StatefulWidget {
 class _ActiveReportsState extends State<ActiveReports> {
   late Future<AllActiveReports> allReports;
   final List<Marker> _markers = <Marker>[];
+  late GeoPoint _selectedPoints;
   final Completer<GoogleMapController> _controller = Completer();
   static const CameraPosition shderotGooglePlex = CameraPosition(
     target: LatLng(31.525700, 34.600000),
     zoom: 14.2,
   );
+
+  Map<String, bool> visiblebuttons = {};
+
+  @override
+  void initState() {
+    super.initState();
+    allReports = AllActiveReports.create();
+    allReports.then((value) {
+      for (var i in value.actives) {
+        visiblebuttons[i] = false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +79,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                     }
                   }
                 },
-                future: AllActiveReports.create()),
+                future: allReports),
           ),
         ]));
   }
@@ -74,35 +88,91 @@ class _ActiveReportsState extends State<ActiveReports> {
     String priority = value['priority'];
     return GestureDetector(
         onTap: () {
-          var point = (value['points'] as GeoPoint);
-          if (_markers.isNotEmpty) _markers.removeLast();
-          _markers.add(Marker(
-              markerId: MarkerId(key),
-              position: LatLng(point.latitude, point.longitude),
-              infoWindow: InfoWindow(title: value['location'])));
-          setState(() {});
+          closeAllcards();
+          _selectedPoints = (value['points'] as GeoPoint);
+          setState(() {
+            visiblebuttons[key] = !visiblebuttons[key]!;
+            if (_markers.isNotEmpty) _markers.removeLast();
+            _markers.add(Marker(
+                markerId: MarkerId(key),
+                position:
+                    LatLng(_selectedPoints.latitude, _selectedPoints.longitude),
+                infoWindow: InfoWindow(title: value['location'])));
+          });
+          _goToPoint();
         },
         child: Card(
             color: Colors.blueGrey.shade200,
             elevation: 8.0,
             child: Container(
-                // color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber : Colors.yellow  ,
                 padding: const EdgeInsets.all(1.0),
-                child: Row(
+                child:
+                    // ExpansionTile(
+                    // title: Text(value['location']),
+                    // children: [
+                    Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(children: <Widget>[
                       Text("ID: $key"),
                       Text("כתובת דיווח: " + value['location']),
-                      Text("זמן דיווח: " + value['time']),
-                      Text("רמת החומרה: " + priority,style: TextStyle(color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber.shade900 : Colors.yellow,),)
+                      // Text("זמן דיווח: " + (value['time'])),
+                      Text(
+                        "רמת החומרה: " + priority,
+                        style: TextStyle(
+                          color: priority == "גבוה"
+                              ? Colors.red
+                              : priority == "בינוני"
+                                  ? Colors.amber.shade900
+                                  : Colors.yellow,
+                        ),
+                      ),
+                      Visibility(
+                        child: Row(children: [ElevatedButton(
+                          onPressed: () {
+                            print("asd");
+                          },
+                          child: const Text("פתח דוח"),
+                          style: ElevatedButton.styleFrom(primary: Colors.brown.shade300),
+                        ),
+                        const SizedBox(width: 40),
+                        ElevatedButton(
+                          onPressed: () {
+                            print("asd");
+                          },
+                          child: const Text("ניווט"),
+                          style: ElevatedButton.styleFrom(primary: Colors.green.shade300),
+                        ),
+                        
+                      ],),
+                      visible: visiblebuttons[key]!,
+                      )
                     ]),
-                    const SizedBox(width: 10,),
+                    const SizedBox(
+                      width: 10,
+                    ),
                     Icon(
                       Icons.emergency_outlined,
-                      color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber.shade900 : Colors.yellow,
+                      color: priority == "גבוה"
+                          ? Colors.red
+                          : priority == "בינוני"
+                              ? Colors.amber.shade900
+                              : Colors.yellow,
                     ),
                   ],
                 ))));
+  }
+
+  Future<void> _goToPoint() async {
+    final GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+        target: LatLng(_selectedPoints.latitude, _selectedPoints.longitude),
+        zoom: 14.2)));
+  }
+
+  void closeAllcards() {
+    setState(() {
+      visiblebuttons.updateAll((key, value) => false);
+    });
   }
 }
