@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -13,19 +14,12 @@ class ActiveReports extends StatefulWidget {
 
 class _ActiveReportsState extends State<ActiveReports> {
   late Future<AllActiveReports> allReports;
+  List<Marker> _markers = <Marker>[];
   final Completer<GoogleMapController> _controller = Completer();
   static const CameraPosition shderotGooglePlex = CameraPosition(
     target: LatLng(31.525700, 34.600000),
     zoom: 14.2,
   );
-
-  @override
-  void initState() {
-    // GetReports();
-    // allReports = AllActiveReports.create();
-    // getDataFromDb();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +34,7 @@ class _ActiveReportsState extends State<ActiveReports> {
               width: MediaQuery.of(context).size.width,
               child: GoogleMap(
                 mapType: MapType.normal,
+                markers: Set<Marker>.of(_markers),
                 initialCameraPosition: shderotGooglePlex,
                 onMapCreated: (GoogleMapController controller) {
                   _controller.complete(controller);
@@ -74,20 +69,24 @@ class _ActiveReportsState extends State<ActiveReports> {
         ]));
   }
 
-  Widget generateCards(String key, String value) {
+  Widget generateCards(String key, Map<String, dynamic> value) {
     return GestureDetector(
-        onTap: () => print("tapped"),
+        onTap: () {
+          var point = (value['points'] as GeoPoint);
+          if (_markers.isNotEmpty) _markers.removeLast();
+          _markers.add(Marker(
+              markerId: MarkerId('SomeId'),
+              position: LatLng(point.latitude, point.longitude),
+              infoWindow: InfoWindow(title: 'The title of the marker')));
+          setState(() {});
+        },
         child: Card(
             elevation: 8.0,
             child: Container(
                 padding: const EdgeInsets.all(1.0),
                 child: Column(children: <Widget>[
                   Text("ID: $key"),
-                  Text("כתובת דיווח: $value")
+                  Text("כתובת דיווח: " + value['location'])
                 ]))));
   }
-
-  // void GetReports() async{
-  //   allReports = await AllActiveReports.create();
-  // }
 }
