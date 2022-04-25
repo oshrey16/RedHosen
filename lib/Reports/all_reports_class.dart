@@ -42,6 +42,7 @@ class AllActiveReports {
         test[element.key]?["location"] = element.value['location'];
         test[element.key]?["points"] = element.value['points'];
         test[element.key]?["priority"] = element.value['priority'];
+        test[element.key]?["time"] = element.value['time'];
       }
     }
     //   print(element);

@@ -23,7 +23,7 @@ class ReportClass {
     fields['version'] = version;
     fields['useruid'] = useruid;
     fields['location'] = location;
-    fields['time'] = time;
+    fields['time'] = DateTime.now();
     GeoPoint googlepoints = GeoPoint(points.latitude, points.longitude);
     fields['points'] = googlepoints;
     fields['priority'] = priorityValue;

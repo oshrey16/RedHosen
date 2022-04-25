@@ -83,14 +83,26 @@ class _ActiveReportsState extends State<ActiveReports> {
           setState(() {});
         },
         child: Card(
+            color: Colors.blueGrey.shade200,
             elevation: 8.0,
             child: Container(
-              color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber : Colors.yellow  ,
+                // color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber : Colors.yellow  ,
                 padding: const EdgeInsets.all(1.0),
-                child: Column(children: <Widget>[
-                  Text("ID: $key"),
-                  Text("כתובת דיווח: " + value['location']),
-                  Text("רמת החומרה: " + priority)
-                ]))));
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(children: <Widget>[
+                      Text("ID: $key"),
+                      Text("כתובת דיווח: " + value['location']),
+                      Text("זמן דיווח: " + value['time']),
+                      Text("רמת החומרה: " + priority,style: TextStyle(color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber.shade900 : Colors.yellow,),)
+                    ]),
+                    const SizedBox(width: 10,),
+                    Icon(
+                      Icons.emergency_outlined,
+                      color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber.shade900 : Colors.yellow,
+                    ),
+                  ],
+                ))));
   }
 }

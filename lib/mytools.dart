@@ -93,6 +93,7 @@ enum institution{
   social,
 }
 
+// TODO SET in report
 enum ReportPriority{
   high,
   medium,
