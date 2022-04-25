@@ -92,3 +92,9 @@ enum institution{
   hosen,
   social,
 }
+
+enum ReportPriority{
+  high,
+  medium,
+  low,
+}

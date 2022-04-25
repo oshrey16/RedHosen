@@ -38,13 +38,12 @@ class AllActiveReports {
     for (var element in allData.entries) {
       if (actives.contains(element.key)) {
         test[element.key] = <String, dynamic>{};
-        //TODO value to location
+        // Add elements to show in ActiveReports page
         test[element.key]?["location"] = element.value['location'];
         test[element.key]?["points"] = element.value['points'];
-        print("OK!");
+        test[element.key]?["priority"] = element.value['priority'];
       }
     }
-    print(test);
     //   print(element);
     //   var f = Map<String, dynamic>.from(element as Map<String, dynamic>);
     //   allreports.addAll(f);

@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:red_hosen/Reports/all_reports_class.dart';
+import 'package:red_hosen/mytools.dart';
 
 class ActiveReports extends StatefulWidget {
   const ActiveReports({Key? key}) : super(key: key);
@@ -70,6 +71,7 @@ class _ActiveReportsState extends State<ActiveReports> {
   }
 
   Widget generateCards(String key, Map<String, dynamic> value) {
+    String priority = value['priority'];
     return GestureDetector(
         onTap: () {
           var point = (value['points'] as GeoPoint);
@@ -83,10 +85,12 @@ class _ActiveReportsState extends State<ActiveReports> {
         child: Card(
             elevation: 8.0,
             child: Container(
+              color: priority == "גבוה" ? Colors.red : priority == "בינוני" ? Colors.amber : Colors.yellow  ,
                 padding: const EdgeInsets.all(1.0),
                 child: Column(children: <Widget>[
                   Text("ID: $key"),
-                  Text("כתובת דיווח: " + value['location'])
+                  Text("כתובת דיווח: " + value['location']),
+                  Text("רמת החומרה: " + priority)
                 ]))));
   }
 }
