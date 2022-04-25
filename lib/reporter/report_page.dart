@@ -27,6 +27,7 @@ class _ReportPageState extends State<ReportPage> {
   String _versionreport = "v1";
   // List of Streets
   late List<String> streetList;
+  String priorityValue = "נמוך";
 
   //TextEditingControllers To inputs
   final Map<int, TextEditingController> _textControllers = {};
@@ -72,6 +73,8 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(height: 15),
               checkboxReportTo(),
               const SizedBox(height: 15),
+              inputPriority(),
+              const SizedBox(height: 15),
               FutureBuilder(
                 future: getrowsText(),
                 builder: (context, snapshot) {
@@ -98,9 +101,10 @@ class _ReportPageState extends State<ReportPage> {
                       //   MaterialPageRoute(
                       //       builder: (context) => const Text("asd")),
                       // );
-                      sendReport().then((value) {showDialogMsg(context, MsgType.ok,
-                                "הדיווח בוצע בהצלחה")
-                            .then((value) => Navigator.pop(context));});
+                      sendReport().then((value) {
+                        showDialogMsg(context, MsgType.ok, "הדיווח בוצע בהצלחה")
+                            .then((value) => Navigator.pop(context));
+                      });
                     },
                     child: const Text("שלח דיווח"),
                   ))
@@ -111,10 +115,11 @@ class _ReportPageState extends State<ReportPage> {
     String city = "שדרות";
     // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
     String strlocation = _locationController.text;
-    List<Location> locations = await locationFromAddress(strlocation + "," + city);
+    List<Location> locations =
+        await locationFromAddress(strlocation + "," + city);
     String time = _timeController.text;
-    ReportClass d =
-        ReportClass(_versionreport, _textControllers, reportToValue,useruid,strlocation,time,locations[0]);
+    ReportClass d = ReportClass(_versionreport, _textControllers, reportToValue,
+        useruid, strlocation, time, locations[0]);
     d.addReport();
   }
 
@@ -157,20 +162,24 @@ class _ReportPageState extends State<ReportPage> {
           Text(":" + title, style: const TextStyle(fontSize: 16)),
           const SizedBox(height: 5),
           SizedBox(
-            width: 200,
-            height: 45.0,
             child: Directionality(
               textDirection: TextDirection.rtl,
-              child: TextField(
-                enabled: _enabled,
-                maxLength: 45,
-                textAlignVertical: TextAlignVertical.center,
-                controller: _textControllers[key],
-                autofocus: true,
-                decoration: InputDecoration(
-                  counterText: "",
-                  border: const OutlineInputBorder(),
-                  labelText: "הקלד " + title,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 300.0,
+                ),
+                child: TextField(
+                  maxLines: null,
+                  enabled: _enabled,
+                  maxLength: 180,
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: _textControllers[key],
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    counterText: "",
+                    border: const OutlineInputBorder(),
+                    labelText: "הקלד " + title,
+                  ),
                 ),
               ),
             ),
@@ -226,6 +235,37 @@ class _ReportPageState extends State<ReportPage> {
             reportToValue[institution.social] = value!;
             setState(() {});
           })
+    ]);
+  }
+
+  Widget inputPriority() {
+    return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+      Column(children: [
+        const Text(":רמת החומרה", style: TextStyle(fontSize: 16)),
+        const SizedBox(height: 5),
+        DropdownButton<String>(
+          value: priorityValue,
+          icon: const Icon(Icons.touch_app_rounded),
+          elevation: 16,
+          style: const TextStyle(color: Colors.deepPurple),
+          underline: Container(
+            height: 2,
+            color: Colors.deepPurpleAccent,
+          ),
+          onChanged: (String? newValue) {
+            setState(() {
+              priorityValue = newValue!;
+            });
+          },
+          items: <String>['גבוה', 'בינוני', 'נמוך']
+              .map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        )
+      ])
     ]);
   }
 
