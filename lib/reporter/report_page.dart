@@ -162,11 +162,12 @@ class _ReportPageState extends State<ReportPage> {
           Text(":" + title, style: const TextStyle(fontSize: 16)),
           const SizedBox(height: 5),
           SizedBox(
+            width: MediaQuery. of(context).size.width / 1.2,
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
-                  maxHeight: 300.0,
+                  maxHeight: 170.0,
                 ),
                 child: TextField(
                   maxLines: null,
