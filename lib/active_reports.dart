@@ -14,7 +14,7 @@ class ActiveReports extends StatefulWidget {
 
 class _ActiveReportsState extends State<ActiveReports> {
   late Future<AllActiveReports> allReports;
-  List<Marker> _markers = <Marker>[];
+  final List<Marker> _markers = <Marker>[];
   final Completer<GoogleMapController> _controller = Completer();
   static const CameraPosition shderotGooglePlex = CameraPosition(
     target: LatLng(31.525700, 34.600000),
@@ -75,9 +75,9 @@ class _ActiveReportsState extends State<ActiveReports> {
           var point = (value['points'] as GeoPoint);
           if (_markers.isNotEmpty) _markers.removeLast();
           _markers.add(Marker(
-              markerId: MarkerId('SomeId'),
+              markerId: MarkerId(key),
               position: LatLng(point.latitude, point.longitude),
-              infoWindow: InfoWindow(title: 'The title of the marker')));
+              infoWindow: InfoWindow(title: value['location'])));
           setState(() {});
         },
         child: Card(

@@ -23,8 +23,8 @@ class ReportClass {
     fields['useruid'] = useruid;
     fields['location'] = location;
     fields['time'] = time;
-    GeoPoint google_points = GeoPoint(points.latitude, points.longitude);
-    fields['points'] = google_points;
+    GeoPoint googlepoints = GeoPoint(points.latitude, points.longitude);
+    fields['points'] = googlepoints;
   }
 
   /// Cast Controllers To <string,dynamic>
