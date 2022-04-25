@@ -108,11 +108,13 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   Future sendReport() async {
+    String city = "שדרות";
     // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
     String strlocation = _locationController.text;
+    List<Location> locations = await locationFromAddress(strlocation + "," + city);
     String time = _timeController.text;
     ReportClass d =
-        ReportClass(_versionreport, _textControllers, reportToValue,useruid,strlocation,time);
+        ReportClass(_versionreport, _textControllers, reportToValue,useruid,strlocation,time,locations[0]);
     d.addReport();
   }
 

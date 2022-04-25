@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:red_hosen/mytools.dart';
 
 class ReportClass {
@@ -11,16 +12,19 @@ class ReportClass {
   final String useruid; 
   final String location;
   final String time;
+  final Location points;
 
 
   ReportClass(this.version, Map<int, TextEditingController> textControllers,
-      reportToValue, this.useruid, this.location, this.time) {
+      reportToValue, this.useruid, this.location, this.time, this.points) {
     castControllers(textControllers);
     castReportTo(reportToValue);
     fields['version'] = version;
     fields['useruid'] = useruid;
     fields['location'] = location;
     fields['time'] = time;
+    GeoPoint google_points = GeoPoint(points.latitude, points.longitude);
+    fields['points'] = google_points;
   }
 
   /// Cast Controllers To <string,dynamic>
