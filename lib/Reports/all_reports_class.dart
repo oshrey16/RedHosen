@@ -3,54 +3,48 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 
 class AllActiveReports {
-  List Actives = [];
-  Map<String,dynamic> AllReports = {};
-  Map<String,String> test = {};
+  List actives = [];
+  final Map<String,dynamic> allreports = {};
+  final Map<String,String> test = {};
 
-  Map<String,String> getTest(){
-    return test;
-  }
+  AllActiveReports._();
 
-  AllActiveReports(){
-    getActiveReportsDb();
-    //TODO
-    const twentyMillis = Duration(milliseconds:1000);
-    Timer(twentyMillis, () => getInfo());
-    // getInfo();
-  }
+  static Future<AllActiveReports> create() async {
+  AllActiveReports calendar = AllActiveReports._();
+  await calendar.getActiveReportsDb().whenComplete(() => calendar.getInfo());
+  return calendar;
+}
 
   /// Get active reports from firebase - realtime db
-  void getActiveReportsDb() async {
+  Future getActiveReportsDb() async {
     DatabaseReference ref = FirebaseDatabase.instance.ref("activeReports");
     DatabaseEvent event = await ref.once();
     Map<String, dynamic> data = Map<String, dynamic>.from(
         event.snapshot.value as Map<dynamic, dynamic>);
 
     data.forEach((key, value) {
-      Actives.add(key);
+      actives.add(key);
     });
   }
 
-  void getInfo() async {
-    // print(Actives);
+  Future getInfo() async {
     CollectionReference reportsStore = FirebaseFirestore.instance.collection('Reports');
     QuerySnapshot querySnapshot = await reportsStore.get();
     Map<String,dynamic> allData = {};
     for (var report in querySnapshot.docs) {
       allData[report.id] = report.data();
     }
-    // print(allData);
     for (var element in allData.entries) {
-      if(Actives.contains(element.key)){
+      if(actives.contains(element.key)){
         //TODO value to location
-        test[element.key] = element.value['1'];
+        test[element.key] = element.value['location'];
         
       }
     }
     print(test);
     //   print(element);
     //   var f = Map<String, dynamic>.from(element as Map<String, dynamic>);
-    //   AllReports.addAll(f);
+    //   allreports.addAll(f);
       // version = f['version'];
       // uid = f['uid'];
       // location = f['location'];
