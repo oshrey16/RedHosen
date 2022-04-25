@@ -119,7 +119,7 @@ class _ReportPageState extends State<ReportPage> {
         await locationFromAddress(strlocation + "," + city);
     String time = _timeController.text;
     ReportClass d = ReportClass(_versionreport, _textControllers, reportToValue,
-        useruid, strlocation, time, locations[0]);
+        useruid, strlocation, time, locations[0],priorityValue);
     d.addReport();
   }
 
