@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:red_hosen/Reports/all_reports_class.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ActiveReports extends StatefulWidget {
   const ActiveReports({Key? key}) : super(key: key);
@@ -138,7 +139,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                         const SizedBox(width: 40),
                         ElevatedButton(
                           onPressed: () {
-                            print("asd");
+                            navigateTo(_selectedPoints.latitude,_selectedPoints.longitude);
                           },
                           child: const Text("ניווט"),
                           style: ElevatedButton.styleFrom(primary: Colors.green.shade300),
@@ -175,4 +176,13 @@ class _ActiveReportsState extends State<ActiveReports> {
       visiblebuttons.updateAll((key, value) => false);
     });
   }
+
+static void navigateTo(double lat, double lng) async {
+   var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+   if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+   } else {
+      throw 'Could not launch ${uri.toString()}';
+   }
+}
 }
