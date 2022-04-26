@@ -117,7 +117,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                     Column(children: <Widget>[
                       Text("ID: $key"),
                       Text("כתובת דיווח: " + value['location']),
-                      // Text("זמן דיווח: " + (value['time'])),
+                      Text("מספר נפגעים: " + value['numberofpeople']),
                       Text(
                         "רמת החומרה: " + priority,
                         style: TextStyle(

@@ -43,6 +43,7 @@ class AllActiveReports {
         test[element.key]?["points"] = element.value['points'];
         test[element.key]?["priority"] = element.value['priority'];
         test[element.key]?["time"] = element.value['time'];
+        test[element.key]?["numberofpeople"] = element.value['numberofpeople'];
       }
     }
     //   print(element);
