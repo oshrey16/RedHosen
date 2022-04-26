@@ -57,7 +57,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                 },
               )),
           const SizedBox(height: 10),
-          
+
           Expanded(
             child: FutureBuilder(
                 builder: (context, AsyncSnapshot<AllActiveReports> snapshot) {
@@ -118,7 +118,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                     Column(children: <Widget>[
                       Text("ID: $key"),
                       Text("כתובת דיווח: " + value['location']),
-                      Text("מספר נפגעים: " + value['numberofpeople'].toString()),
+                      Text("מספר נפגעים: " + value['numberpeople'].toString()),
                       Text(
                         "רמת החומרה: " + priority,
                         style: TextStyle(

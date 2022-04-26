@@ -14,11 +14,11 @@ class ReportClass {
   final String time;
   final Location points;
   final String priorityValue;
-  final int numberofpeople;
+  final int numberpeople;
 
 
   ReportClass(this.version, Map<int, TextEditingController> textControllers,
-      reportToValue, this.useruid, this.location, this.time, this.points, this.priorityValue, this.numberofpeople) {
+      reportToValue, this.useruid, this.location, this.time, this.points, this.priorityValue, this.numberpeople) {
     castControllers(textControllers);
     castReportTo(reportToValue);
     fields['version'] = version;
@@ -28,7 +28,7 @@ class ReportClass {
     GeoPoint googlepoints = GeoPoint(points.latitude, points.longitude);
     fields['points'] = googlepoints;
     fields['priority'] = priorityValue;
-    fields['numberpeople'] = priorityValue;
+    fields['numberpeople'] = numberpeople;
   }
 
   /// Cast Controllers To <string,dynamic>
