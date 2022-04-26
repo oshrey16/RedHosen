@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:geocoding/geocoding.dart';
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:numberpicker/numberpicker.dart';
 import 'package:red_hosen/reporter/report_class.dart';
 import 'package:red_hosen/mytools.dart';
 
@@ -46,6 +47,8 @@ class _ReportPageState extends State<ReportPage> {
     institution.social: false
   };
 
+  int _numberPeople = 0;
+
   @override
   void initState() {
     loadAsset();
@@ -61,11 +64,17 @@ class _ReportPageState extends State<ReportPage> {
         appBar: AppBar(title: const Text("דיווח חדש"), centerTitle: true),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
-            child: Column(children: [
+            child: Center(
+                child: Column(children: [
               const SizedBox(height: 10),
-              inputBoxState(_dateController, "תאריך", false),
-              const SizedBox(height: 10),
-              inputBoxState(_timeController, "שעה", false),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  inputBoxState(_timeController, "שעה", false),
+                  const SizedBox(width: 10),
+                  inputBoxState(_dateController, "תאריך", false),
+                ],
+              ),
               const SizedBox(height: 10),
               inputBoxState(_nameController, "שם מדווח", false),
               const SizedBox(height: 10),
@@ -73,7 +82,27 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(height: 15),
               checkboxReportTo(),
               const SizedBox(height: 15),
-              inputPriority(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Column(
+                    children: [
+                      const Text("מספר נפגעים"),
+                      NumberPicker(
+                        value: _numberPeople,
+                        minValue: 0,
+                        maxValue: 20,
+                        itemWidth: 30,
+                        itemHeight: 30,
+                        onChanged: (value) =>
+                            setState(() => _numberPeople = value),
+                      ),
+                    ],
+                  ),
+                  // SizedBox(width: 30),
+                  inputPriority(),
+                ],
+              ),
               const SizedBox(height: 15),
               FutureBuilder(
                 future: getrowsText(),
@@ -108,7 +137,7 @@ class _ReportPageState extends State<ReportPage> {
                     },
                     child: const Text("שלח דיווח"),
                   ))
-            ])));
+            ]))));
   }
 
   Future sendReport() async {
@@ -119,7 +148,7 @@ class _ReportPageState extends State<ReportPage> {
         await locationFromAddress(strlocation + "," + city);
     String time = _timeController.text;
     ReportClass d = ReportClass(_versionreport, _textControllers, reportToValue,
-        useruid, strlocation, time, locations[0],priorityValue);
+        useruid, strlocation, time, locations[0], priorityValue);
     d.addReport();
   }
 
@@ -142,7 +171,12 @@ class _ReportPageState extends State<ReportPage> {
       Text(":" + item.value, style: const TextStyle(fontSize: 16)),
       if (checkboxitems != null)
         for (int i = 0; i < checkboxitems.length; i++)
+        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        const SizedBox(width: 40),
+        Expanded(
+          child:
           CheckboxListTile(
+              controlAffinity: ListTileControlAffinity.leading,
               title: Text(checkboxsText[item.key]?[i]),
               checkColor: Colors.white,
               value: checkboxsValue[item.key]?[i],
@@ -150,6 +184,7 @@ class _ReportPageState extends State<ReportPage> {
                 checkboxsValue[item.key]?[i] = value!;
                 setState(() {});
               })
+        )])
     ]);
   }
 
@@ -162,7 +197,7 @@ class _ReportPageState extends State<ReportPage> {
           Text(":" + title, style: const TextStyle(fontSize: 16)),
           const SizedBox(height: 5),
           SizedBox(
-            width: MediaQuery. of(context).size.width / 1.2,
+            width: MediaQuery.of(context).size.width / 1.2,
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: ConstrainedBox(
@@ -193,49 +228,57 @@ class _ReportPageState extends State<ReportPage> {
   // inputBox - state fields in report
   Widget inputBoxState(
       TextEditingController? controller, String title, bool _enabled) {
-    return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-      Column(
-        children: [
-          Text(":" + title, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 5),
-          SizedBox(
-            width: 200,
-            height: 45.0,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: TextField(
-                enabled: _enabled,
-                maxLength: 45,
-                textAlignVertical: TextAlignVertical.center,
-                controller: controller,
-                autofocus: true,
-              ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 100,
+          height: 45.0,
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: TextField(
+              enabled: _enabled,
+              maxLength: 45,
+              textAlignVertical: TextAlignVertical.center,
+              controller: controller,
+              autofocus: true,
             ),
           ),
-        ],
-      )
-    ]);
+        ),
+        const SizedBox(width: 10),
+        Text(":" + title, style: const TextStyle(fontSize: 16)),
+      ],
+    );
   }
 
   Widget checkboxReportTo() {
     return Column(children: [
-      const Text("דיווח לגורם:", style: TextStyle(fontSize: 16)),
-      CheckboxListTile(
-          title: const Text("חוסן"),
-          checkColor: Colors.white,
-          value: reportToValue[institution.hosen],
-          onChanged: (bool? value) {
-            reportToValue[institution.hosen] = value!;
-            setState(() {});
-          }),
-      CheckboxListTile(
-          title: const Text("רווחה"),
-          checkColor: Colors.white,
-          value: reportToValue[institution.social],
-          onChanged: (bool? value) {
-            reportToValue[institution.social] = value!;
-            setState(() {});
-          })
+      const Text(":דיווח לגורם", style: TextStyle(fontSize: 16)),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        const SizedBox(width: 40),
+        Expanded(
+          child: CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text("חוסן"),
+              checkColor: Colors.white,
+              value: reportToValue[institution.hosen],
+              onChanged: (bool? value) {
+                reportToValue[institution.hosen] = value!;
+                setState(() {});
+              }),
+        ),
+        Expanded(
+            child: CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                title: const Text("רווחה"),
+                checkColor: Colors.white,
+                value: reportToValue[institution.social],
+                onChanged: (bool? value) {
+                  reportToValue[institution.social] = value!;
+                  setState(() {});
+                }))
+      ])
     ]);
   }
 
