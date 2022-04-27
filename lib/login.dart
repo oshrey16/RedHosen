@@ -1,10 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/secret/addAdmin.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/register.dart';
 import 'package:red_hosen/mytools.dart';
-
-//final _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,55 +28,66 @@ class _LoginPageState extends State<LoginPage> {
         body: Padding(
             padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                loginRegline(_emailController, "אימייל"),
-                const SizedBox(height: 15),
-                loginReglinePassword(_passwordController, "סיסמא"),
-                //const SizedBox(height: 40),
-                Padding(padding: const EdgeInsets.fromLTRB(80, 40, 40, 0),child: Column(children: [
-                ConstrainedBox(
-                    constraints:
-                        const BoxConstraints.tightFor(width: 160, height: 40),
-                    child: ElevatedButton(
-                        onPressed: () async {
-                          final String email = _emailController.text.trim();
-                          final String password =
-                              _passwordController.text.trim();
-                          if (email.isNotEmpty && password.isNotEmpty) {
-                            context.read<AuthService>().login(email, password).then((value){
-                              if(value != "Logged In"){
-                            showDialogMsg(context, MsgType.error, "שם משתמש או סיסמא לא נכונים");
-                              }
-                            });
-                          } else {
-                            if (email.isEmpty) {
-                              showDialogMsg(
-                                  context, MsgType.error, "אימייל לא תקין");
-                            } else {
-                              showDialogMsg(
-                                  context, MsgType.error, "סיסמה לא תקינה");
-                            }
-                          }
-                        },
-                        child: const Text('התחבר'))),
-                const SizedBox(height: 15),
-                ConstrainedBox(
-                    constraints:
-                        const BoxConstraints.tightFor(width: 160, height: 40),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const RegisterPage()),
-                        );
-                      },
-                      child: const Text("הרשמה"),
-                    ))
-              ],))]
-            )));
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  loginRegline(_emailController, "אימייל"),
+                  const SizedBox(height: 15),
+                  loginReglinePassword(_passwordController, "סיסמא"),
+                  //const SizedBox(height: 40),
+                  Padding(
+                      padding: const EdgeInsets.fromLTRB(80, 40, 40, 0),
+                      child: Column(
+                        children: [
+                          ConstrainedBox(
+                              constraints: const BoxConstraints.tightFor(
+                                  width: 160, height: 40),
+                              child: ElevatedButton(
+                                  onPressed: () async {
+                                    final String email =
+                                        _emailController.text.trim();
+                                    final String password =
+                                        _passwordController.text.trim();
+                                    if (email.isNotEmpty &&
+                                        password.isNotEmpty) {
+                                      context
+                                          .read<AuthService>()
+                                          .login(email, password)
+                                          .then((value) {
+                                        if (value != "Logged In") {
+                                          showDialogMsg(context, MsgType.error,
+                                              "שם משתמש או סיסמא לא נכונים");
+                                        }
+                                      });
+                                    } else {
+                                      if (email.isEmpty) {
+                                        showDialogMsg(context, MsgType.error,
+                                            "אימייל לא תקין");
+                                      } else {
+                                        showDialogMsg(context, MsgType.error,
+                                            "סיסמה לא תקינה");
+                                      }
+                                    }
+                                  },
+                                  child: const Text('התחבר'))),
+                          const SizedBox(height: 15),
+                          ConstrainedBox(
+                              constraints: const BoxConstraints.tightFor(
+                                  width: 160, height: 40),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const RegisterPage()),
+                                  );
+                                },
+                                child: const Text("הרשמה"),
+                              )),
+                        ],
+                      ))
+                ])));
   }
 
   Widget loginRegline(TextEditingController controller, String title) {
@@ -134,7 +145,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     onPressed: () {
                       setState(() {
-                         _passwordVisible = !_passwordVisible;
+                        _passwordVisible = !_passwordVisible;
                       });
                     },
                   )),

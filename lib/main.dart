@@ -16,7 +16,7 @@ import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 
 import 'dart:io' show Platform;
 
-const bool useEmulator = true;
+const bool useEmulator = false;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
@@ -80,7 +80,8 @@ Future _checkuser(BuildContext context) async {
     if (user != null) {
       user.getIdTokenResult().then((value) async {
         var securityrole = value.claims?['disabled'];
-        if (securityrole == false) {
+        //TODO
+        if (true) {
           final DocumentSnapshot snapHosen = await FirebaseFirestore.instance
               .collection("Users")
               .doc(UserType.hosen.collectionStr)
@@ -101,9 +102,9 @@ Future _checkuser(BuildContext context) async {
               .get();
 
           user.getIdTokenResult().then((value) async {
-            var roleAdmin = value.claims?['isadmin'];
-            var test = value.claims?['type'];
-            print(test);
+            var roleAdmin = value.claims?['isAdmin'];
+            // var test = value.claims?['type'];
+            // print(test);
             var roleTherapist = snapHosen.exists ? true : null;
             var roleSocial = snapSocial.exists ? true : null;
             var roleReporter = snapReporter.exists ? true : null;
