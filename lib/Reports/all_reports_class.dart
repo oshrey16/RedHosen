@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
+import 'package:red_hosen/global.dart' as global;
+import 'package:red_hosen/mytools.dart';
 
 class AllActiveReports {
   List actives = [];
@@ -23,7 +25,18 @@ class AllActiveReports {
         event.snapshot.value as Map<dynamic, dynamic>);
 
     data.forEach((key, value) {
-      actives.add(key);
+      print(global.usertype);
+      if (global.usertype == UserType.hosen) {
+        if (value['ReportTo']['hosen'] == true) {
+          actives.add(key);
+        }
+      } else {
+        if (global.usertype == UserType.social) {
+          if (value['ReportTo']['social'] == true) {
+            actives.add(key);
+          }
+        }
+      }
     });
   }
 

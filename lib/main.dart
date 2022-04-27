@@ -13,7 +13,7 @@ import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/therapist/welcome.dart' as therapistpage;
 import 'package:red_hosen/socialWorker/welcome.dart' as socialpage;
 import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
-
+import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
 
 const bool useEmulator = false;
@@ -110,6 +110,7 @@ Future _checkuser(BuildContext context) async {
             var roleReporter = snapReporter.exists ? true : null;
             print(roleSocial);
             if (roleTherapist != null) {
+              global.usertype = UserType.hosen;
               if (roleAdmin == true) {
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const admin_hosenpage.HomePage()));
@@ -119,10 +120,12 @@ Future _checkuser(BuildContext context) async {
               }
             } else {
               if (roleReporter != null) {
+                global.usertype = UserType.reporter;
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const reporterpage.HomePage()));
               } else {
                 if (roleSocial != null) {
+                  global.usertype = UserType.social;
                   if (roleAdmin == true) {
                     await Navigator.of(context).pushReplacement(
                         MaterialPageRoute(

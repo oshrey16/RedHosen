@@ -4,7 +4,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:red_hosen/Reports/all_reports_class.dart';
-import 'package:red_hosen/mytools.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActiveReports extends StatefulWidget {
@@ -62,12 +61,15 @@ class _ActiveReportsState extends State<ActiveReports> {
             child: FutureBuilder(
                 builder: (context, AsyncSnapshot<AllActiveReports> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: Text("Loading.."));
+                    return const Center(child: Text("טוען.."));
                   } else {
                     if (snapshot.hasError) {
                       return const Center(child: Text('Error'));
                     } else {
                       if (snapshot.data != null) {
+                        if(snapshot.data!.test.entries.length == 0){
+                          return const Center(child: Text('לא קיימים דיווחים חדשים'));
+                        }
                         return ListView(
                             shrinkWrap: true,
                             padding: const EdgeInsets.all(10.0),

@@ -1,6 +1,8 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:red_hosen/global.dart' as global;
+import 'package:red_hosen/mytools.dart';
 
 class AuthService {
   Stream<User?> get authStateChanges => FirebaseAuth.instance.idTokenChanges();
@@ -49,6 +51,7 @@ class AuthService {
   }
 
   Future<String> logout() async {
+    global.usertype = UserType.nil;
     try {
       await FirebaseAuth.instance.signOut();
       return "Log Out";

@@ -56,6 +56,7 @@ enum UserType {
   hosen,
   social,
   reporter,
+  nil,
 }
 
 extension UserTypeEx on UserType {
@@ -66,6 +67,8 @@ extension UserTypeEx on UserType {
       case UserType.social:
         return "UsersSocialWorker";
       case UserType.reporter:
+        return "UsersReporter";
+      case UserType.nil:
         return "UsersReporter";
     }
   }
@@ -88,13 +91,13 @@ Widget logoutButton(BuildContext context) {
   );
 }
 
-enum institution{
+enum institution {
   hosen,
   social,
 }
 
 // TODO SET in report
-enum ReportPriority{
+enum ReportPriority {
   high,
   medium,
   low,
