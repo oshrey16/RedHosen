@@ -117,3 +117,14 @@ exports.updateUserDisable = functions.https.onCall((data, context) =>{
     return error;
   });
 });
+
+exports.makeAdmin = functions.https.onCall((data) =>{
+    admin.auth().setCustomUserClaims(data.uid, {
+      isAdmin: true,
+  });
+});
+  exports.unMakeAdmin = functions.https.onCall((data) =>{
+    admin.auth().setCustomUserClaims(data.uid, {
+      isAdmin: null,
+  });
+});
