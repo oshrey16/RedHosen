@@ -46,7 +46,7 @@ class ReportClass {
 
   /// Add Report To Firestore
   /// insert report to realtime DB with id in firestore
-  addReport() async {
+  Future addReport() async {
     FirebaseFirestore.instance
         .collection("Reports")
         .add(fields)

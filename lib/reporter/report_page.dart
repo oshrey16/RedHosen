@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:numberpicker/numberpicker.dart';
 import 'package:red_hosen/reporter/report_class.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:translator/translator.dart';
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -24,6 +26,7 @@ class _ReportPageState extends State<ReportPage> {
   late String useruid;
   final _nameController = TextEditingController();
   final _locationController = TextEditingController();
+  final _homeNumber = TextEditingController();
   // TODO @oshrey16 --> set vesion dynamic
   String _versionreport = "v1";
   // List of Streets
@@ -46,12 +49,13 @@ class _ReportPageState extends State<ReportPage> {
     institution.hosen: false,
     institution.social: false
   };
-
+  late Future ssss;
   int _numberPeople = 0;
 
   @override
   void initState() {
     loadAsset();
+    ssss = start();
     setdatetime();
     setUserName();
     getformat();
@@ -78,7 +82,40 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(height: 10),
               inputBoxState(_nameController, "שם מדווח", false),
               const SizedBox(height: 10),
-              SizedBox(width: 200, child: autoCompleteStreet()),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      const Text("מיקום נוכחי"),
+                      IconButton(
+                          onPressed: () async {
+                            (_determinePosition().then((value) async {
+                              final translator = GoogleTranslator();
+                              List<Placemark> placemarks =
+                                  await placemarkFromCoordinates(
+                                      value.latitude, value.longitude);
+                              String street = placemarks[0].street!;
+                              street = street.replaceAll(RegExp('[0-9]'), '');
+                              await translator.translate(street, to: 'iw').then(
+                                (value) {
+                                  _locationController.text = value.text;
+                                  _homeNumber.text = placemarks[0].name!;
+                                  setState(() {
+                                    
+                                  });
+                                },
+                              );
+                            }));
+                          },
+                          icon: const Icon(Icons.location_searching)),
+                    ],
+                  ),
+                  const SizedBox(width: 30),
+                  SizedBox(width: 200, child: autoCompleteStreet()),
+                ],
+              ),
+              inputBoxStateSmall(_homeNumber, "בניין/בית"),
               const SizedBox(height: 15),
               checkboxReportTo(),
               const SizedBox(height: 15),
@@ -105,18 +142,9 @@ class _ReportPageState extends State<ReportPage> {
               ),
               const SizedBox(height: 15),
               FutureBuilder(
-                future: getrowsText(),
+                future: ssss,
                 builder: (context, snapshot) {
-                  return FutureBuilder(
-                      future: getrowstype(),
-                      builder: (context, snapshot) {
-                        return FutureBuilder(
-                          future: getrowsCheckboxs(),
-                          builder: (context, snapshot) {
-                            return buildReport();
-                          },
-                        );
-                      });
+                  return buildReport();
                 },
               ),
               const SizedBox(height: 15),
@@ -125,14 +153,12 @@ class _ReportPageState extends State<ReportPage> {
                       const BoxConstraints.tightFor(width: 160, height: 40),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => const Text("asd")),
-                      // );
                       sendReport().then((value) {
-                        showDialogMsg(context, MsgType.ok, "הדיווח בוצע בהצלחה")
-                            .then((value) => Navigator.pop(context));
+                        if (value == true) {
+                          showDialogMsg(
+                                  context, MsgType.ok, "הדיווח בוצע בהצלחה")
+                              .then((value) => Navigator.pop(context));
+                        }
                       });
                     },
                     child: const Text("שלח דיווח"),
@@ -142,14 +168,45 @@ class _ReportPageState extends State<ReportPage> {
 
   Future sendReport() async {
     String city = "שדרות";
-    // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
-    String strlocation = _locationController.text;
-    List<Location> locations =
-        await locationFromAddress(strlocation + "," + city);
-    String time = _timeController.text;
-    ReportClass d = ReportClass(_versionreport, _textControllers, reportToValue,
-        useruid, strlocation, time, locations[0], priorityValue,_numberPeople);
-    d.addReport();
+    if (validReport() == true) {
+      // var collection = FirebaseFirestore.instance.collection("Reports").add(data)
+      String strlocation = _locationController.text;
+      List<Location> locations =
+          await locationFromAddress(strlocation + "," + city);
+      String time = _timeController.text;
+      ReportClass d = ReportClass(
+          _versionreport,
+          _textControllers,
+          reportToValue,
+          useruid,
+          strlocation,
+          time,
+          locations[0],
+          priorityValue,
+          _numberPeople);
+      return d.addReport().then((value) {
+        return Future<bool>.value(true);
+      });
+    } else {
+      return Future<bool>.value(false);
+    }
+  }
+
+  Future start() {
+    return getrowsText().then((value) => getrowstype().then(
+        (value) => getrowsCheckboxs().then((value) => buildReportBuild())));
+  }
+
+  bool validReport() {
+    if (_locationController.text == "") {
+      showDialogMsg(context, MsgType.error, "אנא הזן כתובת");
+      return false;
+    }
+    if (_homeNumber.text == "") {
+      showDialogMsg(context, MsgType.error, "אנא הזן מספר בית/בניין");
+      return false;
+    }
+    return true;
   }
 
   // Build Report
@@ -164,6 +221,14 @@ class _ReportPageState extends State<ReportPage> {
     ]);
   }
 
+  Future buildReportBuild() async {
+    for (var item in itemsText.entries) {
+      if (itemstype[item.key] == "string") {
+        _textControllers[item.key] = TextEditingController();
+      }
+    }
+  }
+
   // Create checkboxes for Item in ReportTemplate
   Widget checkboxGrouper(MapEntry<int, String> item) {
     var checkboxitems = checkboxsText[item.key];
@@ -171,26 +236,28 @@ class _ReportPageState extends State<ReportPage> {
       Text(":" + item.value, style: const TextStyle(fontSize: 16)),
       if (checkboxitems != null)
         for (int i = 0; i < checkboxitems.length; i++)
-        Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
-        const SizedBox(width: 40),
-        Expanded(
-          child:
-          CheckboxListTile(
-              controlAffinity: ListTileControlAffinity.leading,
-              title: Text(checkboxsText[item.key]?[i]),
-              checkColor: Colors.white,
-              value: checkboxsValue[item.key]?[i],
-              onChanged: (bool? value) {
-                checkboxsValue[item.key]?[i] = value!;
-                setState(() {});
-              })
-        )])
+          Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+            const SizedBox(width: 40),
+            Expanded(
+                child: CheckboxListTile(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Text(checkboxsText[item.key]?[i]),
+                    checkColor: Colors.white,
+                    value: checkboxsValue[item.key]?[i],
+                    onChanged: (bool? value) {
+                      if (value != null) {
+                        print(value);
+                        setState(() {
+                          checkboxsValue[item.key]![i] = value;
+                        });
+                      }
+                    }))
+          ])
     ]);
   }
 
   // Create inputBox for Item in ReportTemplate
   Widget inputBox(int key, String title, bool _enabled) {
-    _textControllers[key] = TextEditingController();
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
       Column(
         children: [
@@ -239,6 +306,30 @@ class _ReportPageState extends State<ReportPage> {
             child: TextField(
               enabled: _enabled,
               maxLength: 45,
+              textAlignVertical: TextAlignVertical.center,
+              controller: controller,
+              autofocus: true,
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(":" + title, style: const TextStyle(fontSize: 16)),
+      ],
+    );
+  }
+
+  Widget inputBoxStateSmall(TextEditingController? controller, String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          width: 60,
+          height: 45.0,
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: TextField(
+              decoration: const InputDecoration(hintText: "", counterText: ""),
+              maxLength: 5,
               textAlignVertical: TextAlignVertical.center,
               controller: controller,
               autofocus: true,
@@ -328,20 +419,28 @@ class _ReportPageState extends State<ReportPage> {
     return Column(children: [
       const Text(":מיקום האירוע", style: TextStyle(fontSize: 16)),
       Directionality(
-          textDirection: TextDirection.rtl,
-          child: Autocomplete<String>(
+        textDirection: TextDirection.rtl,
+        child: Autocomplete<String>(
             optionsBuilder: (TextEditingValue textEditingValue) {
-              if (textEditingValue.text == '') {
-                return const Iterable<String>.empty();
-              }
-              return streetList.where((String option) {
-                return option.contains(textEditingValue.text.toLowerCase());
-              });
-            },
-            onSelected: (String selection) {
-              _locationController.text = selection;
-            },
-          ))
+          if (textEditingValue.text.isEmpty) {
+            return const Iterable<String>.empty();
+          }
+          return streetList.where((String option) {
+            return option.contains(textEditingValue.text);
+          });
+        }, 
+        onSelected: (String selection) {
+          _locationController.text = selection;
+        },
+        fieldViewBuilder: (context, textEditingController,
+                        focusNode, onFieldSubmitted) =>
+                    TextFormField(                             
+                  controller: textEditingController..text = _locationController.text,
+                  onChanged: (text){_locationController.text = text;},
+                   focusNode: focusNode,
+                ),
+        ),
+      )
     ]);
   }
 
@@ -376,8 +475,8 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // Get Text(Translate) of fields From Report Template- FireStore
-  Future getrowsText() {
-    return FirebaseFirestore.instance
+  Future getrowsText() async {
+    return await FirebaseFirestore.instance
         .collection("ReportTempletes")
         .doc(_versionreport)
         .collection("Translate")
@@ -401,8 +500,8 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // Get Types of fields From Report Template- FireStore
-  Future getrowstype() {
-    return FirebaseFirestore.instance
+  Future getrowstype() async {
+    return await FirebaseFirestore.instance
         .collection("ReportTempletes")
         .doc(_versionreport)
         .collection("Types")
@@ -424,8 +523,8 @@ class _ReportPageState extends State<ReportPage> {
   }
 
   // Get Checkboxs From Report Template- FireStore
-  Future getrowsCheckboxs() {
-    return FirebaseFirestore.instance
+  Future getrowsCheckboxs() async {
+    return await FirebaseFirestore.instance
         .collection("ReportTempletes")
         .doc(_versionreport)
         .collection("checkboxs")
@@ -446,5 +545,43 @@ class _ReportPageState extends State<ReportPage> {
         }
       }
     });
+  }
+
+  // GetLocation
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
   }
 }
