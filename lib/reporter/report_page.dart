@@ -216,6 +216,10 @@ class _ReportPageState extends State<ReportPage> {
       showDialogMsg(context, MsgType.error, "עליך לסמן גורם לדיווח");
       return false;
     }
+    if(_numberPeople == 0){
+      showDialogMsg(context, MsgType.error, "אנא בחר מספר נפגעים");
+      return false;
+    }
     return true;
   }
 
@@ -444,7 +448,8 @@ class _ReportPageState extends State<ReportPage> {
         },
         fieldViewBuilder: (context, textEditingController,
                         focusNode, onFieldSubmitted) =>
-                    TextFormField(                             
+                    TextFormField(   
+                      autofocus: true,                          
                   controller: textEditingController..text = _locationController.text,
                   onChanged: (text){_locationController.text = text;},
                    focusNode: focusNode,
