@@ -206,6 +206,16 @@ class _ReportPageState extends State<ReportPage> {
       showDialogMsg(context, MsgType.error, "אנא הזן מספר בית/בניין");
       return false;
     }
+    bool ok = false;
+    for (var v in reportToValue.values){
+      if(v==true){
+        ok=true;
+      }
+    }
+    if(ok == false){
+      showDialogMsg(context, MsgType.error, "עליך לסמן גורם לדיווח");
+      return false;
+    }
     return true;
   }
 
