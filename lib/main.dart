@@ -16,7 +16,7 @@ import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
 
-const bool useEmulator = false;
+const bool useEmulator = true;
 
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
@@ -102,7 +102,8 @@ Future _checkuser(BuildContext context) async {
               .get();
 
           user.getIdTokenResult().then((value) async {
-            var roleAdmin = value.claims?['isAdmin'];
+            //TODO - Change isadmin to isAdmin
+            var roleAdmin = value.claims?['isadmin'];
             // var test = value.claims?['type'];
             // print(test);
             var roleTherapist = snapHosen.exists ? true : null;

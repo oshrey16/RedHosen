@@ -126,4 +126,4 @@ android/app/google-services.json
 **/myscripts/Gcloud
 **/myscripts/EmulatorState
 EmulatorState/
-/lib/Admins/secret
+/lib/Admins/manageUsers/manageAdmins/secret
