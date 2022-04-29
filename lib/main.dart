@@ -25,11 +25,6 @@ Future _connectToFirebaseEmulator() async {
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   FirebaseDatabase.instance.useDatabaseEmulator(localHostString, 9000);
   FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
-  // FirebaseFirestore.instance.settings = Settings(
-  //   host: '$localHostString:8080',
-  //   sslEnabled: false,
-  //   persistenceEnabled: false,
-  // );
 }
 
 void main() async {
@@ -81,7 +76,7 @@ Future _checkuser(BuildContext context) async {
       user.getIdTokenResult().then((value) async {
         var securityrole = value.claims?['disabled'];
         //TODO
-        if (true) {
+        if (securityrole == true) {
           final DocumentSnapshot snapHosen = await FirebaseFirestore.instance
               .collection("Users")
               .doc(UserType.hosen.collectionStr)

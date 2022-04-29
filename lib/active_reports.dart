@@ -67,7 +67,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                       return const Center(child: Text('Error'));
                     } else {
                       if (snapshot.data != null) {
-                        if(snapshot.data!.test.entries.length == 0){
+                        if(snapshot.data!.test.entries.isEmpty){
                           return const Center(child: Text('לא קיימים דיווחים חדשים'));
                         }
                         return ListView(

@@ -25,21 +25,28 @@ export const createUserStore = functions.https.onCall((data) => {
   });
 });
 
+export const updateUserName = functions.https.onCall((data) => {
+  admin.auth().getUserByEmail(data.email)
+  .then((user)=>{
+    admin.auth().updateUser(user.uid, {displayName: data.name});
+  });
+});
+
 exports.disableUserOnCreate = functions.auth.user().onCreate((user) => {
-  admin.auth().updateUser(user.uid,
-    {disabled: true, displayName: user.displayName}).then(() => {
+  return admin.auth().updateUser(user.uid,
+    {disabled: true}).then(() => {
     console.log("Successfully Disabled user", user.email);
-    admin.auth().generateEmailVerificationLink(user.email ?? "")
-    .then(()=>{
-      console.log("generateEmailVerificationLink Send!");
-      admin.auth().setCustomUserClaims(user.uid, {"disabled": true});
-    }).catch((error)=>{
-      console.log("Error generateEmailVerificationLink :", error);
+    return admin.auth().setCustomUserClaims(user.uid, {"disabled": true})
+    .then(()=> {
+return 0;
+}).catch((error)=>{
+  console.log("Error Disabled user:", error);
+  return -1;
     });
   }).catch((error) => {
     console.log("Error Disabled user:", error);
+    return -1;
   });
-  return 0;
 });
 
 exports.updateUserEnable = functions.https.onCall((data, context) =>{
@@ -107,7 +114,7 @@ exports.updateUserDisable = functions.https.onCall((data, context) =>{
       }).catch((error)=> {
         console.log("Error", error);
       });
-    }).catch((error)=> {
+  }).catch((error)=> {
       console.log("Error Disable user:", error);
     });
   });
@@ -119,12 +126,32 @@ exports.updateUserDisable = functions.https.onCall((data, context) =>{
 });
 
 exports.makeAdmin = functions.https.onCall((data) =>{
-    admin.auth().setCustomUserClaims(data.uid, {
-      isAdmin: true,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let customClaims: {[key: string]: any } = {};
+    admin.auth().getUser(data.uid)
+    .then((data)=> {
+      if (data.customClaims != undefined) {
+        customClaims = data.customClaims;
+        customClaims.isAdmin = true;
+        admin.auth().setCustomUserClaims(data.uid, customClaims).then(()=>{
+          console.log(
+            `admin ${data.uid} : ${data.displayName} is active Admin`);
+        });
+      }
   });
 });
-  exports.unMakeAdmin = functions.https.onCall((data) =>{
-    admin.auth().setCustomUserClaims(data.uid, {
-      isAdmin: null,
-  });
+exports.makeAdmin = functions.https.onCall((data) =>{
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let customClaims: {[key: string]: any } = {};
+  admin.auth().getUser(data.uid)
+  .then((data)=> {
+    if (data.customClaims != undefined) {
+      customClaims = data.customClaims;
+      customClaims.isAdmin = false;
+      admin.auth().setCustomUserClaims(data.uid, customClaims).then(()=> {
+        console.log(
+          `admin ${data.uid} : ${data.displayName}is Disabled Admin`);
+      });
+    }
+});
 });

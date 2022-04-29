@@ -25,7 +25,6 @@ class AllActiveReports {
         event.snapshot.value as Map<dynamic, dynamic>);
 
     data.forEach((key, value) {
-      print(global.usertype);
       if (global.usertype == UserType.hosen) {
         if (value['ReportTo']['hosen'] == true) {
           actives.add(key);
