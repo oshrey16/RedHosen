@@ -24,7 +24,7 @@ Future _connectToFirebaseEmulator() async {
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   FirebaseDatabase.instance.useDatabaseEmulator(localHostString, 9000);
-  FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
+  // FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
 }
 
 void main() async {
@@ -76,7 +76,7 @@ Future _checkuser(BuildContext context) async {
       user.getIdTokenResult().then((value) async {
         var securityrole = value.claims?['disabled'];
         //TODO
-        if (securityrole == true) {
+        if (securityrole == false) {
           final DocumentSnapshot snapHosen = await FirebaseFirestore.instance
               .collection("Users")
               .doc(UserType.hosen.collectionStr)
@@ -137,6 +137,7 @@ Future _checkuser(BuildContext context) async {
             }
           });
         } else {
+          print("IM HERE");
           context.read<AuthService>().logout();
         }
       });
