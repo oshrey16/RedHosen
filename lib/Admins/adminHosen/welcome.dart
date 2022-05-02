@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
 import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
 import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
 import 'package:red_hosen/mytools.dart';
@@ -26,6 +27,22 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: SingleChildScrollView(
               child: Column(children: [
+                //TODO - DONT FORGET TO DELETE!!!!
+                SizedBox(
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const SecretPage()),
+                        );
+                      },
+                      child: const Text("דף סודי"),
+                    )),
+                    const SizedBox(height: 15),
+                    //TODO - DONT FORGET TO DELETE!!!!
                 SizedBox(
                     height: 50,
                     child: ElevatedButton(

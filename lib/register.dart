@@ -84,6 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       'usertype': selectedUsertype == "בחר"
                           ? mapvars['usertype'] = 'בחר'
                           : userTypedb(),
+                      'claimtype': _convertusertype(),
                     };
                     if (procvars()) {
                       context

@@ -24,7 +24,6 @@ Future _connectToFirebaseEmulator() async {
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   FirebaseDatabase.instance.useDatabaseEmulator(localHostString, 9000);
-  // FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
 }
 
 void main() async {
@@ -45,7 +44,6 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider<AuthService>(create: (_) => AuthService()),
-        // create: (_) => AuthService(FirebaseAuth.instance)),
         StreamProvider(
             create: (context) => context.read<AuthService>().authStateChanges,
             initialData: null)
@@ -74,71 +72,37 @@ Future _checkuser(BuildContext context) async {
   FirebaseAuth.instance.authStateChanges().listen((User? user) async {
     if (user != null) {
       user.getIdTokenResult().then((value) async {
-        var securityrole = value.claims?['disabled'];
-        //TODO
+        String type = value.claims?['usertype'];
+        bool securityrole = value.claims?['disabled'];
+        var roleadmin = value.claims?['isadmin'];
         if (securityrole == false) {
-          final DocumentSnapshot snapHosen = await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(UserType.hosen.collectionStr)
-              .collection(UserType.hosen.collectionStr)
-              .doc(user.uid)
-              .get();
-          final DocumentSnapshot snapSocial = await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(UserType.social.collectionStr)
-              .collection(UserType.social.collectionStr)
-              .doc(user.uid)
-              .get();
-          final DocumentSnapshot snapReporter = await FirebaseFirestore.instance
-              .collection("Users")
-              .doc(UserType.reporter.collectionStr)
-              .collection(UserType.reporter.collectionStr)
-              .doc(user.uid)
-              .get();
-
-          user.getIdTokenResult().then((value) async {
-            //TODO - Change isadmin to isAdmin
-            var roleAdmin = value.claims?['isadmin'];
-            // var test = value.claims?['type'];
-            // print(test);
-            var roleTherapist = snapHosen.exists ? true : null;
-            var roleSocial = snapSocial.exists ? true : null;
-            var roleReporter = snapReporter.exists ? true : null;
-            print(roleSocial);
-            if (roleTherapist != null) {
-              global.usertype = UserType.hosen;
-              if (roleAdmin == true) {
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const admin_hosenpage.HomePage()));
-              } else {
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const therapistpage.HomePage()));
-              }
+          if (type == "Therapist") {
+            global.usertype = UserType.hosen;
+            if (roleadmin == true) {
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const admin_hosenpage.HomePage()));
             } else {
-              if (roleReporter != null) {
-                global.usertype = UserType.reporter;
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const therapistpage.HomePage()));
+            }
+          } else {
+            if (type == "SocialWorker") {
+              global.usertype = UserType.social;
+              if (roleadmin == true) {
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const reporterpage.HomePage()));
+                    builder: (context) => const admin_socialpage.HomePage()));
               } else {
-                if (roleSocial != null) {
-                  global.usertype = UserType.social;
-                  if (roleAdmin == true) {
-                    await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const admin_socialpage.HomePage()));
-                  } else {
-                    await Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context) => const socialpage.HomePage()));
-                  }
-                }
+                await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const socialpage.HomePage()));
               }
             }
-          });
-        } else {
-          print("IM HERE");
-          context.read<AuthService>().logout();
+            else{
+              if (type == "Reporter"){
+                await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    builder: (context) => const reporterpage.HomePage()));
+              }
+            }
+          }
         }
       });
     }

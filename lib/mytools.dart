@@ -69,7 +69,7 @@ extension UserTypeEx on UserType {
       case UserType.reporter:
         return "UsersReporter";
       case UserType.nil:
-        return "UsersReporter";
+        return "nil";
     }
   }
 }

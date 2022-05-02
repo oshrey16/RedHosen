@@ -1,36 +1,86 @@
 import * as functions from "firebase-functions";
-import {initializeApp} from "firebase-admin/lib/index";
+import {initializeApp, auth} from "firebase-admin/lib/index";
+// import {UserInfo} from "firebase-admin/lib/index";
 
 // // Start writing Firebase Functions
 // // https://firebase.google.com/docs/functions/typescript
 //
 const admin = initializeApp();
 
-export const createUserStore = functions.https.onCall((data) => {
-  admin.auth().getUserByEmail(data.mapvars["email"])
-  .then((user)=>{
-    const uid = user.uid;
-    admin.firestore().collection("Users").
-    doc(data.mapvars["usertype"]).
-    collection(data.mapvars["usertype"]).
-    doc(uid).create({
-      "uid": uid,
-      "fname": data.mapvars["fname"],
-      "lname": data.mapvars["lname"],
-      "id": data.mapvars["idcon"],
-      "phone": data.mapvars["phone"],
-      "email": data.mapvars["email"],
-      "enabled": false,
+export const createUser = functions.https.onCall((data, context) => {
+  const uid = context.auth?.uid;
+  if (uid != undefined) {
+    createUserStore(uid, data.mapvars).then(()=> {
+      console.log("User Created in FireStore");
+      const fullName = data.mapvars["fname"] + " " + data.mapvars["lname"];
+      updateUserName(uid, fullName).then(()=> {
+        insertUserType(uid, data.mapvars["claimtype"]).then(()=> {
+          console.log("User Created!");
+        });
+      });
     });
-  });
+  }
 });
 
-export const updateUserName = functions.https.onCall((data) => {
-  admin.auth().getUserByEmail(data.email)
-  .then((user)=>{
-    admin.auth().updateUser(user.uid, {displayName: data.name});
+/**
+ * This Function Create user In FireStore - save user data
+ * @param {string} uid - uid of user
+ * @param {any} mapvars - map with parameters
+ * @return {Promise<FirebaseFirestore.WriteResult>} result
+ */
+function createUserStore(uid: string, mapvars:any)
+: Promise<FirebaseFirestore.WriteResult> {
+  return admin.firestore().collection("Users").
+  doc(mapvars["usertype"]).
+  collection(mapvars["usertype"]).
+  doc(uid).create({
+    "uid": uid,
+    "fname": mapvars["fname"],
+    "lname": mapvars["lname"],
+    "id": mapvars["idcon"],
+    "phone": mapvars["phone"],
+    "email": mapvars["email"],
+    "enabled": false,
   });
-});
+}
+
+// export const createUserStore = functions.https.onCall((data) => {
+//   admin.auth().getUserByEmail(data.mapvars["email"])
+//   .then((user)=>{
+//     const uid = user.uid;
+//     admin.firestore().collection("Users").
+//     doc(data.mapvars["usertype"]).
+//     collection(data.mapvars["usertype"]).
+//     doc(uid).create({
+//       "uid": uid,
+//       "fname": data.mapvars["fname"],
+//       "lname": data.mapvars["lname"],
+//       "id": data.mapvars["idcon"],
+//       "phone": data.mapvars["phone"],
+//       "email": data.mapvars["email"],
+//       "enabled": false,
+//     });
+//   });
+// });
+
+
+/**
+ * This Function create Display name for user
+ * @param {string} uid - uid of user
+ * @param {string} fullname - fullname of user
+ * @return {Promise<auth.UserRecord>} result
+ */
+function updateUserName(uid: string, fullname: string)
+: Promise<auth.UserRecord> {
+    return admin.auth().updateUser(uid, {displayName: fullname});
+}
+
+// export const updateUserName = functions.https.onCall((data) => {
+//   admin.auth().getUserByEmail(data.email)
+//   .then((user)=>{
+//     admin.auth().updateUser(user.uid, {displayName: data.name});
+//   });
+// });
 
 exports.disableUserOnCreate = functions.auth.user().onCreate((user) => {
   return admin.auth().updateUser(user.uid,
@@ -125,7 +175,7 @@ exports.updateUserDisable = functions.https.onCall((data, context) =>{
   });
 });
 
-exports.makeAdmin = functions.https.onCall((data) =>{
+export const makeAdmin = functions.https.onCall((data) =>{
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let customClaims: {[key: string]: any } = {};
     admin.auth().getUser(data.uid)
@@ -140,7 +190,7 @@ exports.makeAdmin = functions.https.onCall((data) =>{
       }
   });
 });
-exports.makeAdmin = functions.https.onCall((data) =>{
+export const unmakeAdmin = functions.https.onCall((data) =>{
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let customClaims: {[key: string]: any } = {};
   admin.auth().getUser(data.uid)
@@ -155,3 +205,24 @@ exports.makeAdmin = functions.https.onCall((data) =>{
     }
 });
 });
+
+/**
+ * This Function update User type in Custom Claims
+ * @param {string} uid - uid of user
+ * @param {string} type - type of user
+ * @return {Promise<auth.UserRecord>} result
+ */
+function insertUserType(uid: string, type: string):
+Promise<void | auth.UserRecord> {
+  let customClaims: {[key: string]: any } = {};
+    return admin.auth().getUser(uid)
+    .then((user)=> {
+        customClaims = user.customClaims ?? {};
+        customClaims.usertype = type;
+        return admin.auth().setCustomUserClaims(user.uid, customClaims)
+        .then(()=>{
+          console.log(
+            `User ${user.email} set To ${type}`);
+        });
+});
+}

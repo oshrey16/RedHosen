@@ -25,23 +25,30 @@ class AuthService {
               email: mapvars['email'], password: mapvars['password'])
           .then((value) async {
         // if (FirebaseAuth.instance.currentUser != null) {
-        HttpsCallable callable =
-            FirebaseFunctions.instance.httpsCallable("createUserStore");
+        HttpsCallable callable = FirebaseFunctions.instance.httpsCallable("createUser");
         mapvars.remove('password');
         mapvars.remove('passwordv');
         mapvars.remove('emailv');
-        return await callable({"mapvars": mapvars});
-        // return "User Created";
-        // }
-      }).then((value) async {
-        HttpsCallable updatename =
-            FirebaseFunctions.instance.httpsCallable("updateUserName");
-        String email = mapvars['email'].toString();
-        String fullName = mapvars['fname'] + " " + mapvars['lname'];
-        return await updatename(
-            <String, dynamic>{'name': fullName, 'email': email}).then((value) {
+        return await callable({"mapvars": mapvars}).then((value) {
           return "User Created";
         });
+        //   print("OK");
+        //   HttpsCallable updatename =
+        //       FirebaseFunctions.instance.httpsCallable("updateUserName");
+        //   String email = mapvars['email'].toString();
+        //   String fullName = mapvars['fname'] + " " + mapvars['lname'];
+        //   return await updatename(
+        //           <String, dynamic>{'name': fullName, 'email': email})
+        //       .then((value) async {
+        //     String type = mapvars['claimtype'];
+        //     HttpsCallable updatetype =
+        //         FirebaseFunctions.instance.httpsCallable("InsertUserType");
+        //     return await updatetype(
+        //         <String, dynamic>{'type': type, 'email': email}).then((value) {
+        //       return "User Created";
+        //     });
+        //   });
+        // });
       });
     } catch (e) {
       return e.toString();
