@@ -61,7 +61,7 @@ class _ActiveReportsState extends State<ActiveReports> {
             child: FutureBuilder(
                 builder: (context, AsyncSnapshot<AllActiveReports> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: Text("טוען.."));
+                    return const Center(child: Text("..טוען"));
                   } else {
                     if (snapshot.hasError) {
                       return const Center(child: Text('Error'));

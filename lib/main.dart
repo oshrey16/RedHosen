@@ -24,6 +24,7 @@ Future _connectToFirebaseEmulator() async {
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   FirebaseDatabase.instance.useDatabaseEmulator(localHostString, 9000);
+  FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
 }
 
 void main() async {

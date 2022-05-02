@@ -19,6 +19,7 @@ class ReportPage extends StatefulWidget {
 }
 
 class _ReportPageState extends State<ReportPage> {
+  bool loadingLocation = false;
   // Text Controllers
   final _dateController = TextEditingController();
   final _timeController = TextEditingController();
@@ -88,8 +89,19 @@ class _ReportPageState extends State<ReportPage> {
                   Column(
                     children: [
                       const Text("מיקום נוכחי"),
-                      IconButton(
+                      ElevatedButton(onPressed: () {
+                        setState(() {
+                          loadingLocation =! loadingLocation;
+                        });
+                      }, child: loadingLocation ?
+                      Text("..טוען")
+                      :IconButton(
                           onPressed: () async {
+                            setState(() {
+                              loadingLocation =! loadingLocation;
+                            });
+                            
+                            var f = _determinePosition();
                             (_determinePosition().then((value) async {
                               final translator = GoogleTranslator();
                               List<Placemark> placemarks =
@@ -102,13 +114,13 @@ class _ReportPageState extends State<ReportPage> {
                                   _locationController.text = value.text;
                                   _homeNumber.text = placemarks[0].name!;
                                   setState(() {
-                                    
+                                    loadingLocation = false;
                                   });
                                 },
                               );
                             }));
                           },
-                          icon: const Icon(Icons.location_searching)),
+                          icon: const Icon(Icons.location_searching)),)
                     ],
                   ),
                   const SizedBox(width: 30),
