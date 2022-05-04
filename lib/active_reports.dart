@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
 
 import 'package:red_hosen/Reports/all_reports_class.dart';
+import 'package:red_hosen/Reports/report_read.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActiveReports extends StatefulWidget {
@@ -134,7 +135,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                       Visibility(
                         child: Row(children: [ElevatedButton(
                           onPressed: () {
-                            print("asd");
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => (ReportRead(reportid:key))));
                           },
                           child: const Text("פתח דוח"),
                           style: ElevatedButton.styleFrom(primary: Colors.brown.shade300),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:intl/intl.dart';
 import 'package:red_hosen/mytools.dart';
 
 class ReportClass {
@@ -19,12 +20,13 @@ class ReportClass {
 
   ReportClass(this.version, Map<int, TextEditingController> textControllers,
       reportToValue, this.useruid, this.location, this.time, this.points, this.priorityValue, this.numberpeople) {
+        DateTime now = DateTime.now();
     castControllers(textControllers);
     castReportTo(reportToValue);
     fields['version'] = version;
     fields['useruid'] = useruid;
     fields['location'] = location;
-    fields['time'] = DateTime.now();
+    fields['time'] = now;
     GeoPoint googlepoints = GeoPoint(points.latitude, points.longitude);
     fields['points'] = googlepoints;
     fields['priority'] = priorityValue;
@@ -47,16 +49,14 @@ class ReportClass {
   /// Add Report To Firestore
   /// insert report to realtime DB with id in firestore
   Future addReport() async {
-    FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("Reports")
         .add(fields)
         .then((value) async {
-      DatabaseReference ref =
-          FirebaseDatabase.instance.ref("activeReports/" + value.id);
-      await ref.set({
+      return FirebaseDatabase.instance.ref("activeReports").child(value.id).set({
         "ReportTo": reportTo,
         "Priority": priorityValue,
-      });
-    });
+      }).catchError((error) => print(error));
+  });
   }
 }

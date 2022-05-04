@@ -23,8 +23,11 @@ Future _connectToFirebaseEmulator() async {
   FirebaseFirestore.instance.useFirestoreEmulator(localHostString, 8080);
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
+  // FirebaseDatabase.instance.setLoggingEnabled(true);
   FirebaseDatabase.instance.useDatabaseEmulator(localHostString, 9000);
-  FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
+  // FirebaseDatabase.instance.setPersistenceEnabled(true);
+  // FirebaseFirestore.instance.enablePersistence(const PersistenceSettings(synchronizeTabs: false));
+  // final databaseReference2 = FirebaseDatabase(databaseURL:fdbUrl2).instance.reference();
 }
 
 void main() async {

@@ -37,6 +37,7 @@ class AllActiveReports {
         }
       }
     });
+    return 0;
   }
 
   Future getInfo() async {

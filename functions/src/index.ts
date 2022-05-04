@@ -14,12 +14,29 @@ export const createUser = functions.https.onCall((data, context) => {
       console.log("User Created in FireStore");
       const fullName = data.mapvars["fname"] + " " + data.mapvars["lname"];
       updateUserName(uid, fullName).then(()=> {
-        insertUserType(uid, data.mapvars["claimtype"]).then(()=> {
-          console.log("User Created!");
+        const phone = "+972" + data.mapvars["phone"];
+        updatePhoneNumber(uid, phone).then(() => {
+          insertUserType(uid, data.mapvars["claimtype"]).then(()=> {
+            console.log("User Created!");
+          });
         });
       });
     });
   }
+});
+
+export const getUser = functions.https.onCall((data) => {
+  interface map {
+    [key: string]: string|number;
+ }
+    const di:map = {};
+    di["A"] = 3;
+    console.log(di["A"]);
+    return admin.auth().getUser(data.uid).then((v)=> {
+      v.displayName? di["name"] = v.displayName : di["name"] = "error";
+      v.phoneNumber? di["phone"] = v.phoneNumber : di["phone"] = "error";
+      return di;
+    });
 });
 
 /**
@@ -65,7 +82,7 @@ function createUserStore(uid: string, mapvars:any)
 
 
 /**
- * This Function create Display name for user
+ * This Function create Display name to user
  * @param {string} uid - uid of user
  * @param {string} fullname - fullname of user
  * @return {Promise<auth.UserRecord>} result
@@ -74,6 +91,17 @@ function updateUserName(uid: string, fullname: string)
 : Promise<auth.UserRecord> {
     return admin.auth().updateUser(uid, {displayName: fullname});
 }
+
+/**
+ * This Function create Phone number to user
+ * @param {string} uid - uid of user
+ * @param {string} phone - fullname of user
+ * @return {Promise<auth.UserRecord>} result
+ */
+ function updatePhoneNumber(uid: string, phone: string)
+ : Promise<auth.UserRecord> {
+     return admin.auth().updateUser(uid, {phoneNumber: phone});
+ }
 
 // export const updateUserName = functions.https.onCall((data) => {
 //   admin.auth().getUserByEmail(data.email)
