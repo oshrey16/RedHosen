@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:red_hosen/mytools.dart';
 
 class BasicReport {
   String reportid;
@@ -10,6 +14,7 @@ class BasicReport {
   String? location;
   GeoPoint? point;
   int? numberpeople;
+  Map<institution, bool> reportTo = {};
   // ===
   String version = "v1";
   final int numofbasic = 7;
@@ -54,6 +59,12 @@ class BasicReport {
         point = (data['points'] as GeoPoint);
         numberpeople = data['numberpeople'];
       }
+      FirebaseDatabase.instance.ref("activeReports").child(value.id).get().then((value) {
+        var rt = (value.value as Map<dynamic, dynamic>);
+        var reportto = rt["ReportTo"] as Map<dynamic,dynamic>;
+        reportTo[institution.hosen] = reportto["hosen"];
+        reportTo[institution.social] = reportto["social"];
+      });
     });
     return 0;
   }

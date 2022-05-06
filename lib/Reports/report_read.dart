@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:red_hosen/Reports/report_class_read.dart';
 import 'package:intl/intl.dart';
+import 'package:red_hosen/mytools.dart';
 
 class ReportRead extends StatefulWidget {
   final String reportid;
@@ -19,9 +20,10 @@ class _ReportReadState extends State<ReportRead> {
   final _phoneController = TextEditingController();
   final _locationController = TextEditingController();
   final _numberPeopleController = TextEditingController();
+  Map<institution, bool> reportToValue = {};
 
   late Map<int, TextEditingController> dataControllers = {};
-  late Map<int,String> translate;
+  late Map<int, String> translate;
   @override
   void initState() {
     report = BasicReport.create(widget.reportid);
@@ -31,11 +33,12 @@ class _ReportReadState extends State<ReportRead> {
       _phoneController.text = value.phoneReporter.toString();
       _numberPeopleController.text = value.numberpeople.toString();
       _locationController.text = value.location.toString();
-      for(var v in value.datamap.entries){
+      for (var v in value.datamap.entries) {
         dataControllers[v.key] = TextEditingController();
         dataControllers[v.key]?.text = v.value;
       }
       translate = value.translate;
+      reportToValue = value.reportTo;
     });
     super.initState();
   }
@@ -62,71 +65,77 @@ class _ReportReadState extends State<ReportRead> {
               lineBlock(_numberPeopleController, "מספר נפגעים", false),
               const SizedBox(height: 10),
               lineBlock(_locationController, "מיקום", false),
-              const SizedBox(height: 10), 
+              const SizedBox(height: 10),
               FutureBuilder(
                 future: report,
                 builder: (context, snapshot) {
                   return buildReport();
                 },
               ),
-            ]))));
+              const Text(":אפשרויות"),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      _doneReport();
+                    },
+                    child: const Text("סמן כבטיפול"),
+                    style: ElevatedButton.styleFrom(primary: Colors.amber),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      _doneReport();
+                    },
+                    child: const Text("סמן כבוצע"),
+                    style: ElevatedButton.styleFrom(primary: Colors.green),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      if(reportToValue[institution.hosen] != null){
+                        reportToValue[institution.hosen] == false ? null : _doneReport();
+                      }
+                    },
+                    child: reportToValue[institution.hosen] == false ? const Text("דיווח לחוסן") : const Text("דיווח לחוסן",style: TextStyle(decoration: TextDecoration.lineThrough),),
+                    style: ElevatedButton.styleFrom(
+                        primary: reportToValue[institution.hosen] == false ? Colors.brown.shade400 : Colors.grey),
+                  ),
+                  const SizedBox(width: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      _doneReport();
+                    },
+                    child: reportToValue[institution.hosen] == false ? const Text("דיווח לרווחה") : const Text("דיווח לרווחה",style: TextStyle(decoration: TextDecoration.lineThrough),),
 
-    //        
-    //           
-    //           Row(
-    //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //             children: [
-    //               Column(
-    //                 children: [
-    //                   const Text("מספר נפגעים"),
-    //                   NumberPicker(
-    //                     value: _numberPeople,
-    //                     minValue: 0,
-    //                     maxValue: 20,
-    //                     itemWidth: 30,
-    //                     itemHeight: 30,
-    //                     onChanged: (value) =>
-    //                         setState(() => _numberPeople = value),
-    //                   ),
-    //                 ],
-    //               ),
-    //               // SizedBox(width: 30),
-    //               inputPriority(),
-    //             ],
-    //           ),
-    //           const SizedBox(height: 15),
-    //           FutureBuilder(
-    //             future: ssss,
-    //             builder: (context, snapshot) {
-    //               return buildReport();
-    //             },
-    //           ),
-    //           const SizedBox(height: 15),
-    //           ConstrainedBox(
-    //               constraints:
-    //                   const BoxConstraints.tightFor(width: 160, height: 40),
-    //               child: ElevatedButton(
-    //                 onPressed: () {
-    //                   sendReport().then((value) {
-    //                     if (value == true) {
-    //                       showDialogMsg(
-    //                               context, MsgType.ok, "הדיווח בוצע בהצלחה")
-    //                           .then((value) => Navigator.pop(context));
-    //                     }
-    //                   });
-    //                 },
-    //                 child: const Text("שלח דיווח"),
-    //               ))
-    //         ]))));
+                    style: ElevatedButton.styleFrom(
+                        primary: reportToValue[institution.hosen] == false ? Colors.brown.shade400 : Colors.grey),
+                  ),
+                ],
+              )
+            ]))));
   }
 
-    // Build Report
+  // Build Report
   // Create Widgets with ReportFormat loaded
   Widget buildReport() {
     return Column(children: [
+      reportedtoCheckBox(),
+      const SizedBox(height: 10),
       for (var item in dataControllers.entries)
-          line2Block(dataControllers[item.key], translate[item.key]!, false)
+        line2Block(dataControllers[item.key], translate[item.key]!, false)
     ]);
+  }
+
+  _doneReport() {
+    print("Click");
   }
 
   // void getReport() {
@@ -194,7 +203,8 @@ class _ReportReadState extends State<ReportRead> {
     );
   }
 
-   Widget line2Block(TextEditingController? controller, String title, bool _enabled) {
+  Widget line2Block(
+      TextEditingController? controller, String title, bool _enabled) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -213,5 +223,30 @@ class _ReportReadState extends State<ReportRead> {
         ),
       ],
     );
+  }
+
+  Widget reportedtoCheckBox() {
+    return Column(children: [
+      const Text(":דיווח לגורם", style: TextStyle(fontSize: 16)),
+      Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+        const SizedBox(width: 40),
+        Expanded(
+          child: CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              controlAffinity: ListTileControlAffinity.leading,
+              title: const Text("חוסן"),
+              checkColor: Colors.white,
+              value: reportToValue[institution.hosen] ?? false,
+              onChanged: null),
+        ),
+        Expanded(
+            child: CheckboxListTile(
+                controlAffinity: ListTileControlAffinity.leading,
+                title: const Text("רווחה"),
+                checkColor: Colors.white,
+                value: reportToValue[institution.hosen] ?? false,
+                onChanged: null))
+      ])
+    ]);
   }
 }
