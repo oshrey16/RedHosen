@@ -18,10 +18,11 @@ class ReportClass {
   final int numberpeople;
 
 
-  ReportClass(this.version, Map<int, TextEditingController> textControllers,
+  ReportClass(this.version, Map<int, TextEditingController> textControllers,Map<int, Map<int, bool>> checkboxsValue,
       reportToValue, this.useruid, this.location, this.time, this.points, this.priorityValue, this.numberpeople) {
         DateTime now = DateTime.now();
     castControllers(textControllers);
+    castCheckBoxes(checkboxsValue);
     castReportTo(reportToValue);
     fields['version'] = version;
     fields['useruid'] = useruid;
@@ -40,6 +41,17 @@ class ReportClass {
     });
   }
 
+  castCheckBoxes(Map<int, Map<int, bool>> checkboxsValue){
+    Map<String, Map<String, bool>> checkboxesval = {};
+    checkboxsValue.forEach((k, v) {
+      checkboxesval[k.toString()] = {};
+      v.forEach((key, value) {
+        checkboxesval[k.toString()]![key.toString()] = value;
+      });
+      fields[k.toString()] = checkboxesval[k.toString()];
+    });
+  }
+
   castReportTo(Map<institution, bool> reportToValue) {
     reportToValue.forEach((k, v) {
       reportTo[k.name] = v;
@@ -49,6 +61,8 @@ class ReportClass {
   /// Add Report To Firestore
   /// insert report to realtime DB with id in firestore
   Future addReport() async {
+    Map<String, int> status = {"hosen": 0,"social" : 0};
+    Map<String, dynamic> assignment = {"hosen": "null","social": "null"};
     return FirebaseFirestore.instance
         .collection("Reports")
         .add(fields)
@@ -56,6 +70,8 @@ class ReportClass {
       return FirebaseDatabase.instance.ref("activeReports").child(value.id).set({
         "ReportTo": reportTo,
         "Priority": priorityValue,
+        "Status": status,
+        "assignment": assignment,
       }).catchError((error) => print(error));
   });
   }

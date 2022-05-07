@@ -189,6 +189,7 @@ class _ReportPageState extends State<ReportPage> {
       ReportClass d = ReportClass(
           _versionreport,
           _textControllers,
+          checkboxsValue,
           reportToValue,
           useruid,
           strlocation,
