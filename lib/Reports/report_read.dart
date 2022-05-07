@@ -72,6 +72,7 @@ class _ReportReadState extends State<ReportRead> {
                   return buildReport();
                 },
               ),
+              // Buttons
               const Text(":אפשרויות"),
               const SizedBox(height: 10),
               Row(
@@ -79,7 +80,7 @@ class _ReportReadState extends State<ReportRead> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
-                      _doneReport();
+                      _inProgress().then((value) => showDialogMsg(context,MsgType.ok,"סטטוס הדיווח - בטיפול"));
                     },
                     child: const Text("סמן כבטיפול"),
                     style: ElevatedButton.styleFrom(primary: Colors.amber),
@@ -87,7 +88,7 @@ class _ReportReadState extends State<ReportRead> {
                   const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () {
-                      _doneReport();
+                      _done().then((value) => showDialogMsg(context,MsgType.ok,"האירוע נסגר"));
                     },
                     child: const Text("סמן כבוצע"),
                     style: ElevatedButton.styleFrom(primary: Colors.green),
@@ -101,7 +102,7 @@ class _ReportReadState extends State<ReportRead> {
                   ElevatedButton(
                     onPressed: () {
                       if(reportToValue[institution.hosen] != null){
-                        reportToValue[institution.hosen] == false ? null : _doneReport();
+                        reportToValue[institution.hosen] == false ? null : _reportToSocial();
                       }
                     },
                     child: reportToValue[institution.hosen] == false ? const Text("דיווח לחוסן") : const Text("דיווח לחוסן",style: TextStyle(decoration: TextDecoration.lineThrough),),
@@ -111,12 +112,14 @@ class _ReportReadState extends State<ReportRead> {
                   const SizedBox(width: 20),
                   ElevatedButton(
                     onPressed: () {
-                      _doneReport();
+                      if(reportToValue[institution.social] != null){
+                      reportToValue[institution.social] == false ? null :_reportToHosen();
+                      }
                     },
-                    child: reportToValue[institution.hosen] == false ? const Text("דיווח לרווחה") : const Text("דיווח לרווחה",style: TextStyle(decoration: TextDecoration.lineThrough),),
+                    child: reportToValue[institution.social] == false ? const Text("דיווח לרווחה") : const Text("דיווח לרווחה",style: TextStyle(decoration: TextDecoration.lineThrough),),
 
                     style: ElevatedButton.styleFrom(
-                        primary: reportToValue[institution.hosen] == false ? Colors.brown.shade400 : Colors.grey),
+                        primary: reportToValue[institution.social] == false ? Colors.brown.shade400 : Colors.grey),
                   ),
                 ],
               )
@@ -134,21 +137,18 @@ class _ReportReadState extends State<ReportRead> {
     ]);
   }
 
-  _doneReport() {
-    print("Click");
+  Future _done() {
+    return report.then((value) => value.doneReport());
   }
+  Future _inProgress(){
+     return report.then((value) => value.inProgressReport());
+  }
+  _reportToSocial(){
 
-  // void getReport() {
-  //   FirebaseFirestore.instance
-  //       .collection("Reports")
-  //       .doc(widget.reportid)
-  //       .get()
-  //       .then((value) {
-  //     var data = value.data();
-  //     setDate(data!['time'] as Timestamp);
-  //     print(data);
-  //   });
-  // }
+  }
+  _reportToHosen(){
+    
+  }
 
   void setDate(DateTime dt) {
     final DateFormat formatterdate = DateFormat('dd-MM-yyyy');
@@ -156,30 +156,6 @@ class _ReportReadState extends State<ReportRead> {
     final DateFormat formattertime = DateFormat('hh:mm');
     _timeController.text = formattertime.format(dt);
   }
-
-  // Future getTitles() async {
-  //   return await FirebaseFirestore.instance
-  //       .collection("ReportTempletes")
-  //       .doc(_versionreport)
-  //       .collection("Translate")
-  //       .doc("Translate")
-  //       .get()
-  //       .then((value) {
-  //     var data = value.data();
-  //     if (data != null) {
-  //       int len = data.length;
-  //       for (int i = 0; i < len; i++) {
-  //         if (data[i.toString()] != null) {
-  //           itemsText[i] = data[i.toString()];
-  //         }
-  //         // deleted value will continue be field on firestore
-  //         else {
-  //           len += 1;
-  //         }
-  //       }
-  //     }
-  //   });
-  // }
 
   Widget lineBlock(
       TextEditingController? controller, String title, bool _enabled) {
