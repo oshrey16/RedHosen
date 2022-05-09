@@ -18,7 +18,7 @@ class BasicReport {
   // ===
   String version = "v1";
   int numofbasic = 7;
-  Map<int, String> datamap = {};
+  Map<int, dynamic> datamap = {};
   Map<int, String> translate = {};
 
   BasicReport._(this.reportid);

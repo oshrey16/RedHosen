@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:red_hosen/Reports/report_class_read.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:red_hosen/mytools.dart';
 
 class ReportRead extends StatefulWidget {
@@ -35,7 +35,7 @@ class _ReportReadState extends State<ReportRead> {
       _locationController.text = value.location.toString();
       for (var v in value.datamap.entries) {
         dataControllers[v.key] = TextEditingController();
-        dataControllers[v.key]?.text = v.value;
+        dataControllers[v.key]?.text = v.value.toString();
       }
       translate = value.translate;
       reportToValue = value.reportTo;
@@ -151,9 +151,9 @@ class _ReportReadState extends State<ReportRead> {
   }
 
   void setDate(DateTime dt) {
-    final DateFormat formatterdate = DateFormat('dd-MM-yyyy');
+    final intl.DateFormat formatterdate = intl.DateFormat('dd-MM-yyyy');
     _dateController.text = formatterdate.format(dt);
-    final DateFormat formattertime = DateFormat('hh:mm');
+    final intl.DateFormat formattertime = intl.DateFormat('hh:mm');
     _timeController.text = formattertime.format(dt);
   }
 
@@ -181,24 +181,33 @@ class _ReportReadState extends State<ReportRead> {
 
   Widget line2Block(
       TextEditingController? controller, String title, bool _enabled) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(":" + title, style: const TextStyle(fontSize: 16)),
-        const SizedBox(height: 10),
-        SizedBox(
-          width: 100,
-          height: 45.0,
-          child: TextField(
-            enabled: _enabled,
-            maxLength: 45,
-            textAlignVertical: TextAlignVertical.center,
-            controller: controller,
-            autofocus: true,
+        return FittedBox(
+            fit: BoxFit.fitWidth, child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+      Column(
+        children: [
+          Text(":" + title, style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 5),
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.2,
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 170.0,
+                ),
+                child: TextField(
+                  maxLines: null,
+                  enabled: _enabled,
+                  maxLength: 180,
+                  textAlignVertical: TextAlignVertical.center,
+                  controller: controller,
+                ),
+              ),
+            ),
           ),
-        ),
-      ],
-    );
+        ],
+      )
+    ]));
   }
 
   Widget reportedtoCheckBox() {
