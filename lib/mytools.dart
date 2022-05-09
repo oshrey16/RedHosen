@@ -102,3 +102,15 @@ enum ReportPriority {
   medium,
   low,
 }
+extension ReportPriorityEx on ReportPriority {
+  String get collectionStr {
+    switch (this) {
+      case ReportPriority.low:
+        return "נמוך";
+      case ReportPriority.medium:
+        return "בינוני";
+      case ReportPriority.high:
+        return "גבוה";
+    }
+  }
+}
