@@ -285,7 +285,9 @@ class _ReportPageState extends State<ReportPage> {
 
   // Create inputBox for Item in ReportTemplate
   Widget inputBox(int key, String title, bool _enabled) {
-    return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+    return FittedBox(
+            fit: BoxFit.fitWidth, child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+     Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
       Column(
         children: [
           Text(":" + title, style: const TextStyle(fontSize: 16)),
@@ -316,7 +318,7 @@ class _ReportPageState extends State<ReportPage> {
           ),
         ],
       )
-    ]);
+    ])]));
   }
 
   // inputBox - state fields in report
