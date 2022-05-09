@@ -65,7 +65,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                     return const Center(child: Text("..טוען"));
                   } else {
                     if (snapshot.hasError) {
-                      return const Center(child: Text('Error'));
+                      return const Center(child: Text("אין אירועים חדשים"));
                     } else {
                       if (snapshot.data != null) {
                         if(snapshot.data!.test.entries.isEmpty){
