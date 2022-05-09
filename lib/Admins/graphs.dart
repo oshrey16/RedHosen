@@ -15,15 +15,6 @@ class _GrapghsPageState extends State<GrapghsPage> {
   final List<DateTime> dates = [];
   final Map mapdates = {};
   final List<DateCount> dt = <DateCount>[];
-  final List<SalesData> chartData = <SalesData>[
-    SalesData(DateTime(2006, 1, 1), 'India', 1.5, 21, 28, 680, 760),
-    SalesData(DateTime(2006, 2, 1), 'China', 2.2, 24, 44, 550, 880),
-    SalesData(DateTime(2006, 3, 1), 'USA', 3.32, 36, 48, 440, 788),
-    SalesData(DateTime(2006, 4, 1), 'Japan', 4.56, 38, 50, 350, 560),
-    SalesData(DateTime(2006, 5, 1), 'Russia', 5.87, 54, 66, 444, 566),
-    SalesData(DateTime(2006, 6, 1), 'France', 6.8, 57, 78, 780, 650),
-    SalesData(DateTime(2006, 7, 1), 'Germany', 8.5, 70, 84, 450, 800)
-  ];
 
   @override
   void initState() {
@@ -98,22 +89,10 @@ class _GrapghsPageState extends State<GrapghsPage> {
 }
 }
 
-
-
-class SalesData {
-  SalesData(this.date, this.a, this.b, this.c, this.d, this.e, this.f);
-
-  final DateTime date;
-  final String a;
-  final double b;
-  final int c;
-  final int d;
-  final int e;
-  final int f;
-}
-
 class DateCount{
   final DateTime date;
   final int count;
   DateCount(this.date,this.count);
 }
+
+
