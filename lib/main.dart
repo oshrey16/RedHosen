@@ -21,6 +21,7 @@ const bool useEmulator = true;
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
   FirebaseFirestore.instance.useFirestoreEmulator(localHostString, 8080);
+  FirebaseFirestore.instance.clearPersistence();
   FirebaseAuth.instance.useAuthEmulator(localHostString, 9099);
   FirebaseFunctions.instance.useFunctionsEmulator(localHostString, 5001);
   // FirebaseDatabase.instance.setLoggingEnabled(true);

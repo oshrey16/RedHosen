@@ -46,6 +46,8 @@ dependencies:
   url_launcher: ^6.1.0
   # Select number
   numberpicker: ^2.1.1
+  # Charts
+  syncfusion_flutter_charts: ^20.1.52
   
 
   flutter_easyloading: ^3.0.3

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/graphs.dart';
 import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
 import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
 import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
@@ -35,14 +36,13 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const SecretPage()),
+                              builder: (context) => const SecretPage()),
                         );
                       },
                       child: const Text("דף סודי"),
                     )),
-                    const SizedBox(height: 15),
-                    //TODO - DONT FORGET TO DELETE!!!!
+                const SizedBox(height: 15),
+                //TODO - DONT FORGET TO DELETE!!!!
                 SizedBox(
                     height: 50,
                     child: ElevatedButton(
@@ -84,36 +84,48 @@ class _HomePageState extends State<HomePage> {
                       child: const Text("מפת הכאב"),
                     )),
                 const SizedBox(height: 15),
-                              SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const ReportPage()),
-                    );
-                  },
-                  child: const Text("צור דיווח"),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReportPage()),
+                      );
+                    },
+                    child: const Text("צור דיווח"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15),
-                                            SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const ActiveReports()),
-                    );
-                  },
-                  child: const Text("דיווחים פעילים"),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ActiveReports()),
+                      );
+                    },
+                    child: const Text("דיווחים פעילים"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GrapghsPage()),
+                      );
+                    },
+                    child: const Text("גרפים"),
+                  ),
+                ),
+                const SizedBox(height: 15),
                 logoutButton(context),
               ]),
             )));
