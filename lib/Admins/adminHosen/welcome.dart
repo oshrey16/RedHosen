@@ -7,6 +7,7 @@ import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/Admins/map.dart';
 import 'package:red_hosen/reporter/report_page.dart';
 import 'package:red_hosen/active_reports.dart';
+import 'package:red_hosen/slideBar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("מנהל חוסן - ראשי"),
           centerTitle: true,
@@ -129,8 +131,6 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("גרפים"),
                   ),
                 ),
-                const SizedBox(height: 15),
-                logoutButton(context),
               ]),
             )));
   }

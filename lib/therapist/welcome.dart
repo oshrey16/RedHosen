@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/slideBar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,6 +13,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("מטפל - ראשי"),
           centerTitle: true,
@@ -21,7 +23,6 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             child: SingleChildScrollView(
               child: Column(children: [
-                logoutButton(context),
               ]),
             )));
   }

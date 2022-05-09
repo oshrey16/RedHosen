@@ -10,6 +10,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:numberpicker/numberpicker.dart';
 import 'package:red_hosen/reporter/report_class.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/slideBar.dart';
 import 'package:translator/translator.dart';
 
 class ReportPage extends StatefulWidget {
@@ -66,6 +67,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         appBar: AppBar(title: const Text("דיווח חדש"), centerTitle: true),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),

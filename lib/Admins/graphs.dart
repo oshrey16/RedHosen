@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/slideBar.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class GrapghsPage extends StatefulWidget {
@@ -28,6 +29,7 @@ class _GrapghsPageState extends State<GrapghsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text("גרפים"),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:red_hosen/Reports/report_class_read.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/slideBar.dart';
 
 class ReportRead extends StatefulWidget {
   final String reportid;
@@ -46,6 +47,7 @@ class _ReportReadState extends State<ReportRead> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         appBar: AppBar(title: const Text("צפיה דוח"), centerTitle: true),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),

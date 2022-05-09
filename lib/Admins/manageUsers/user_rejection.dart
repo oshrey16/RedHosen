@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:red_hosen/Admins/manageUsers/user_info.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/slideBar.dart';
 
 class UserRejectionPage extends StatefulWidget {
   final UserType type;
@@ -23,6 +24,7 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         resizeToAvoidBottomInset: true,
         appBar: AppBar(title: Text(setTitle()), centerTitle: true),
         body: Padding(

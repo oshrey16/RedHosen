@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:red_hosen/Reports/all_reports_class.dart';
 import 'package:red_hosen/Reports/report_read.dart';
+import 'package:red_hosen/slideBar.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ActiveReports extends StatefulWidget {
@@ -40,6 +41,7 @@ class _ActiveReportsState extends State<ActiveReports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("דיווחים פעילים"),
           centerTitle: true,

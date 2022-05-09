@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:red_hosen/mytools.dart';
+import 'package:red_hosen/slideBar.dart';
 
 class UserInfo extends StatefulWidget {
   @override
@@ -23,6 +24,7 @@ class _UserInfoState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawer: NavDrawer(),
       appBar: AppBar(
         title: const Text('פרטי משתמש'),
         centerTitle: true,
