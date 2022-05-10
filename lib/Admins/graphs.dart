@@ -22,6 +22,7 @@ class _GrapghsPageState extends State<GrapghsPage> {
   final List<PriorityCount> pr = <PriorityCount>[];
   @override
   void initState() {
+    FirebaseFirestore.instance.clearPersistence();
     super.initState();
   }
 
@@ -123,6 +124,11 @@ class _GrapghsPageState extends State<GrapghsPage> {
     dt.clear();
     for (var element in mapdates.entries) {
       dt.add(DateCount(element.key, element.value));
+    }
+
+    dt.sort((a,b) => a.date.compareTo(b.date));
+    for(var d in dt){
+      print(d.date);
     }
   }
 
