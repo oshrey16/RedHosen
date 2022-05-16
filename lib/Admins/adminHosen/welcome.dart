@@ -35,19 +35,19 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
               child: Column(children: [
                 //TODO - DONT FORGET TO DELETE!!!!
-                SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SecretPage()),
-                        );
-                      },
-                      child: const Text("דף סודי"),
-                    )),
-                const SizedBox(height: 15),
+                // SizedBox(
+                //     height: 50,
+                //     child: ElevatedButton(
+                //       onPressed: () {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => const SecretPage()),
+                //         );
+                //       },
+                //       child: const Text("דף סודי"),
+                //     )),
+                // const SizedBox(height: 15),
                 //TODO - DONT FORGET TO DELETE!!!!
                 SizedBox(
                     height: 50,
