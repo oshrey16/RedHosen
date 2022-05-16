@@ -49,7 +49,9 @@ dependencies:
   # Select number
   numberpicker: ^2.1.1
   # Charts
-  syncfusion_flutter_charts: ^20.1.55
+  syncfusion_flutter_charts: ^20.1.52
+  # DatePicker
+  syncfusion_flutter_datepicker: ^20.1.55
   
 
   flutter_easyloading: ^3.0.3
