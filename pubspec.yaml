@@ -32,6 +32,9 @@ dependencies:
   cloud_firestore: ^3.1.7
   cloud_functions: ^3.2.6
   firebase_database: ^9.0.13
+  # Notifications
+  firebase_messaging: ^11.4.0
+  flutter_local_notifications: ^9.5.3+1
   intl: ^0.17.0
   ntp: ^2.0.0
   # Google Maps & geocoding

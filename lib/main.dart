@@ -15,6 +15,7 @@ import 'package:red_hosen/socialWorker/welcome.dart' as socialpage;
 import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 const bool useEmulator = true;
 

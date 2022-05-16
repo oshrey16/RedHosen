@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:red_hosen/global.dart' as global;
 import 'package:red_hosen/mytools.dart';
@@ -29,6 +30,8 @@ class AuthService {
         mapvars.remove('password');
         mapvars.remove('passwordv');
         mapvars.remove('emailv');
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+        mapvars['fcmToken'] = fcmToken;
         return await callable({"mapvars": mapvars}).then((value) {
           return "User Created";
         });
