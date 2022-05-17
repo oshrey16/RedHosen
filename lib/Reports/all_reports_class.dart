@@ -11,14 +11,15 @@ class AllActiveReports {
 
   AllActiveReports._();
 
-  static Future<AllActiveReports> create() async {
+  static Future<AllActiveReports> create({int n=0}) async {
     AllActiveReports calendar = AllActiveReports._();
-    await calendar.getActiveReportsDb().whenComplete(() => calendar.getInfo());
+    await calendar.getActiveReportsDb(n:n).whenComplete(() => calendar.getInfo());
     return calendar;
   }
 
   /// Get active reports from firebase - realtime db
-  Future getActiveReportsDb() async {
+  Future getActiveReportsDb({required int n}) async {
+    print(n);
     DatabaseReference ref = FirebaseDatabase.instance.ref("activeReports");
     DatabaseEvent event = await ref.once();
     Map<String, dynamic> data = Map<String, dynamic>.from(
@@ -27,13 +28,25 @@ class AllActiveReports {
     data.forEach((key, value) {
       if (global.usertype == UserType.hosen) {
         if (value['ReportTo']['hosen'] == true) {
+          if(n==1){
+            if(value['Status']['hosen'] == 1){
+              actives.add(key);
+            }
+          }
+          else{
           actives.add(key);
-        }
+        }}
       } else {
         if (global.usertype == UserType.social) {
           if (value['ReportTo']['social'] == true) {
-            actives.add(key);
+                      if(n==1){
+            if(value['Status']['social'] == 1){
+              actives.add(key);
+            }
           }
+          else{
+            actives.add(key);
+          }}
         }
       }
     });
