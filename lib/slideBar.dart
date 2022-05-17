@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:red_hosen/contactus.dart';
 import 'package:red_hosen/main.dart';
+import 'package:red_hosen/video_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -39,25 +40,32 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.call),
             title: Text('התקשר לאגף הרווחה'),
-            onTap: () {launchUrlString("tel://086620297");},
+            onTap: () {
+              launchUrlString("tel://086620297");
+            },
           ),
           ListTile(
             leading: Icon(Icons.call),
             title: Text('התקשר למרכז חוסן'),
-            onTap: () {launchUrlString("tel://086611140");},
+            onTap: () {
+              launchUrlString("tel://086611140");
+            },
           ),
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('דיווח על תקלה'),
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => const ContactUsPage()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const ContactUsPage()));
             },
           ),
           ListTile(
             leading: Icon(Icons.border_color),
             title: Text('מתן עזרה ראשונה - הדרכה'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => const VideoPage()));
+            },
           ),
           ListTile(
             leading: Icon(Icons.exit_to_app),
