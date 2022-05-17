@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/adminHosen/export_reports.dart';
 import 'package:red_hosen/Admins/graphs.dart';
 import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
 import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
@@ -26,10 +27,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("מנהל חוסן - ראשי"),
-          centerTitle: true,
+          centerTitle: true
         ),
         body: Container(
             alignment: Alignment.center,
@@ -159,6 +160,20 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                     child: const Text("דוחות בטיפול"),
+                  ),
+                ),
+                                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ExportReportsPage()),
+                      );
+                    },
+                    child: const Text("הפקת דוח"),
                   ),
                 ),
               ]),

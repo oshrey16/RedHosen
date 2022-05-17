@@ -24,7 +24,7 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         resizeToAvoidBottomInset: true,
         appBar: AppBar(title: Text(setTitle()), centerTitle: true),
         body: Padding(

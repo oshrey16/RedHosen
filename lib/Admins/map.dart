@@ -45,10 +45,10 @@ Circle(
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("מפת העיר"),
-          centerTitle: true,
+          centerTitle: true
         ),
         body: GoogleMap(
         mapType: MapType.normal,

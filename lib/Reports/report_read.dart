@@ -47,7 +47,7 @@ class _ReportReadState extends State<ReportRead> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         appBar: AppBar(title: const Text("צפיה דוח"), centerTitle: true),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
@@ -191,8 +191,8 @@ class _ReportReadState extends State<ReportRead> {
           const SizedBox(height: 5),
           SizedBox(
             width: MediaQuery.of(context).size.width / 1.2,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
+            // child: Directionality(
+            //   textDirection: TextDirection.rtl,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
                   maxHeight: 170.0,
@@ -206,7 +206,7 @@ class _ReportReadState extends State<ReportRead> {
                 ),
               ),
             ),
-          ),
+          // ),
         ],
       )
     ]));

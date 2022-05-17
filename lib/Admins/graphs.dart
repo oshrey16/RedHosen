@@ -30,11 +30,11 @@ class _GrapghsPageState extends State<GrapghsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           title: const Text("גרפים"),
-          centerTitle: true,
+          centerTitle: true
         ),
         body: SingleChildScrollView(
             child: Column(children: [

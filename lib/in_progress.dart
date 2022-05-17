@@ -41,10 +41,10 @@ class _ActiveReportsState extends State<InProgressReports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        endDrawer: NavDrawer(),
+        drawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("דיווחים פעילים"),
-          centerTitle: true,
+          centerTitle: true
         ),
         body: Column(children: [
           SizedBox(

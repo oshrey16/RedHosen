@@ -67,7 +67,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         appBar: AppBar(title: const Text("דיווח חדש"), centerTitle: true),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
@@ -296,8 +296,8 @@ class _ReportPageState extends State<ReportPage> {
           const SizedBox(height: 5),
           SizedBox(
             width: MediaQuery.of(context).size.width / 1.2,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
+            // child: Directionality(
+            //   textDirection: TextDirection.rtl,
               child: ConstrainedBox(
                 constraints: const BoxConstraints(
                   maxHeight: 170.0,
@@ -317,7 +317,7 @@ class _ReportPageState extends State<ReportPage> {
                 ),
               ),
             ),
-          ),
+          // ),
         ],
       )
     ])]));
@@ -332,8 +332,8 @@ class _ReportPageState extends State<ReportPage> {
         SizedBox(
           width: 100,
           height: 45.0,
-          child: Directionality(
-            textDirection: TextDirection.rtl,
+          // child: Directionality(
+          //   textDirection: TextDirection.rtl,
             child: TextField(
               enabled: _enabled,
               maxLength: 45,
@@ -342,7 +342,7 @@ class _ReportPageState extends State<ReportPage> {
               autofocus: true,
             ),
           ),
-        ),
+        // ),
         const SizedBox(width: 10),
         Text(":" + title, style: const TextStyle(fontSize: 16)),
       ],
@@ -356,8 +356,8 @@ class _ReportPageState extends State<ReportPage> {
         SizedBox(
           width: 60,
           height: 45.0,
-          child: Directionality(
-            textDirection: TextDirection.rtl,
+          // child: Directionality(
+          //   textDirection: TextDirection.rtl,
             child: TextField(
               decoration: const InputDecoration(hintText: "", counterText: ""),
               maxLength: 5,
@@ -366,7 +366,7 @@ class _ReportPageState extends State<ReportPage> {
               autofocus: true,
             ),
           ),
-        ),
+        // ),
         const SizedBox(width: 10),
         Text(":" + title, style: const TextStyle(fontSize: 16)),
       ],
@@ -449,9 +449,10 @@ class _ReportPageState extends State<ReportPage> {
   Widget autoCompleteStreet() {
     return Column(children: [
       const Text(":מיקום האירוע", style: TextStyle(fontSize: 16)),
-      Directionality(
-        textDirection: TextDirection.rtl,
-        child: Autocomplete<String>(
+      // Directionality(
+      //   textDirection: TextDirection.rtl,
+      //   child: 
+        Autocomplete<String>(
             optionsBuilder: (TextEditingValue textEditingValue) {
           if (textEditingValue.text.isEmpty) {
             return const Iterable<String>.empty();
@@ -472,7 +473,7 @@ class _ReportPageState extends State<ReportPage> {
                    focusNode: focusNode,
                 ),
         ),
-      )
+      // )
     ]);
   }
 

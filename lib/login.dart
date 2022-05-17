@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('כניסה למערכת'),
-        centerTitle: true,
+        centerTitle: true
       ),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),

@@ -18,10 +18,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("מנהל רווחה - ראשי"),
-          centerTitle: true,
+          centerTitle: true
         ),
         body: Container(
             alignment: Alignment.topCenter,

@@ -16,6 +16,7 @@ import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 const bool useEmulator = true;
 
@@ -55,6 +56,16 @@ class MyApp extends StatelessWidget {
             initialData: null)
       ],
       child: const MaterialApp(
+          localizationsDelegates: [
+    GlobalCupertinoLocalizations.delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ],
+        supportedLocales: [
+              // Locale('en', 'US'), // American English
+              Locale('he', 'IL'), // Israeli Hebrew
+        ],
+
         title: 'test',
         home: AuthWrapper(),
       ),
@@ -101,9 +112,8 @@ Future _checkuser(BuildContext context) async {
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const socialpage.HomePage()));
               }
-            }
-            else{
-              if (type == "Reporter"){
+            } else {
+              if (type == "Reporter") {
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const reporterpage.HomePage()));
               }

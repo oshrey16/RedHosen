@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/auth_services.dart';
+import 'package:red_hosen/contactus.dart';
 import 'package:red_hosen/main.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -48,7 +49,10 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.settings),
             title: Text('דיווח על תקלה'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () {
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => const ContactUsPage()));
+            },
           ),
           ListTile(
             leading: Icon(Icons.border_color),

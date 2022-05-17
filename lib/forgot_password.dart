@@ -20,7 +20,7 @@ class _LoginPageState extends State<ForgotPassPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('שכחתי סיסמא'),
-        centerTitle: true,
+        centerTitle: true
       ),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),

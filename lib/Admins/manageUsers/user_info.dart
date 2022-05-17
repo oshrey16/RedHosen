@@ -24,10 +24,10 @@ class _UserInfoState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      endDrawer: NavDrawer(),
+      drawer: NavDrawer(),
       appBar: AppBar(
         title: const Text('פרטי משתמש'),
-        centerTitle: true,
+        centerTitle: true
       ),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),

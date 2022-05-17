@@ -36,17 +36,17 @@ class _MyReportsState extends State<MyReports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        endDrawer: NavDrawer(),
+        drawer: NavDrawer(),
         appBar: AppBar(
           title: const Text("הדיווחים"),
-          centerTitle: true,
+          centerTitle: true
         ),
         body: Column(children: [
           const SizedBox(
             height: 20,
           ),
           Row(
-              textDirection: TextDirection.rtl,
+              // textDirection: TextDirection.rtl,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(
@@ -91,7 +91,7 @@ class _MyReportsState extends State<MyReports> {
             duration: const Duration(milliseconds: 500),
             child: Visibility(
               child: Column(
-                textDirection: TextDirection.rtl,
+                // textDirection: TextDirection.rtl,
                 children: [
                   const Text(":טווח תאריכים"),
                   Positioned(
@@ -99,8 +99,8 @@ class _MyReportsState extends State<MyReports> {
                       top: 80,
                       right: 0,
                       bottom: 0,
-                      child: Directionality(
-                        textDirection: TextDirection.rtl,
+                      // child: Directionality(
+                      //   textDirection: TextDirection.rtl,
                         child: SfDateRangePicker(
                           onSelectionChanged: _onSelectionChanged,
                           selectionMode: DateRangePickerSelectionMode.range,
@@ -108,7 +108,8 @@ class _MyReportsState extends State<MyReports> {
                               DateTime.now().subtract(const Duration(days: 4)),
                               DateTime.now().add(const Duration(days: 3))),
                         ),
-                      )),
+                      ),
+                      // )
                   SizedBox(
                     height: 30,
                     width: 110,
