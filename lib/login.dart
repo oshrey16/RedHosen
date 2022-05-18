@@ -20,12 +20,10 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('כניסה למערכת'),
-        centerTitle: true
-      ),
-      body: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),
+        appBar: AppBar(title: const Text('כניסה למערכת'), centerTitle: true),
+        body: Container(
+          alignment: AlignmentDirectional.center,
+          width: MediaQuery.of(context).size.width - 20,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,8 +56,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ],
-          )),
-    );
+          ),
+        ));
   }
 
   Widget registerButton() {
@@ -101,25 +99,26 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
+        Text(title + " :", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 20),
         SizedBox(
           width: 200,
           height: 45.0,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: TextField(
-              maxLength: 45,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-              decoration: InputDecoration(
-                counterText: "",
-                border: const OutlineInputBorder(),
-                labelText: "הקלד " + title,
-              ),
+          // child: Directionality(
+          //   textDirection: TextDirection.ltr,
+          child: TextField(
+            maxLength: 45,
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(
+              counterText: "",
+              border: const OutlineInputBorder(),
+              labelText: "הקלד " + title,
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
+        // ),
       ],
     );
   }
@@ -128,6 +127,8 @@ class _LoginPageState extends State<LoginPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
+        Text(title + " :", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 20),
         SizedBox(
           width: 200,
           height: 45.0,
@@ -159,7 +160,6 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }

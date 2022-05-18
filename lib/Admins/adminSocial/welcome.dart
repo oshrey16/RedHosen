@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/adminHosen/export_reports.dart';
+import 'package:red_hosen/Admins/graphs.dart';
 import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
 import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
 import 'package:red_hosen/Admins/map.dart';
 import 'package:red_hosen/active_reports.dart';
+import 'package:red_hosen/in_progress.dart';
+import 'package:red_hosen/my_reports.dart';
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/reporter/report_page.dart';
 import 'package:red_hosen/slideBar.dart';
@@ -126,6 +130,62 @@ class _HomePageState extends State<HomePage> {
                   child: const Text("דיווחים פעילים"),
                 ),
               ),
+              const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const GrapghsPage()),
+                      );
+                    },
+                    child: const Text("גרפים"),
+                  ),
+                ),
+                                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const MyReports()),
+                      );
+                    },
+                    child: const Text("הדוחות שלי"),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const InProgressReports()),
+                      );
+                    },
+                    child: const Text("דוחות בטיפול"),
+                  ),
+                ),
+                                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ExportReportsPage()),
+                      );
+                    },
+                    child: const Text("הפקת דוח"),
+                  ),
+                ),
               ]),
             )));
   }
