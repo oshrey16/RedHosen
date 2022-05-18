@@ -97,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginRegline(TextEditingController controller, String title) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(title + " :", style: const TextStyle(fontSize: 16)),
         const SizedBox(width: 20),
@@ -125,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginReglinePassword(TextEditingController controller, String title) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Text(title + " :", style: const TextStyle(fontSize: 16)),
         const SizedBox(width: 20),

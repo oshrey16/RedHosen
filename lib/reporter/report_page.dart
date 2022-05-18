@@ -67,7 +67,7 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
+        drawer: NavDrawer(),
         appBar: AppBar(title: const Text("דיווח חדש"), centerTitle: true),
         body: SingleChildScrollView(
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
@@ -77,9 +77,9 @@ class _ReportPageState extends State<ReportPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  inputBoxState(_timeController, "שעה", false),
-                  const SizedBox(width: 10),
                   inputBoxState(_dateController, "תאריך", false),
+                  const SizedBox(width: 10),
+                  inputBoxState(_timeController, "שעה", false),
                 ],
               ),
               const SizedBox(height: 10),
@@ -91,38 +91,44 @@ class _ReportPageState extends State<ReportPage> {
                   Column(
                     children: [
                       const Text("מיקום נוכחי"),
-                      ElevatedButton(onPressed: () {
-                        setState(() {
-                          loadingLocation =! loadingLocation;
-                        });
-                      }, child: loadingLocation ?
-                      Text("..טוען")
-                      :IconButton(
-                          onPressed: () async {
-                            setState(() {
-                              loadingLocation =! loadingLocation;
-                            });
-                            
-                            var f = _determinePosition();
-                            (_determinePosition().then((value) async {
-                              final translator = GoogleTranslator();
-                              List<Placemark> placemarks =
-                                  await placemarkFromCoordinates(
-                                      value.latitude, value.longitude);
-                              String street = placemarks[0].street!;
-                              street = street.replaceAll(RegExp('[0-9]'), '');
-                              await translator.translate(street, to: 'iw').then(
-                                (value) {
-                                  _locationController.text = value.text;
-                                  _homeNumber.text = placemarks[0].name!;
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            loadingLocation = !loadingLocation;
+                          });
+                        },
+                        child: loadingLocation
+                            ? Text("..טוען")
+                            : IconButton(
+                                onPressed: () async {
                                   setState(() {
-                                    loadingLocation = false;
+                                    loadingLocation = !loadingLocation;
                                   });
+
+                                  var f = _determinePosition();
+                                  (_determinePosition().then((value) async {
+                                    final translator = GoogleTranslator();
+                                    List<Placemark> placemarks =
+                                        await placemarkFromCoordinates(
+                                            value.latitude, value.longitude);
+                                    String street = placemarks[0].street!;
+                                    street =
+                                        street.replaceAll(RegExp('[0-9]'), '');
+                                    await translator
+                                        .translate(street, to: 'iw')
+                                        .then(
+                                      (value) {
+                                        _locationController.text = value.text;
+                                        _homeNumber.text = placemarks[0].name!;
+                                        setState(() {
+                                          loadingLocation = false;
+                                        });
+                                      },
+                                    );
+                                  }));
                                 },
-                              );
-                            }));
-                          },
-                          icon: const Icon(Icons.location_searching)),)
+                                icon: const Icon(Icons.location_searching)),
+                      )
                     ],
                   ),
                   const SizedBox(width: 30),
@@ -222,16 +228,16 @@ class _ReportPageState extends State<ReportPage> {
       return false;
     }
     bool ok = false;
-    for (var v in reportToValue.values){
-      if(v==true){
-        ok=true;
+    for (var v in reportToValue.values) {
+      if (v == true) {
+        ok = true;
       }
     }
-    if(ok == false){
+    if (ok == false) {
       showDialogMsg(context, MsgType.error, "עליך לסמן גורם לדיווח");
       return false;
     }
-    if(_numberPeople == 0){
+    if (_numberPeople == 0) {
       showDialogMsg(context, MsgType.error, "אנא בחר מספר נפגעים");
       return false;
     }
@@ -288,39 +294,41 @@ class _ReportPageState extends State<ReportPage> {
   // Create inputBox for Item in ReportTemplate
   Widget inputBox(int key, String title, bool _enabled) {
     return FittedBox(
-            fit: BoxFit.fitWidth, child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-     Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-      Column(
-        children: [
-          Text(":" + title, style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 5),
-          SizedBox(
-            width: MediaQuery.of(context).size.width / 1.2,
-            // child: Directionality(
-            //   textDirection: TextDirection.rtl,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 170.0,
-                ),
-                child: TextField(
-                  maxLines: null,
-                  enabled: _enabled,
-                  maxLength: 180,
-                  textAlignVertical: TextAlignVertical.center,
-                  controller: _textControllers[key],
-                  autofocus: true,
-                  decoration: InputDecoration(
-                    counterText: "",
-                    border: const OutlineInputBorder(),
-                    labelText: "הקלד " + title,
+        fit: BoxFit.fitWidth,
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+            Column(
+              children: [
+                Text(title+" :", style: const TextStyle(fontSize: 16)),
+                const SizedBox(height: 5),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.2,
+                  // child: Directionality(
+                  //   textDirection: TextDirection.rtl,
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(
+                      maxHeight: 170.0,
+                    ),
+                    child: TextField(
+                      maxLines: null,
+                      enabled: _enabled,
+                      maxLength: 180,
+                      textAlignVertical: TextAlignVertical.center,
+                      controller: _textControllers[key],
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        counterText: "",
+                        border: const OutlineInputBorder(),
+                        labelText: "הקלד " + title,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-          // ),
-        ],
-      )
-    ])]));
+                // ),
+              ],
+            )
+          ])
+        ]));
   }
 
   // inputBox - state fields in report
@@ -329,22 +337,22 @@ class _ReportPageState extends State<ReportPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Text(title + " :", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 10),
         SizedBox(
           width: 100,
           height: 45.0,
           // child: Directionality(
           //   textDirection: TextDirection.rtl,
-            child: TextField(
-              enabled: _enabled,
-              maxLength: 45,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-            ),
+          child: TextField(
+            enabled: _enabled,
+            maxLength: 45,
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            autofocus: true,
           ),
+        ),
         // ),
-        const SizedBox(width: 10),
-        Text(":" + title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }
@@ -353,29 +361,29 @@ class _ReportPageState extends State<ReportPage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Text(title + " :", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 10),
         SizedBox(
           width: 60,
           height: 45.0,
           // child: Directionality(
           //   textDirection: TextDirection.rtl,
-            child: TextField(
-              decoration: const InputDecoration(hintText: "", counterText: ""),
-              maxLength: 5,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-            ),
+          child: TextField(
+            decoration: const InputDecoration(hintText: "", counterText: ""),
+            maxLength: 5,
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            autofocus: true,
           ),
+        ),
         // ),
-        const SizedBox(width: 10),
-        Text(":" + title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }
 
   Widget checkboxReportTo() {
     return Column(children: [
-      const Text(":דיווח לגורם", style: TextStyle(fontSize: 16)),
+      const Text("דיווח לגורם:", style: TextStyle(fontSize: 16)),
       Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
         const SizedBox(width: 40),
         Expanded(
@@ -407,7 +415,7 @@ class _ReportPageState extends State<ReportPage> {
   Widget inputPriority() {
     return Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
       Column(children: [
-        const Text(":רמת החומרה", style: TextStyle(fontSize: 16)),
+        const Text("רמת החומרה:", style: TextStyle(fontSize: 16)),
         const SizedBox(height: 5),
         DropdownButton<String>(
           value: priorityValue,
@@ -448,31 +456,33 @@ class _ReportPageState extends State<ReportPage> {
   // AutoComplete Street Widget
   Widget autoCompleteStreet() {
     return Column(children: [
-      const Text(":מיקום האירוע", style: TextStyle(fontSize: 16)),
+      const Text("מיקום:", style: TextStyle(fontSize: 16)),
       // Directionality(
       //   textDirection: TextDirection.rtl,
-      //   child: 
-        Autocomplete<String>(
-            optionsBuilder: (TextEditingValue textEditingValue) {
+      //   child:
+      Autocomplete<String>(
+        optionsBuilder: (TextEditingValue textEditingValue) {
           if (textEditingValue.text.isEmpty) {
             return const Iterable<String>.empty();
           }
           return streetList.where((String option) {
             return option.contains(textEditingValue.text);
           });
-        }, 
+        },
         onSelected: (String selection) {
           _locationController.text = selection;
         },
-        fieldViewBuilder: (context, textEditingController,
-                        focusNode, onFieldSubmitted) =>
-                    TextFormField(   
-                      autofocus: true,                          
-                  controller: textEditingController..text = _locationController.text,
-                  onChanged: (text){_locationController.text = text;},
-                   focusNode: focusNode,
-                ),
+        fieldViewBuilder:
+            (context, textEditingController, focusNode, onFieldSubmitted) =>
+                TextFormField(
+          autofocus: true,
+          controller: textEditingController..text = _locationController.text,
+          onChanged: (text) {
+            _locationController.text = text;
+          },
+          focusNode: focusNode,
         ),
+      ),
       // )
     ]);
   }
