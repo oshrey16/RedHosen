@@ -135,16 +135,7 @@ exports.disableUserOnCreate = functions.auth.user().onCreate((user) => {
     .updateUser(user.uid, {disabled: true})
     .then(() => {
       console.log("Successfully Disabled user", user.email);
-      return admin
-        .auth()
-        .setCustomUserClaims(user.uid, {disabled: true})
-        .then(() => {
           return 0;
-        })
-        .catch((error) => {
-          console.log("Error Disabled user:", error);
-          return -1;
-        });
     })
     .catch((error) => {
       console.log("Error Disabled user:", error);
@@ -171,10 +162,6 @@ exports.updateUserEnable = functions.https.onCall((data, context) => {
           .then((doc) => {
             if (doc.exists) {
               resetRef.update({enabled: true}).then(() => {
-                admin
-                  .auth()
-                  .setCustomUserClaims(data.uid, {disabled: false})
-                  .then(() => {
                     console.log(
                       "Successfully Enable user uid: ",
                       data.uid,
@@ -189,7 +176,6 @@ exports.updateUserEnable = functions.https.onCall((data, context) => {
                     console.log("Error", error);
                     return reject(error);
                   });
-              });
             }
           })
           .catch((error) => {

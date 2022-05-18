@@ -90,9 +90,9 @@ Future _checkuser(BuildContext context) async {
     if (user != null) {
       user.getIdTokenResult().then((value) async {
         String type = value.claims?['usertype'];
-        bool securityrole = value.claims?['disabled'];
-        var roleadmin = value.claims?['isadmin'];
-        if (securityrole == false) {
+        // bool securityrole = value.claims?['disabled'];
+        var roleadmin = value.claims?['isAdmin'];
+        // if (securityrole == false) {
           if (type == "Therapist") {
             global.usertype = UserType.hosen;
             if (roleadmin == true) {
@@ -120,7 +120,8 @@ Future _checkuser(BuildContext context) async {
             }
           }
         }
-      });
+      // }
+      );
     }
   });
 }
