@@ -24,14 +24,13 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
-        appBar: AppBar(
-          title: const Text("מנהל חוסן - ראשי"),
-          centerTitle: true
-        ),
+        drawer: NavDrawer(),
+        appBar:
+            AppBar(title: const Text("מנהל חוסן - ראשי"), centerTitle: true),
         body: Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
@@ -134,7 +133,7 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("גרפים"),
                   ),
                 ),
-                                const SizedBox(height: 15),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
@@ -162,7 +161,7 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("דוחות בטיפול"),
                   ),
                 ),
-                                const SizedBox(height: 15),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(

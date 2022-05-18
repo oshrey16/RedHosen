@@ -22,11 +22,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
-        appBar: AppBar(
-          title: const Text("מנהל רווחה - ראשי"),
-          centerTitle: true
-        ),
+        drawer: NavDrawer(),
+        appBar:
+            AppBar(title: const Text("מנהל רווחה - ראשי"), centerTitle: true),
         body: Container(
             alignment: Alignment.topCenter,
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
@@ -39,7 +37,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserConfirmation(type: UserType.social)),
+                            builder: (context) =>
+                                const UserConfirmation(type: UserType.social)),
                       );
                     },
                     child: const Text("אישור עובדים סוציאלים במערכת"),
@@ -53,7 +52,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserRejectionPage(type: UserType.social)),
+                            builder: (context) =>
+                                const UserRejectionPage(type: UserType.social)),
                       );
                     },
                     child: const Text("מחיקת עובדים סוציאלים במערכת"),
@@ -67,7 +67,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserConfirmation(type:UserType.reporter)),
+                            builder: (context) => const UserConfirmation(
+                                type: UserType.reporter)),
                       );
                     },
                     child: const Text("אישור צח\"ש במערכת"),
@@ -81,7 +82,8 @@ class _HomePageState extends State<HomePage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const UserRejectionPage(type:UserType.reporter)),
+                            builder: (context) => const UserRejectionPage(
+                                type: UserType.reporter)),
                       );
                     },
                     child: const Text("מחיקת צח\"ש במערכת"),
@@ -101,36 +103,34 @@ class _HomePageState extends State<HomePage> {
                       child: const Text("מפת הכאב"),
                     )),
                 const SizedBox(height: 15),
-                              SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const ReportPage()),
-                    );
-                  },
-                  child: const Text("צור דיווח"),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ReportPage()),
+                      );
+                    },
+                    child: const Text("צור דיווח"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15),
-                                            SizedBox(
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              const ActiveReports()),
-                    );
-                  },
-                  child: const Text("דיווחים פעילים"),
+                const SizedBox(height: 15),
+                SizedBox(
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ActiveReports()),
+                      );
+                    },
+                    child: const Text("דיווחים פעילים"),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 15),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("גרפים"),
                   ),
                 ),
-                                const SizedBox(height: 15),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
@@ -172,7 +172,7 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("דוחות בטיפול"),
                   ),
                 ),
-                                const SizedBox(height: 15),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(

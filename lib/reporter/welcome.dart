@@ -14,11 +14,8 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
-        appBar: AppBar(
-          title: const Text("מדווח - ראשי"),
-          centerTitle: true
-        ),
+        drawer: NavDrawer(),
+        appBar: AppBar(title: const Text("מדווח - ראשי"), centerTitle: true),
         body: Container(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             alignment: Alignment.center,
@@ -31,8 +28,7 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              const ReportPage()),
+                          builder: (context) => const ReportPage()),
                     );
                   },
                   child: const Text("צור דיווח"),
