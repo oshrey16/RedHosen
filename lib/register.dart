@@ -41,7 +41,9 @@ class _RegisterPageState extends State<RegisterPage> {
               const SizedBox(height: 15),
               loginRegline(_idController, "ת.ז"),
               const SizedBox(height: 15),
-              Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+              Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
+                const Text("סוג משתמש:", style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 10,),
                 DropdownButton<String>(
                     value: selectedUsertype,
                     onChanged: (String? newValue) {
@@ -56,7 +58,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         child: Text(value),
                       );
                     }).toList()),
-                const Text(" :סוג משתמש", style: TextStyle(fontSize: 16)),
+                
               ]),
               const SizedBox(height: 15),
               loginRegline(_emailController, "דואר אלקטרוני"),
@@ -104,8 +106,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Widget loginRegline(TextEditingController controller, String title) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+                Text(title+" :", style: const TextStyle(fontSize: 16)),
+                const SizedBox(width: 10,),
         SizedBox(
           width: 200,
           height: 45.0,
@@ -124,7 +128,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
+
       ],
     );
   }
@@ -132,8 +136,10 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget loginReglinePassword(TextEditingController controller, String title,
       PasswordVisible passwordVisible) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
+                Text(title+" :", style: const TextStyle(fontSize: 16)),
+                const SizedBox(width: 10,),
         SizedBox(
           width: 200,
           height: 45.0,
@@ -165,7 +171,6 @@ class _RegisterPageState extends State<RegisterPage> {
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }
