@@ -13,15 +13,12 @@ class ForgotPassPage extends StatefulWidget {
 
 class _LoginPageState extends State<ForgotPassPage> {
   final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+  // final _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('שכחתי סיסמא'),
-        centerTitle: true
-      ),
+      appBar: AppBar(title: const Text('שכחתי סיסמא'), centerTitle: true),
       body: Padding(
           padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),
           child: Column(
@@ -43,14 +40,29 @@ class _LoginPageState extends State<ForgotPassPage> {
   Widget forgotButton() {
     return ElevatedButton(
         onPressed: () async {
+          if (_checkemail()) {
+            context
+                .read<AuthService>()
+                .SendResetPassword(_emailController.text)
+                .then((value) {
+              if (value == 0) {
+                showDialogMsg(context, MsgType.ok, "אימייל נשלח! אנא בדוק את תיבת המייל").then((value) => Navigator.pop(context));
+              }
+              else{
+                showDialogMsg(context, MsgType.error, "שגיאה, שליחת המייל לא הצליחה");
+              }
+            });
+          }
         },
-        child: const Text('המשך'));
+        child: const Text('אפס סיסמא'));
   }
 
   Widget loginRegline(TextEditingController controller, String title) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Text(title + " :", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 10),
         SizedBox(
           width: 200,
           height: 45.0,
@@ -69,9 +81,17 @@ class _LoginPageState extends State<ForgotPassPage> {
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }
 
+  _checkemail() {
+    bool secure = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(_emailController.text);
+    if (secure == false) {
+      showDialogMsg(context, MsgType.error, "אימייל לא חוקי");
+    }
+    return secure;
+  }
 }
