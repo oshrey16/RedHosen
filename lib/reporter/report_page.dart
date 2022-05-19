@@ -11,6 +11,8 @@ import 'package:numberpicker/numberpicker.dart';
 import 'package:red_hosen/reporter/report_class.dart';
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/slideBar.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 import 'package:translator/translator.dart';
 
 class ReportPage extends StatefulWidget {
@@ -54,6 +56,13 @@ class _ReportPageState extends State<ReportPage> {
   late Future ssss;
   int _numberPeople = 0;
 
+  // Speech To Text
+  final SpeechToText _speechToText = SpeechToText();
+  int selectdSpeechTotex = -1;
+  Map<int, Color> micColoricon = {};
+  bool available = false;
+  String _SavedText = "";
+
   @override
   void initState() {
     loadAsset();
@@ -61,6 +70,7 @@ class _ReportPageState extends State<ReportPage> {
     setdatetime();
     setUserName();
     getformat();
+    // _initSpeech();
     super.initState();
   }
 
@@ -98,7 +108,7 @@ class _ReportPageState extends State<ReportPage> {
                           });
                         },
                         child: loadingLocation
-                            ? Text("..טוען")
+                            ? const Text("..טוען")
                             : IconButton(
                                 onPressed: () async {
                                   setState(() {
@@ -260,6 +270,8 @@ class _ReportPageState extends State<ReportPage> {
     for (var item in itemsText.entries) {
       if (itemstype[item.key] == "string") {
         _textControllers[item.key] = TextEditingController();
+        // Change Colors in Microphone Icon
+        micColoricon[item.key] = Colors.black;
       }
     }
   }
@@ -268,7 +280,7 @@ class _ReportPageState extends State<ReportPage> {
   Widget checkboxGrouper(MapEntry<int, String> item) {
     var checkboxitems = checkboxsText[item.key];
     return Column(children: [
-      Text(":" + item.value, style: const TextStyle(fontSize: 16)),
+      Text(item.value + " :", style: const TextStyle(fontSize: 16)),
       if (checkboxitems != null)
         for (int i = 0; i < checkboxitems.length; i++)
           Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -291,6 +303,69 @@ class _ReportPageState extends State<ReportPage> {
     ]);
   }
 
+  void _initAndStartSpeech(int key) async {
+    if (!available) {
+      available = await _speechToText.initialize(
+          onStatus: statusListener, onError: errorListener);
+      setState(() {});
+    } else {
+      _startListening();
+      setState(() {
+        selectdSpeechTotex = key;
+        micColoricon[key] = Colors.green;
+      });
+    }
+  }
+
+  void _onSpeechResult(SpeechRecognitionResult result) {
+    setState(() {
+      if(_textControllers[selectdSpeechTotex]!.text != ""){
+        _textControllers[selectdSpeechTotex]!.text = _SavedText + " " + result.recognizedWords;
+      }
+      else{
+      _textControllers[selectdSpeechTotex]!.text = _SavedText + result.recognizedWords;
+      }
+    });
+  }
+
+  /// Each time to start a speech recognition session
+  void _startListening() async {
+    if (available) {
+      await _speechToText.listen(onResult: _onSpeechResult, localeId: "he");
+    }
+    setState(() {
+      _SavedText = _textControllers[selectdSpeechTotex]!.text;
+    });
+  }
+
+  void statusListener(str) {
+    if (str == "notListening") {
+      setState(() {
+        micColoricon[selectdSpeechTotex] = Colors.black;
+      });
+    }
+    print(str);
+  }
+
+  void errorListener(str) {
+    setState(() {
+      micColoricon[selectdSpeechTotex] = Colors.black;
+    });
+    print(str);
+  }
+
+  /// Manually stop the active speech recognition session
+  /// Note that there are also timeouts that each platform enforces
+  /// and the SpeechToText plugin supports setting timeouts on the
+  /// listen method.
+  void _stopListening(int key) async {
+    await _speechToText.stop();
+    setState(() {
+      selectdSpeechTotex = -1;
+      micColoricon[key] = Colors.black;
+    });
+  }
+
   // Create inputBox for Item in ReportTemplate
   Widget inputBox(int key, String title, bool _enabled) {
     return FittedBox(
@@ -299,7 +374,26 @@ class _ReportPageState extends State<ReportPage> {
           Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             Column(
               children: [
-                Text(title+" :", style: const TextStyle(fontSize: 16)),
+                Row(
+                  children: [
+                    GestureDetector(
+                      child: IconButton(
+                          icon: const Icon(Icons.mic_none),
+                          color: micColoricon[key],
+                          onPressed: () {}),
+                      onLongPress: () {
+                        _initAndStartSpeech(key);
+                      },
+                      onLongPressEnd: (LongPressEndDetails details) {
+                        _stopListening(key);
+                      },
+                    ),
+                    const SizedBox(
+                      width: 3,
+                    ),
+                    Text(title + " :", style: const TextStyle(fontSize: 16)),
+                  ],
+                ),
                 const SizedBox(height: 5),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 1.2,
