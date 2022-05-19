@@ -127,3 +127,5 @@ android/app/google-services.json
 **/myscripts/EmulatorState
 EmulatorState/
 /lib/Admins/manageUsers/manageAdmins/secret
+.firebase
+node_modules

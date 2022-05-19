@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/register.dart';
@@ -102,10 +103,10 @@ class _LoginPageState extends State<LoginPage> {
         Text(title + " :", style: const TextStyle(fontSize: 16)),
         const SizedBox(width: 20),
         SizedBox(
-          width: 200,
-          height: 45.0,
-          // child: Directionality(
-          //   textDirection: TextDirection.ltr,
+          width: MediaQuery. of(context). size. width/2,
+          height: 60,
+          child: Directionality(
+            textDirection: TextDirection.ltr,
           child: TextField(
             maxLength: 45,
             textAlignVertical: TextAlignVertical.center,
@@ -118,7 +119,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
         ),
-        // ),
+        ),
       ],
     );
   }
@@ -130,8 +131,8 @@ class _LoginPageState extends State<LoginPage> {
         Text(title + " :", style: const TextStyle(fontSize: 16)),
         const SizedBox(width: 20),
         SizedBox(
-          width: 200,
-          height: 45.0,
+          width: MediaQuery. of(context). size. width/2,
+          height: 60,
           child: Directionality(
             textDirection: TextDirection.ltr,
             child: TextField(

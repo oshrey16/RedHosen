@@ -50,6 +50,20 @@ class _HomePageState extends State<HomePage> {
                 //       child: const Text("דף סודי"),
                 //     )),
                 // const SizedBox(height: 15),
+                //                 SizedBox(
+                //   height: 50,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       Navigator.push(
+                //         context,
+                //         MaterialPageRoute(
+                //             builder: (context) => const UserConfirmation(
+                //                 type: UserType.reporter)),
+                //       );
+                //     },
+                //     child: const Text("אישור צח\"ש במערכת"),
+                //   ),
+                // ),
                 //TODO - DONT FORGET TO DELETE!!!!
                 SizedBox(
                     height: 50,
