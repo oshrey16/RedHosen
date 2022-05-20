@@ -14,6 +14,7 @@ import 'package:red_hosen/slideBar.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:translator/translator.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart' as spinkit;
 
 class ReportPage extends StatefulWidget {
   const ReportPage({Key? key}) : super(key: key);
@@ -58,10 +59,11 @@ class _ReportPageState extends State<ReportPage> {
 
   // Speech To Text
   final SpeechToText _speechToText = SpeechToText();
-  int selectdSpeechTotex = -1;
+  int selectdSpeechTotext = -1;
   Map<int, Color> micColoricon = {};
   bool available = false;
   String _SavedText = "";
+  late AnimationController _controllera;
 
   @override
   void initState() {
@@ -95,56 +97,9 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(height: 10),
               inputBoxState(_nameController, "שם מדווח", false),
               const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    children: [
-                      const Text("מיקום נוכחי"),
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            loadingLocation = !loadingLocation;
-                          });
-                        },
-                        child: loadingLocation
-                            ? const Text("..טוען")
-                            : IconButton(
-                                onPressed: () async {
-                                  setState(() {
-                                    loadingLocation = !loadingLocation;
-                                  });
-
-                                  var f = _determinePosition();
-                                  (_determinePosition().then((value) async {
-                                    final translator = GoogleTranslator();
-                                    List<Placemark> placemarks =
-                                        await placemarkFromCoordinates(
-                                            value.latitude, value.longitude);
-                                    String street = placemarks[0].street!;
-                                    street =
-                                        street.replaceAll(RegExp('[0-9]'), '');
-                                    await translator
-                                        .translate(street, to: 'iw')
-                                        .then(
-                                      (value) {
-                                        _locationController.text = value.text;
-                                        _homeNumber.text = placemarks[0].name!;
-                                        setState(() {
-                                          loadingLocation = false;
-                                        });
-                                      },
-                                    );
-                                  }));
-                                },
-                                icon: const Icon(Icons.location_searching)),
-                      )
-                    ],
-                  ),
-                  const SizedBox(width: 30),
-                  SizedBox(width: 200, child: autoCompleteStreet()),
-                ],
-              ),
+              Container(width: MediaQuery. of(context). size. width/1.2, child: 
+              autoCompleteStreet(),),
+              const SizedBox(height: 10),
               inputBoxStateSmall(_homeNumber, "בניין/בית"),
               const SizedBox(height: 15),
               checkboxReportTo(),
@@ -311,7 +266,7 @@ class _ReportPageState extends State<ReportPage> {
     } else {
       _startListening();
       setState(() {
-        selectdSpeechTotex = key;
+        selectdSpeechTotext = key;
         micColoricon[key] = Colors.green;
       });
     }
@@ -319,11 +274,12 @@ class _ReportPageState extends State<ReportPage> {
 
   void _onSpeechResult(SpeechRecognitionResult result) {
     setState(() {
-      if(_textControllers[selectdSpeechTotex]!.text != ""){
-        _textControllers[selectdSpeechTotex]!.text = _SavedText + " " + result.recognizedWords;
-      }
-      else{
-      _textControllers[selectdSpeechTotex]!.text = _SavedText + result.recognizedWords;
+      if (_textControllers[selectdSpeechTotext]!.text != "") {
+        _textControllers[selectdSpeechTotext]!.text =
+            _SavedText + " " + result.recognizedWords;
+      } else {
+        _textControllers[selectdSpeechTotext]!.text =
+            _SavedText + result.recognizedWords;
       }
     });
   }
@@ -334,14 +290,14 @@ class _ReportPageState extends State<ReportPage> {
       await _speechToText.listen(onResult: _onSpeechResult, localeId: "he");
     }
     setState(() {
-      _SavedText = _textControllers[selectdSpeechTotex]!.text;
+      _SavedText = _textControllers[selectdSpeechTotext]!.text;
     });
   }
 
   void statusListener(str) {
     if (str == "notListening") {
       setState(() {
-        micColoricon[selectdSpeechTotex] = Colors.black;
+        micColoricon[selectdSpeechTotext] = Colors.black;
       });
     }
     print(str);
@@ -349,7 +305,7 @@ class _ReportPageState extends State<ReportPage> {
 
   void errorListener(str) {
     setState(() {
-      micColoricon[selectdSpeechTotex] = Colors.black;
+      micColoricon[selectdSpeechTotext] = Colors.black;
     });
     print(str);
   }
@@ -361,7 +317,7 @@ class _ReportPageState extends State<ReportPage> {
   void _stopListening(int key) async {
     await _speechToText.stop();
     setState(() {
-      selectdSpeechTotex = -1;
+      selectdSpeechTotext = -1;
       micColoricon[key] = Colors.black;
     });
   }
@@ -551,34 +507,101 @@ class _ReportPageState extends State<ReportPage> {
   Widget autoCompleteStreet() {
     return Column(children: [
       const Text("מיקום:", style: TextStyle(fontSize: 16)),
-      // Directionality(
-      //   textDirection: TextDirection.rtl,
-      //   child:
-      Autocomplete<String>(
-        optionsBuilder: (TextEditingValue textEditingValue) {
-          if (textEditingValue.text.isEmpty) {
-            return const Iterable<String>.empty();
-          }
-          return streetList.where((String option) {
-            return option.contains(textEditingValue.text);
-          });
-        },
-        onSelected: (String selection) {
-          _locationController.text = selection;
-        },
-        fieldViewBuilder:
-            (context, textEditingController, focusNode, onFieldSubmitted) =>
-                TextFormField(
-          autofocus: true,
-          controller: textEditingController..text = _locationController.text,
-          onChanged: (text) {
-            _locationController.text = text;
+      LayoutBuilder(
+        builder: (context, constraints) => Autocomplete<String>(
+          optionsBuilder: (TextEditingValue textEditingValue) {
+            if (textEditingValue.text.isEmpty) {
+              return const Iterable<String>.empty();
+            }
+            return streetList.where((String option) {
+              return option.contains(textEditingValue.text);
+            });
           },
-          focusNode: focusNode,
+          onSelected: (String selection) {
+            _locationController.text = selection;
+          },
+          // TextField Widget
+          fieldViewBuilder:
+              (context, textEditingController, focusNode, onFieldSubmitted) =>
+                  TextField(
+            showCursor: true,
+            autofocus: true,
+            controller: textEditingController..text = _locationController.text,
+            decoration: InputDecoration(
+                hintText: 'הקלד כתובת',
+                suffixIconConstraints:
+                    const BoxConstraints(maxHeight: 40, maxWidth: 40),
+                suffixIcon: !loadingLocation
+                    ? IconButton(
+                        onPressed: () {
+                          setState(() {
+                            loadLocation();
+                          });
+                        },
+                        icon: const Icon(Icons.location_searching),
+                        color: loadingLocation ? Colors.green : Colors.black,
+                      )
+                    : const spinkit.SpinKitRipple(color: Colors.red)),
+            onChanged: (text) {
+              _locationController.text = text;
+            },
+            focusNode: focusNode,
+          ),
+          // OptionList Widget
+          optionsViewBuilder: (context, onSelected, options) => Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              color:Colors.grey.shade200,
+              shape: const RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(4.0)),
+              ),
+              child: SizedBox(
+                height: 52.0 * options.length,
+                width: constraints.biggest.width,
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  itemCount: options.length,
+                  shrinkWrap: false,
+                  itemBuilder: (BuildContext context, int index) {
+                    final String option = options.elementAt(index);
+                    return InkWell(
+                      onTap: () => onSelected(option),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(option),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
         ),
       ),
-      // )
     ]);
+  }
+
+  Future loadLocation() {
+    setState(() {
+      loadingLocation = true;
+    });
+    return (_determinePosition().then((value) async {
+      final translator = GoogleTranslator();
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(value.latitude, value.longitude);
+      String street = placemarks[0].street!;
+      street = street.replaceAll(RegExp('[0-9]'), '');
+      return await translator.translate(street, to: 'iw').then(
+        (value) {
+          _locationController.text = value.text;
+          _homeNumber.text = placemarks[0].name!;
+          setState(() {
+            loadingLocation = false;
+          });
+        },
+      );
+    }));
   }
 
   // Set Time To this report
