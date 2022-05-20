@@ -62,8 +62,7 @@ class _ReportPageState extends State<ReportPage> {
   int selectdSpeechTotext = -1;
   Map<int, Color> micColoricon = {};
   bool available = false;
-  String _SavedText = "";
-  late AnimationController _controllera;
+  String savedText = "";
 
   @override
   void initState() {
@@ -97,8 +96,10 @@ class _ReportPageState extends State<ReportPage> {
               const SizedBox(height: 10),
               inputBoxState(_nameController, "שם מדווח", false),
               const SizedBox(height: 10),
-              Container(width: MediaQuery. of(context). size. width/1.2, child: 
-              autoCompleteStreet(),),
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.2,
+                child: autoCompleteStreet(),
+              ),
               const SizedBox(height: 10),
               inputBoxStateSmall(_homeNumber, "בניין/בית"),
               const SizedBox(height: 15),
@@ -276,10 +277,10 @@ class _ReportPageState extends State<ReportPage> {
     setState(() {
       if (_textControllers[selectdSpeechTotext]!.text != "") {
         _textControllers[selectdSpeechTotext]!.text =
-            _SavedText + " " + result.recognizedWords;
+            savedText + " " + result.recognizedWords;
       } else {
         _textControllers[selectdSpeechTotext]!.text =
-            _SavedText + result.recognizedWords;
+            savedText + result.recognizedWords;
       }
     });
   }
@@ -290,7 +291,7 @@ class _ReportPageState extends State<ReportPage> {
       await _speechToText.listen(onResult: _onSpeechResult, localeId: "he");
     }
     setState(() {
-      _SavedText = _textControllers[selectdSpeechTotext]!.text;
+      savedText = _textControllers[selectdSpeechTotext]!.text;
     });
   }
 
@@ -338,6 +339,7 @@ class _ReportPageState extends State<ReportPage> {
                           color: micColoricon[key],
                           onPressed: () {}),
                       onLongPress: () {
+                        FocusScope.of(context).unfocus();
                         _initAndStartSpeech(key);
                       },
                       onLongPressEnd: (LongPressEndDetails details) {
@@ -551,7 +553,7 @@ class _ReportPageState extends State<ReportPage> {
           optionsViewBuilder: (context, onSelected, options) => Align(
             alignment: Alignment.topLeft,
             child: Material(
-              color:Colors.grey.shade200,
+              color: Colors.grey.shade200,
               shape: const RoundedRectangleBorder(
                 borderRadius:
                     BorderRadius.vertical(bottom: Radius.circular(4.0)),
@@ -588,19 +590,30 @@ class _ReportPageState extends State<ReportPage> {
     });
     return (_determinePosition().then((value) async {
       final translator = GoogleTranslator();
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(value.latitude, value.longitude);
-      String street = placemarks[0].street!;
-      street = street.replaceAll(RegExp('[0-9]'), '');
-      return await translator.translate(street, to: 'iw').then(
-        (value) {
-          _locationController.text = value.text;
-          _homeNumber.text = placemarks[0].name!;
+      if (value.accuracy < 30) {
+        print(value.accuracy);
+        List<Placemark> placemarks =
+            await placemarkFromCoordinates(value.latitude, value.longitude);
+        String street = placemarks[0].street!;
+        street = street.replaceAll(RegExp('[0-9]'), '');
+        return await translator.translate(street, to: 'iw').then(
+          (value) {
+            _locationController.text = value.text;
+            _homeNumber.text = placemarks[0].name!;
+            setState(() {
+              loadingLocation = false;
+            });
+          },
+        );
+      } else {
+        return showDialogMsg(context, MsgType.alert,
+                "המיקום אינו מדוייק, אנא נסה שוב או הקלד ידנית")
+            .then((value) {
           setState(() {
-            loadingLocation = false;
-          });
-        },
-      );
+              loadingLocation = false;
+            });
+        });
+      }
     }));
   }
 
@@ -631,7 +644,7 @@ class _ReportPageState extends State<ReportPage> {
         .collection("ReportTempletes")
         .doc("corrent")
         .get()
-        .then((value) => _versionreport = "v" + value.data()?["v"]);
+        .then((value) => _versionreport = value.data()?["version"]);
   }
 
   // Get Text(Translate) of fields From Report Template- FireStore

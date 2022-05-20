@@ -30,6 +30,7 @@ Future showDialogMsg(BuildContext context, MsgType title, String t) async {
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
+        alignment : Alignment.center,
         title: Text(title.str),
         actionsAlignment: MainAxisAlignment.center,
         content: SingleChildScrollView(
