@@ -56,6 +56,11 @@ dependencies:
   speech_to_text: ^5.5.0
   # Animation Icons
   flutter_spinkit: ^5.1.0
+  # Excel
+  syncfusion_flutter_xlsio: ^20.1.56-beta
+  # PATH
+  path_provider: ^2.0.10
+  open_file: ^3.2.1
 
   flutter_easyloading: ^3.0.3
   provider: ^6.0.1
