@@ -87,11 +87,36 @@ class AuthService {
   }
 
   Future updateFCMToken(UserCredential v){
+    return _checkuser().then((value) {
     return FirebaseMessaging.instance.getToken().then((fcmToken) {
       if(fcmToken != null){
         String uid = v.user!.uid;
-        FirebaseDatabase.instance.ref("FCMTokens").child(uid).update({"Token": fcmToken});
+        FirebaseDatabase.instance.ref("FCMTokens").child(global.usertype.collectionStrSam).child(uid).update({"Token": fcmToken});
       }
     });
+    });
   }
+
+  Future _checkuser() async {
+  FirebaseAuth.instance.authStateChanges().listen((User? user) async {
+    if (user != null) {
+      user.getIdTokenResult().then((value) async {
+        String type = value.claims?['usertype'];
+        // if (securityrole == false) {
+          if (type == "Therapist") {
+            global.usertype = UserType.hosen;
+          } else {
+            if (type == "SocialWorker") {
+              global.usertype = UserType.social;
+            } else {
+              if (type == "Reporter") {
+                global.usertype = UserType.reporter;
+              }
+            }
+          }
+        }
+      );
+    }
+  });
+}
 }

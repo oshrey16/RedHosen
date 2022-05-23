@@ -114,6 +114,7 @@ Future _checkuser(BuildContext context) async {
               }
             } else {
               if (type == "Reporter") {
+                global.usertype = UserType.reporter;
                 await Navigator.of(context).pushReplacement(MaterialPageRoute(
                     builder: (context) => const reporterpage.HomePage()));
               }

@@ -75,6 +75,21 @@ extension UserTypeEx on UserType {
   }
 }
 
+extension UserTypeSam on UserType {
+  String get collectionStrSam {
+    switch (this) {
+      case UserType.hosen:
+        return "Therapist";
+      case UserType.social:
+        return "SocialWorker";
+      case UserType.reporter:
+        return "Reporter";
+      case UserType.nil:
+        return "nil";
+    }
+  }
+}
+
 /////EorD - enabled or diabled
 enum EorD {
   enabled,
