@@ -95,6 +95,7 @@ Widget logoutButton(BuildContext context) {
 enum institution {
   hosen,
   social,
+  nil,
 }
 
 // TODO SET in report

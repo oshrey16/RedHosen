@@ -20,6 +20,7 @@ class BasicReport {
   int numofbasic = 7;
   Map<int, dynamic> datamap = {};
   Map<int, String> translate = {};
+  Map<institution,int> status = {};
 
   BasicReport._(this.reportid);
   static Future<BasicReport> create(reportid) async {
@@ -64,6 +65,9 @@ class BasicReport {
         var reportto = rt["ReportTo"] as Map<dynamic, dynamic>;
         reportTo[institution.hosen] = reportto["hosen"];
         reportTo[institution.social] = reportto["social"];
+        var statusg = rt["Status"] as Map<dynamic, dynamic>;
+        status[institution.hosen] = statusg["hosen"];
+        status[institution.social] = statusg["social"];
       });
     });
     return 0;
