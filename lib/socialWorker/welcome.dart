@@ -53,6 +53,7 @@ class _HomePageState extends State<HomePage> {
                     child: const Text("דיווחים פעילים"),
                   ),
                 ),
+                const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
