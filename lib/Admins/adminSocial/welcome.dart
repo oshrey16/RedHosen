@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/adminSocial/mainManage.dart';
 import 'package:red_hosen/Admins/export_reports.dart';
 import 'package:red_hosen/Admins/graphs.dart';
 import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
@@ -31,64 +32,17 @@ class _HomePageState extends State<HomePage> {
             child: SingleChildScrollView(
               child: Column(children: [
                 SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const UserConfirmation(type: UserType.social)),
-                      );
-                    },
-                    child: const Text("אישור עובדים סוציאלים במערכת"),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const UserRejectionPage(type: UserType.social)),
-                      );
-                    },
-                    child: const Text("מחיקת עובדים סוציאלים במערכת"),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const UserConfirmation(
-                                type: UserType.reporter)),
-                      );
-                    },
-                    child: const Text("אישור צח\"ש במערכת"),
-                  ),
-                ),
-                const SizedBox(height: 15),
-                SizedBox(
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const UserRejectionPage(
-                                type: UserType.reporter)),
-                      );
-                    },
-                    child: const Text("מחיקת צח\"ש במערכת"),
-                  ),
-                ),
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const MainMagnageSocialPage()),
+                        );
+                      },
+                      child: const Text("ניהול משתמשים"),
+                    )),
                 const SizedBox(height: 15),
                 SizedBox(
                     height: 50,

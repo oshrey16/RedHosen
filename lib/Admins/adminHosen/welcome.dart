@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/Admins/adminHosen/mainManage.dart';
 import 'package:red_hosen/Admins/export_reports.dart';
 import 'package:red_hosen/Admins/graphs.dart';
 import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
@@ -72,25 +73,10 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  const UserConfirmation(type: UserType.hosen)),
+                              builder: (context) => const MainMagnageHosenPage()),
                         );
                       },
-                      child: const Text("אישור מטפלים במערכת"),
-                    )),
-                const SizedBox(height: 15),
-                SizedBox(
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const UserRejectionPage(
-                                  type: UserType.hosen)),
-                        );
-                      },
-                      child: const Text("מחיקת מטפלים במערכת"),
+                      child: const Text("ניהול משתמשים"),
                     )),
                 const SizedBox(height: 15),
                 SizedBox(
