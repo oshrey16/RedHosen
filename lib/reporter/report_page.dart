@@ -261,9 +261,12 @@ class _ReportPageState extends State<ReportPage> {
 
   void _initAndStartSpeech(int key) async {
     if (!available) {
-      available = await _speechToText.initialize(
+              print("init");
+              available = await _speechToText.initialize(
+                debugLogging: true,
           onStatus: statusListener, onError: errorListener);
-      setState(() {});
+      setState(() {
+      });
     } else {
       _startListening();
       setState(() {
@@ -288,7 +291,8 @@ class _ReportPageState extends State<ReportPage> {
   /// Each time to start a speech recognition session
   void _startListening() async {
     if (available) {
-      await _speechToText.listen(onResult: _onSpeechResult, localeId: "he");
+      await _speechToText.cancel();
+      await _speechToText.listen(onResult: _onSpeechResult, localeId: "he",onDevice: true,pauseFor:const Duration(seconds: 20));
     }
     setState(() {
       savedText = _textControllers[selectdSpeechTotext]!.text;
@@ -308,6 +312,7 @@ class _ReportPageState extends State<ReportPage> {
     setState(() {
       micColoricon[selectdSpeechTotext] = Colors.black;
     });
+    print("ERROR");
     print(str);
   }
 
@@ -337,9 +342,10 @@ class _ReportPageState extends State<ReportPage> {
                       child: IconButton(
                           icon: const Icon(Icons.mic_none),
                           color: micColoricon[key],
+                          splashColor: Colors.green.shade300,
+                          // focusColor: Colors.green,
                           onPressed: () {}),
                       onLongPress: () {
-                        FocusScope.of(context).unfocus();
                         _initAndStartSpeech(key);
                       },
                       onLongPressEnd: (LongPressEndDetails details) {
