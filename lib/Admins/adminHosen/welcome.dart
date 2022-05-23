@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
                               builder: (context) => const MapPage()),
                         );
                       },
-                      child: const Text("מפת הכאב"),
+                      child: const Text("מפת העיר"),
                     )),
                 const SizedBox(height: 15),
                 SizedBox(
