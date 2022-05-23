@@ -43,14 +43,13 @@ class _LoginPageState extends State<ForgotPassPage> {
           if (_checkemail()) {
             context
                 .read<AuthService>()
-                .SendResetPassword(_emailController.text)
+                .sendResetPassword(_emailController.text)
                 .then((value) {
-              if (value == 0) {
-                showDialogMsg(context, MsgType.ok, "אימייל נשלח! אנא בדוק את תיבת המייל").then((value) => Navigator.pop(context));
-              }
-              else{
-                showDialogMsg(context, MsgType.error, "שגיאה, שליחת המייל לא הצליחה");
-              }
+                showDialogMsg(context, MsgType.ok,
+                        "אימייל נשלח! אנא בדוק את תיבת המייל")
+                    .then((value) => Navigator.pop(context));
+            }).catchError((error) {
+              showDialogMsg(context, MsgType.error, "תיאור השגיאה:"  + error.toString());
             });
           }
         },

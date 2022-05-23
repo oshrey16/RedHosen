@@ -1,5 +1,6 @@
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:red_hosen/global.dart' as global;
@@ -11,7 +12,9 @@ class AuthService {
   Future<String> login(String email, String password) async {
     try {
       await FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: email, password: password);
+          .signInWithEmailAndPassword(email: email, password: password).then((value) {
+            updateFCMToken(value);
+          });
       return "Logged In";
     } catch (e) {
       return e.toString();
@@ -78,13 +81,17 @@ class AuthService {
     }
   }
 
-  Future<int> SendResetPassword(String email) async{
-    try{
-      FirebaseAuth.instance.sendPasswordResetEmail(email: email);
-      return 0;
-    }
-    catch(e){
-      return 1;
-    }
+  Future sendResetPassword(String email) async{
+      return FirebaseAuth.instance.sendPasswordResetEmail(email: email).catchError((error){return Future.error(error);});
+
+  }
+
+  Future updateFCMToken(UserCredential v){
+    return FirebaseMessaging.instance.getToken().then((fcmToken) {
+      if(fcmToken != null){
+        String uid = v.user!.uid;
+        FirebaseDatabase.instance.ref("FCMTokens").child(uid).update({"Token": fcmToken});
+      }
+    });
   }
 }
