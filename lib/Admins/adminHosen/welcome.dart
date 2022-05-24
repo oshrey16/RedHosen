@@ -73,7 +73,8 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MainMagnageHosenPage()),
+                              builder: (context) =>
+                                  const MainMagnageHosenPage()),
                         );
                       },
                       child: const Text("ניהול משתמשים"),
@@ -94,7 +95,9 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
+                  width: 140,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.green),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -109,6 +112,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -151,6 +155,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.orange),
                     onPressed: () {
                       Navigator.push(
                         context,

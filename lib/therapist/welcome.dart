@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             child: SingleChildScrollView(
               child: Column(children: [
-                 //TODO - DONT FORGET TO DELETE!!!!
+                //TODO - DONT FORGET TO DELETE!!!!
                 // SizedBox(
                 //     height: 50,
                 //     child: ElevatedButton(
@@ -58,7 +58,9 @@ class _HomePageState extends State<HomePage> {
                 const SizedBox(height: 15),
                 SizedBox(
                   height: 50,
+                  width: 140,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.green),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -73,6 +75,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.red),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -101,6 +104,7 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: 50,
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(primary: Colors.orange),
                     onPressed: () {
                       Navigator.push(
                         context,

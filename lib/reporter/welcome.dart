@@ -23,7 +23,11 @@ class _HomePageState extends State<HomePage> {
                 child: Column(children: [
               SizedBox(
                 height: 50,
+                width: 140,
                 child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                        primary: Colors.green
+                    ),
                   onPressed: () {
                     Navigator.push(
                       context,
