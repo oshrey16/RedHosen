@@ -268,11 +268,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   _checkPassword() {
     bool secure =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
             .hasMatch(mapvars['password']);
     if (secure == false) {
       showDialogMsg(context, MsgType.error,
-          ":סיסמא לא תקינה, אנא הזן סיסמא בעלת\n אות גדולה אחת-\n אות קטנה אחת-\n תו מיוחד-\n ספרה אחת- \n לפחות 8 ספרות-");
+          "סיסמא לא תקינה, אנא הזן סיסמא בעלת לפחות:\n  -אות גדולה\n  -אות קטנה\n  -ספרות\n  -אורך הסיסמה: לפחות 8 תווים");
     }
     return secure;
   }
