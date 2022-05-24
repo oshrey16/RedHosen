@@ -168,7 +168,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
           if(i<=12 && i>=0) {
             if(data[i.toString()] != ""){
               if(i!=8){
-              sheet.getRangeByName('${lettersiter[i]}$row').setText(data[i.toString()]);
+              sheet.getRangeByName('${lettersiter[i]}$row').setText(data[i.toString()].toString());
             }}
             else{
               le++;
@@ -176,6 +176,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
           }
         }
       }
+      row++;
     }
     //Set titles.
     // Save the document.
