@@ -6,6 +6,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/slideBar.dart';
 import 'package:red_hosen/global.dart' as global;
+import 'package:url_launcher/url_launcher_string.dart';
 
 class ReportRead extends StatefulWidget {
   final String reportid;
@@ -27,20 +28,24 @@ class _ReportReadState extends State<ReportRead> {
   Map<institution, int> status = {};
   institution ins = global.getinstitution();
 
-  late Map<int, TextEditingController> dataControllers = {};
+  final Map<int, TextEditingController> _dataControllers = {};
   late Map<int, String> translate;
+  final Map<int, bool> _disabledControllers = {};
+  bool enterToEditMode = false;
   @override
   void initState() {
     report = BasicReport.create(widget.reportid);
     report.then((value) {
       setDate(value.time!);
       _nameController.text = value.nameReporter.toString();
-      _phoneController.text = value.phoneReporter.toString();
+      var phone = value.phoneReporter!.substring(value.phoneReporter!.length - 10);
+      _phoneController.text = phone;
       _numberPeopleController.text = value.numberpeople.toString();
       _locationController.text = value.location.toString();
       for (var v in value.datamap.entries) {
-        dataControllers[v.key] = TextEditingController();
-        dataControllers[v.key]?.text = v.value.toString();
+        _dataControllers[v.key] = TextEditingController();
+        _disabledControllers[v.key] = false;
+        _dataControllers[v.key]?.text = v.value.toString();
       }
       translate = value.translate;
       reportToValue = value.reportTo;
@@ -69,7 +74,7 @@ class _ReportReadState extends State<ReportRead> {
               const SizedBox(height: 10),
               lineBlock(_nameController, "שם מדווח", false),
               const SizedBox(height: 10),
-              lineBlock(_phoneController, "טלפון מדווח", false),
+              lineBlockphone(_phoneController, "טלפון מדווח"),
               const SizedBox(height: 10),
               lineBlock(_numberPeopleController, "מספר נפגעים", false),
               const SizedBox(height: 10),
@@ -181,6 +186,31 @@ class _ReportReadState extends State<ReportRead> {
                         ),
                       ],
                     ),
+                    // Update Report
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          updateReport().then((value) {
+                            showDialogMsg(context, MsgType.ok,
+                                "עדכון הדוח בוצע בהצלחה");
+                                setState(() {
+                                  _disabledControllers.updateAll((name, value) => value = false);
+                                  enterToEditMode = false;
+                                });
+                          });
+                        },
+                        child: enterToEditMode
+                            ? const Text("במידה וערכת נתונים - לחץ כאן לעדכון")
+                            : const Text(
+                                "במידה וערכת נתונים - לחץ כאן לעדכון",
+                                style: TextStyle(
+                                    decoration: TextDecoration.lineThrough),
+                              ),
+                        style: ElevatedButton.styleFrom(
+                            primary:
+                                enterToEditMode ? Colors.green : Colors.grey),
+                      ),
+                    ]),
                   ]);
                 },
               ),
@@ -193,8 +223,8 @@ class _ReportReadState extends State<ReportRead> {
     return Column(children: [
       reportedtoCheckBox(),
       const SizedBox(height: 10),
-      for (var item in dataControllers.entries)
-        line2Block(dataControllers[item.key], translate[item.key]!, false)
+      for (var item in _dataControllers.entries)
+        line2Block(_dataControllers[item.key], translate[item.key]!, item.key)
     ]);
   }
 
@@ -276,9 +306,32 @@ class _ReportReadState extends State<ReportRead> {
       ],
     );
   }
+  Widget lineBlockphone(
+      TextEditingController? controller, String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(title + " :", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 10),
+        SizedBox(
+          width: MediaQuery. of(context). size. width/2,
+          height: 45.0,
+          child:
+        TextField(
+          readOnly: true,
+          textAlignVertical: TextAlignVertical.center ,
+          controller: controller,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(onPressed: (){
+              launchUrlString("tel://${_phoneController.text}");
+            },
+            icon: const Icon(Icons.phone))
+          )
+        ),)
+      ]);
+  }
 
-  Widget line2Block(
-      TextEditingController? controller, String title, bool _enabled) {
+  Widget line2Block(TextEditingController? controller, String title, int key) {
     return FittedBox(
         fit: BoxFit.fitWidth,
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
@@ -286,20 +339,36 @@ class _ReportReadState extends State<ReportRead> {
             children: [
               Text(title + " :", style: const TextStyle(fontSize: 16)),
               const SizedBox(height: 5),
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.2,
-                // child: Directionality(
-                //   textDirection: TextDirection.rtl,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxHeight: 170.0,
-                  ),
-                  child: TextField(
-                    maxLines: null,
-                    enabled: _enabled,
-                    maxLength: 180,
-                    textAlignVertical: TextAlignVertical.center,
-                    controller: controller,
+              GestureDetector(
+                onLongPress: () {
+                  setState(() {
+                    _disabledControllers[key] = true;
+                    enterToEditMode = true;
+                  });
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                          color: _disabledControllers[key] == true
+                              ? Colors.red
+                              : Colors.white)),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width / 1.2,
+                    // child: Directionality(
+                    //   textDirection: TextDirection.rtl,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxHeight: 170.0,
+                      ),
+                      child: TextField(
+                        maxLines: null,
+                        cursorColor: Colors.red,
+                        enabled: _disabledControllers[key],
+                        maxLength: 180,
+                        textAlignVertical: TextAlignVertical.center,
+                        controller: controller,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -332,5 +401,18 @@ class _ReportReadState extends State<ReportRead> {
                 onChanged: null))
       ])
     ]);
+  }
+
+  Future updateReport() {
+    Map<String, String> datanew = {};
+    for (var item in _disabledControllers.entries) {
+      if (item.value == true) {
+        datanew[item.key.toString()] = _dataControllers[item.key]!.text;
+      }
+    }
+    return FirebaseFirestore.instance
+        .collection("Reports")
+        .doc(widget.reportid)
+        .update(datanew);
   }
 }

@@ -26,14 +26,14 @@ class BasicReport {
   static Future<BasicReport> create(reportid) async {
     BasicReport basicreport = BasicReport._(reportid);
     await basicreport.readReport().whenComplete(() => basicreport
-        .setnameReporter()
+        .setnamePhoneReporter()
         .whenComplete(() => basicreport
             .readdata()
             .whenComplete(() => basicreport.readTranslate())));
     return basicreport;
   }
 
-  Future setnameReporter() async {
+  Future setnamePhoneReporter() async {
     HttpsCallable callable =
         FirebaseFunctions.instance.httpsCallable("getUser");
     await callable(<String, dynamic>{'uid': reporteruid}).then((value) async {
