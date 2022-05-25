@@ -292,7 +292,7 @@ class _ReportPageState extends State<ReportPage> {
   void _startListening() async {
     if (available) {
       await _speechToText.cancel();
-      await _speechToText.listen(onResult: _onSpeechResult, localeId: "he",onDevice: true,pauseFor:const Duration(seconds: 20));
+      await _speechToText.listen(onResult: _onSpeechResult, localeId: "he",pauseFor:const Duration(seconds: 20));
     }
     setState(() {
       savedText = _textControllers[selectdSpeechTotext]!.text;
