@@ -3,6 +3,7 @@ import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:red_hosen/auth_services.dart';
@@ -15,8 +16,8 @@ import 'package:red_hosen/socialWorker/welcome.dart' as socialpage;
 import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
 
 const bool useEmulator = true;
 
@@ -33,9 +34,37 @@ Future _connectToFirebaseEmulator() async {
   // final databaseReference2 = FirebaseDatabase(databaseURL:fdbUrl2).instance.reference();
 }
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // If you're going to use other Firebase services in the background, such as Firestore,
+  // make sure you call `initializeApp` before using other Firebase services.
+  await Firebase.initializeApp();
+
+  print("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
+  // FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+  // NotificationSettings settings = await messaging.requestPermission(
+  //   alert: true,
+  //   announcement: false,
+  //   badge: true,
+  //   carPlay: false,
+  //   criticalAlert: false,
+  //   provisional: false,
+  //   sound: true,
+  // );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  print('Got a message whilst in the foreground!');
+  print('Message data: ${message.data}');
+
+  if (message.notification != null) {
+    print('Message also contained a notification: ${message.notification}');
+  }
+});
   if (useEmulator) {
     await _connectToFirebaseEmulator();
   }
@@ -56,16 +85,15 @@ class MyApp extends StatelessWidget {
             initialData: null)
       ],
       child: const MaterialApp(
-          localizationsDelegates: [
-    GlobalCupertinoLocalizations.delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-  ],
-        supportedLocales: [
-              // Locale('en', 'US'), // American English
-              Locale('he', 'IL'), // Israeli Hebrew
+        localizationsDelegates: [
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
         ],
-
+        supportedLocales: [
+          // Locale('en', 'US'), // American English
+          Locale('he', 'IL'), // Israeli Hebrew
+        ],
         title: 'test',
         home: AuthWrapper(),
       ),
@@ -93,36 +121,36 @@ Future _checkuser(BuildContext context) async {
         // bool securityrole = value.claims?['disabled'];
         var roleadmin = value.claims?['isAdmin'];
         // if (securityrole == false) {
-          if (type == "Therapist") {
-            global.usertype = UserType.hosen;
+        if (type == "Therapist") {
+          global.usertype = UserType.hosen;
+          if (roleadmin == true) {
+            await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => const admin_hosenpage.HomePage()));
+          } else {
+            await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                builder: (context) => const therapistpage.HomePage()));
+          }
+        } else {
+          if (type == "SocialWorker") {
+            global.usertype = UserType.social;
             if (roleadmin == true) {
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const admin_hosenpage.HomePage()));
+                  builder: (context) => const admin_socialpage.HomePage()));
             } else {
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const therapistpage.HomePage()));
+                  builder: (context) => const socialpage.HomePage()));
             }
           } else {
-            if (type == "SocialWorker") {
-              global.usertype = UserType.social;
-              if (roleadmin == true) {
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const admin_socialpage.HomePage()));
-              } else {
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const socialpage.HomePage()));
-              }
-            } else {
-              if (type == "Reporter") {
-                global.usertype = UserType.reporter;
-                await Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const reporterpage.HomePage()));
-              }
+            if (type == "Reporter") {
+              global.usertype = UserType.reporter;
+              await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (context) => const reporterpage.HomePage()));
             }
           }
         }
-      // }
-      );
+      }
+          // }
+          );
     }
   });
 }
