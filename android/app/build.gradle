@@ -54,7 +54,7 @@ android {
         applicationId "com.foxloopdev.red_hosen"
         // minSdkVersion 19
         // minSdkVersion 21
-        minSdkVersion 21
+        minSdkVersion 23
         // targetSdkVersion 30
         targetSdkVersion 31
         versionCode flutterVersionCode.toInteger()
