@@ -126,6 +126,6 @@ android/app/google-services.json
 **/myscripts/Gcloud
 **/myscripts/EmulatorState
 EmulatorState/
-/lib/Admins/manageUsers/manageAdmins/secret
+# /lib/Admins/manageUsers/manageAdmins/secret
 .firebase
 node_modules
