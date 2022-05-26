@@ -135,7 +135,7 @@ exports.disableUserOnCreate = functions.auth.user().onCreate((user) => {
     .updateUser(user.uid, {disabled: true})
     .then(() => {
       console.log("Successfully Disabled user", user.email);
-          return 0;
+      return 0;
     })
     .catch((error) => {
       console.log("Error Disabled user:", error);
@@ -161,21 +161,23 @@ exports.updateUserEnable = functions.https.onCall((data, context) => {
           .get()
           .then((doc) => {
             if (doc.exists) {
-              resetRef.update({enabled: true}).then(() => {
-                    console.log(
-                      "Successfully Enable user uid: ",
-                      data.uid,
-                      ", Byuid: ",
-                      context.auth?.token.uid,
-                      ", AdminEmail: ",
-                      context.auth?.token.email
-                    );
-                    return resolve("success");
-                  })
-                  .catch((error) => {
-                    console.log("Error", error);
-                    return reject(error);
-                  });
+              resetRef
+                .update({enabled: true})
+                .then(() => {
+                  console.log(
+                    "Successfully Enable user uid: ",
+                    data.uid,
+                    ", Byuid: ",
+                    context.auth?.token.uid,
+                    ", AdminEmail: ",
+                    context.auth?.token.email
+                  );
+                  return resolve("success");
+                })
+                .catch((error) => {
+                  console.log("Error", error);
+                  return reject(error);
+                });
             }
           })
           .catch((error) => {
@@ -342,19 +344,29 @@ interface Dictionary<T> {
 exports.sendListenerPushNotification = functions.database
   .ref("/activeReports")
   .onWrite((data, context) => {
-    const FCMToken = admin
-      .database()
-      .ref("FCMTokens")
-      .child("Therapist")
-      .once("value");
-    FCMToken.then((v) => {
+    const FCMRef = admin.database().ref("FCMTokens");
+    const FCMTokenHosen = FCMRef.child("Therapist").once("value");
+    const FCMTokenSocial = FCMRef.child("SocialWorker").once("value");
+    FCMTokenHosen.then((v1) => {
+      FCMTokenSocial.then((v2) => {
       const k = [];
-      const d = v.val();
-      for (const [key, value] of Object.entries(d)) {
-        console.log(key);
-        const choiceItem = value as Dictionary<string>;
-        console.log(choiceItem["Token"]);
-        k.push(choiceItem["Token"]);
+      const d1 = v1.val();
+      const d2 = v2.val();
+      if (d1 != null) {
+        for (const [key, value] of Object.entries(d1)) {
+          console.log(key);
+          const choiceItem = value as Dictionary<string>;
+          console.log(choiceItem["Token"]);
+          k.push(choiceItem["Token"]);
+        }
+      }
+      if (d2 != null) {
+        for (const [key, value] of Object.entries(d2)) {
+          console.log(key);
+          const choiceItem = value as Dictionary<string>;
+          console.log(choiceItem["Token"]);
+          k.push(choiceItem["Token"]);
+        }
       }
       k.forEach((element) => {
         const payload = {
@@ -379,5 +391,6 @@ exports.sendListenerPushNotification = functions.database
             return {error: error.code};
           });
       });
+    });
     });
   });
