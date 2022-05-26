@@ -6,7 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:geocoding/geocoding.dart';
 import 'package:csv/csv.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show SystemChannels, rootBundle;
 import 'package:numberpicker/numberpicker.dart';
 import 'package:red_hosen/reporter/report_class.dart';
 import 'package:red_hosen/mytools.dart';
@@ -75,8 +75,50 @@ class _ReportPageState extends State<ReportPage> {
     super.initState();
   }
 
+  showDataAlert() {
+    return FittedBox(
+        fit: BoxFit.none,
+        child: Column(children: [
+          Container(
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0),
+                color: const Color.fromARGB(60, 0, 217, 255),
+              ),
+              child: Column(children: [
+                Container(
+                    color: Colors.black87,
+                    child: Text("מאזין...",
+                        style: Theme.of(context).primaryTextTheme.titleLarge)),
+                Container(
+                    color: Colors.black87,
+                    child: Text("אנא השאר את הכפתור לחוץ בעת הקלטה",
+                        style: Theme.of(context).primaryTextTheme.bodyText1)),
+                const SizedBox(height: 10),
+                const spinkit.SpinKitWave(color: Colors.green)
+              ])),
+          const SizedBox(
+            height: 250,
+          )
+        ]));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final layers = <Widget>[];
+    layers.add(_buildPage());
+    if (selectdSpeechTotext != -1) {
+      layers.add(showDataAlert());
+    }
+    return Listener(
+      child: Stack(
+        fit: StackFit.expand,
+        children: layers,
+      ),
+    );
+  }
+
+  Widget _buildPage() {
     return Scaffold(
         drawer: NavDrawer(),
         appBar: AppBar(title: const Text("דיווח חדש"), centerTitle: true),
@@ -261,12 +303,10 @@ class _ReportPageState extends State<ReportPage> {
 
   void _initAndStartSpeech(int key) async {
     if (!available) {
-              print("init");
-              available = await _speechToText.initialize(
-                debugLogging: true,
-          onStatus: statusListener, onError: errorListener);
-      setState(() {
-      });
+      print("init");
+      available = await _speechToText.initialize(
+          debugLogging: true, onStatus: statusListener, onError: errorListener);
+      setState(() {});
     } else {
       _startListening();
       setState(() {
@@ -290,9 +330,13 @@ class _ReportPageState extends State<ReportPage> {
 
   /// Each time to start a speech recognition session
   void _startListening() async {
+    showDataAlert();
     if (available) {
       await _speechToText.cancel();
-      await _speechToText.listen(onResult: _onSpeechResult, localeId: "he",pauseFor:const Duration(seconds: 20));
+      await _speechToText.listen(
+          onResult: _onSpeechResult,
+          localeId: "he",
+          pauseFor: const Duration(seconds: 20));
     }
     setState(() {
       savedText = _textControllers[selectdSpeechTotext]!.text;
@@ -302,6 +346,14 @@ class _ReportPageState extends State<ReportPage> {
   void statusListener(str) {
     if (str == "notListening") {
       setState(() {
+        selectdSpeechTotext = -1;
+        micColoricon[selectdSpeechTotext] = Colors.black;
+      });
+    }
+    print(str);
+    if (str == "done") {
+      setState(() {
+        selectdSpeechTotext = -1;
         micColoricon[selectdSpeechTotext] = Colors.black;
       });
     }
@@ -310,6 +362,7 @@ class _ReportPageState extends State<ReportPage> {
 
   void errorListener(str) {
     setState(() {
+      selectdSpeechTotext = -1;
       micColoricon[selectdSpeechTotext] = Colors.black;
     });
     print("ERROR");
@@ -338,19 +391,22 @@ class _ReportPageState extends State<ReportPage> {
               children: [
                 Row(
                   children: [
-                    GestureDetector(
-                      child: IconButton(
-                          icon: const Icon(Icons.mic_none),
-                          color: micColoricon[key],
-                          splashColor: Colors.green.shade300,
-                          // focusColor: Colors.green,
-                          onPressed: () {}),
-                      onLongPress: () {
-                        _initAndStartSpeech(key);
-                      },
-                      onLongPressEnd: (LongPressEndDetails details) {
-                        _stopListening(key);
-                      },
+                    AnimatedContainer(
+                      duration: Duration.zero,
+                      child: GestureDetector(
+                        child: IconButton(
+                            icon: const Icon(Icons.mic_none),
+                            color: micColoricon[key],
+                            splashColor: Colors.green.shade300,
+                            // focusColor: Colors.green,
+                            onPressed: () {}),
+                        onLongPress: () {
+                          _initAndStartSpeech(key);
+                        },
+                        onLongPressEnd: (LongPressEndDetails details) {
+                          _stopListening(key);
+                        },
+                      ),
                     ),
                     const SizedBox(
                       width: 3,
@@ -616,8 +672,8 @@ class _ReportPageState extends State<ReportPage> {
                 "המיקום אינו מדוייק, אנא נסה שוב או הקלד ידנית")
             .then((value) {
           setState(() {
-              loadingLocation = false;
-            });
+            loadingLocation = false;
+          });
         });
       }
     }));
