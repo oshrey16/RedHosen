@@ -75,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginButton() {
     return ElevatedButton(
+      key: const Key("LoginButton"),
         onPressed: () async {
           final String email = _emailController.text.trim();
           final String password = _passwordController.text.trim();
@@ -108,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Directionality(
             textDirection: TextDirection.ltr,
           child: TextField(
+            key: const Key("Email"),
             maxLength: 45,
             textAlignVertical: TextAlignVertical.center,
             controller: controller,

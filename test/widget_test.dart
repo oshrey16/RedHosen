@@ -1,28 +1,58 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility that Flutter provides. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:red_hosen/login.dart';
 
+void main() async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  final instance = FakeFirebaseFirestore();
+  await instance
+      .collection('users')
+      .doc("Therapist")
+      .collection("Therapist")
+      .add({
+    'username': 'Bob',
+  });
+  final snapshot = await instance
+      .collection('users')
+      .doc("Therapist")
+      .collection("Therapist")
+      .get();
+  print(snapshot.docs.length);
 
-void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    // await tester.pumpWidget(const MyApp());
+  testWidgets('TestTitle', (WidgetTester tester) async {
+    await tester.pumpWidget(const MaterialApp(home: LoginPage()));
+    final titleFinder = find.text('כניסה למערכת');
+    expect(titleFinder, findsOneWidget);
+  });
 
-  //   // Verify that our counter starts at 0.
-  //   expect(find.text('0'), findsOneWidget);
-  //   expect(find.text('1'), findsNothing);
+  group("LoginPage", () {
+    testWidgets('TestEmail', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: LoginPage()));
+      final email = find.byKey(const Key("Email"));
+      await tester.enterText(email, "");
+      final loginButton = find.byKey(const Key("LoginButton"));
+      await tester.tap(loginButton);
+      await tester.pump();
+      final res = find.text("אימייל לא תקין");
+      expect(res, findsOneWidget);
+    });
 
-  //   // Tap the '+' icon and trigger a frame.
-  //   await tester.tap(find.byIcon(Icons.add));
-  //   await tester.pump();
+    testWidgets('TestPassword', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: LoginPage()));
+      final email = find.byKey(const Key("Email"));
+      await tester.enterText(email, "test@test.com");
+      final loginButton = find.byKey(const Key("LoginButton"));
+      await tester.tap(loginButton);
+      await tester.pump();
+      final res = find.text("סיסמה לא תקינה");
+      expect(res, findsOneWidget);
+    });
+  });
 
-  //   // Verify that our counter has incremented.
-  //   expect(find.text('0'), findsNothing);
-  //   expect(find.text('1'), findsOneWidget);
+  group("LoginPage", () {
+    testWidgets('TestEmail', (WidgetTester tester) async {
+      await tester.pumpWidget(const MaterialApp(home: LoginPage()));
+    });
   });
 }
