@@ -341,39 +341,95 @@ interface Dictionary<T> {
   [Key: string]: T;
 }
 
+interface FcmArray {
+  address: string[];
+}
+
+
 exports.sendListenerPushNotification = functions.database
-  .ref("/activeReports")
+  .ref("/activeReports/{pushId}/ReportTo")
   .onWrite((data, context) => {
+    const reportID: string | null | undefined = data.after.ref.parent?.key;
+    const reportToBefore = data.before.val();
+    const reportToAfter = data.after.val();
+    let beforeHosen;
+    let beforeSocial;
+    /* Get ReportTo to select who get the message */
+    if (reportToBefore && reportToAfter) {
+      for (const [k, v] of Object.entries(reportToBefore)) {
+        if (v) {
+          if (k == "hosen") {
+            beforeHosen = v;
+          } else {
+            if (k == "social") {
+              beforeSocial = v;
+            }
+          }
+        }
+      }
+      let afterHosen;
+      let afterSocial;
+      for (const [k, v] of Object.entries(reportToAfter)) {
+        if (v) {
+          if (k == "hosen") {
+            afterHosen = v;
+          } else {
+            if (k == "social") {
+              afterSocial = v;
+            }
+          }
+        }
+      }
     const FCMRef = admin.database().ref("FCMTokens");
+    // const k = [];
+    const k: string[] = [];
     const FCMTokenHosen = FCMRef.child("Therapist").once("value");
     const FCMTokenSocial = FCMRef.child("SocialWorker").once("value");
-    FCMTokenHosen.then((v1) => {
-      FCMTokenSocial.then((v2) => {
-      const k = [];
-      const d1 = v1.val();
-      const d2 = v2.val();
-      if (d1 != null) {
-        for (const [key, value] of Object.entries(d1)) {
-          console.log(key);
-          const choiceItem = value as Dictionary<string>;
-          console.log(choiceItem["Token"]);
-          k.push(choiceItem["Token"]);
+
+      FCMTokenHosen.then(async (v1) => {
+        FCMTokenSocial.then((v2) => {
+        if (beforeHosen == undefined && afterHosen == true) {
+        const d1 = v1.val();
+        if (d1 != null) {
+          for (const [_, value] of Object.entries(d1)) {
+            // console.log(key);
+            const choiceItem = value as Dictionary<string>;
+            // console.log(choiceItem["Token"]);
+            k.push(choiceItem["Token"]);
+          }
         }
-      }
-      if (d2 != null) {
-        for (const [key, value] of Object.entries(d2)) {
-          console.log(key);
-          const choiceItem = value as Dictionary<string>;
-          console.log(choiceItem["Token"]);
-          k.push(choiceItem["Token"]);
+    }
+    if (beforeSocial == undefined && afterSocial == true) {
+        const d2 = v2.val();
+        if (d2 != null) {
+          for (const [_, value] of Object.entries(d2)) {
+            // console.log(key);
+            const choiceItem = value as Dictionary<string>;
+            // console.log(choiceItem["Token"]);
+            k.push(choiceItem["Token"]);
+          }
         }
-      }
+    }
+    let location = "";
+    if (reportID) {
+    admin.firestore().collection("Reports")
+    .doc(reportID)
+    .get().then((value) => {
+      const d = value.data();
+      if (d) {
+        location = d["location"];
+    }
+    });
+    }
+    const bodyText = " התראה חדשה ברחוב" + location;
+    console.log(k);
       k.forEach((element) => {
+        console.log(element);
         const payload = {
           token: element,
           notification: {
-            title: "התראה",
-            body: "התראה חדשה",
+            title: "התראה חדשה",
+            body: bodyText,
           },
           data: {
             body: "בדיקה בדיקה",
@@ -388,9 +444,11 @@ exports.sendListenerPushNotification = functions.database
             return {success: true};
           })
           .catch((error) => {
+            console.log(error);
             return {error: error.code};
           });
-      });
-    });
     });
   });
+});
+  }
+});
