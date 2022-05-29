@@ -411,6 +411,7 @@ exports.sendListenerPushNotification = functions.database
         }
     }
     let location = "";
+    let priority = "";
     if (reportID) {
     admin.firestore().collection("Reports")
     .doc(reportID)
@@ -418,10 +419,11 @@ exports.sendListenerPushNotification = functions.database
       const d = value.data();
       if (d) {
         location = d["location"];
-    }
-    });
-    }
-    const bodyText = " התראה חדשה ברחוב" + location;
+        priority = d["priority"];
+      }
+
+    const bodyText = "התראה חדשה ברחוב " + location + "\n"+
+    "רמת החומרה: " + priority;
     console.log(k);
       k.forEach((element) => {
         console.log(element);
@@ -448,6 +450,8 @@ exports.sendListenerPushNotification = functions.database
             return {error: error.code};
           });
     });
+  });
+}
   });
 });
   }
