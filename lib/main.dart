@@ -17,7 +17,7 @@ import 'package:red_hosen/reporter/welcome.dart' as reporterpage;
 import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
 import 'package:flutter_localizations/flutter_localizations.dart';
-
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 const bool useEmulator = true;
 
@@ -37,33 +37,56 @@ Future _connectToFirebaseEmulator() async {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
   // make sure you call `initializeApp` before using other Firebase services.
-  await Firebase.initializeApp();
-
+  // await Firebase.initializeApp();
   print("Handling a background message: ${message.messageId}");
 }
 
-void main() async {
-  // FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  // NotificationSettings settings = await messaging.requestPermission(
-  //   alert: true,
-  //   announcement: false,
-  //   badge: true,
-  //   carPlay: false,
-  //   criticalAlert: false,
-  //   provisional: false,
-  //   sound: true,
-  // );
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  description: 'This channel is used for important notifications.', // description
+  importance: Importance.max,
+);
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  print('Got a message whilst in the foreground!');
-  print('Message data: ${message.data}');
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  if (message.notification != null) {
-    print('Message also contained a notification: ${message.notification}');
-  }
+  await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  await flutterLocalNotificationsPlugin
+.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+  ?.createNotificationChannel(channel);
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+
+  RemoteNotification notification = message.notification!;
+  // AndroidNotification android = message.notification!.android!;
+
+    flutterLocalNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: "@mipmap/ic_launcher",
+            // other properties...
+          ),
+        ));
 });
   if (useEmulator) {
     await _connectToFirebaseEmulator();
@@ -73,7 +96,6 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
