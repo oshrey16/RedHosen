@@ -112,6 +112,7 @@ class MyApp extends StatelessWidget {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
+        debugShowCheckedModeBanner: false,
         supportedLocales: [
           // Locale('en', 'US'), // American English
           Locale('he', 'IL'), // Israeli Hebrew

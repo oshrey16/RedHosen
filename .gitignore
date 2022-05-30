@@ -129,3 +129,4 @@ EmulatorState/
 # /lib/Admins/manageUsers/manageAdmins/secret
 .firebase
 node_modules
+myscripts/outputLocation.txt
