@@ -28,7 +28,7 @@ pipeline {
                 
                 bat 'echo ${env.BRANCH_NAME}'
                 script{
-                    if(env.BRANCH_NAME == 'main'){
+                    if(env.GIT_BRANCH == 'main'){
                     bat 'echo %env.BRANCH_NAME%'
                     bat '''
                         %flutterPATH% build apk
@@ -36,8 +36,8 @@ pipeline {
                     '''
                     }
                     else{
-                        
-                        if(env.BRANCH_NAME == 'dev'){
+
+                        if(env.GIT_BRANCH == 'dev'){
                             bat 'echo dev'
                         }
                     }
