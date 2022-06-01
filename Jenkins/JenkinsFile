@@ -31,11 +31,11 @@ pipeline {
                 '''
             }
         }
-        if(env.BRANCH_NAME == "main"){
-            stage ('testit'){
+        stage ('testit'){
+            if(env.BRANCH_NAME == "main"){
                 steps {
                     bat 'echo main'
-            }
+                }
             }
         }
     }
