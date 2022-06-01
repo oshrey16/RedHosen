@@ -36,7 +36,6 @@ pipeline {
                     '''
                     }
                     else{
-
                         if(env.GIT_BRANCH == 'dev'){
                             bat 'echo dev'
                         }
