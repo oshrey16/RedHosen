@@ -25,17 +25,13 @@ pipeline {
         }
         stage ('Flutter Build APK') {
             steps {
-                bat '''
-                    %flutterPATH% build apk
-                    echo %WORKSPACE%"
-                '''
-            }
-        }
-        stage ('testit'){
-            steps {
                 script{
-                    if(env.BRANCH_NAME == "main"){
-                        bat 'echo main'
+                    if(env.BRANCH_NAME == 'main'){
+                    bat 'echo %env.BRANCH_NAME%'
+                    bat '''
+                        %flutterPATH% build apk
+                        echo %WORKSPACE%"
+                    '''
                     }
                 }
             }
