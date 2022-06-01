@@ -25,7 +25,6 @@ pipeline {
         }
         stage ('Flutter Build APK') {
             steps {
-                
                 bat 'echo ${env.BRANCH_NAME}'
                 script{
                     if(env.BRANCH_NAME == 'main'){
