@@ -34,7 +34,7 @@ pipeline {
         // }
         stage ('Deploy') {
             steps {
-                withEnv(['GOOGLE_APPLICATION_CREDENTIALS=.service-credentials-Shahar.json']){
+                withEnv(['GOOGLE_APPLICATION_CREDENTIALS=service-credentials-Shahar.json']){
                     dir('android'){
                         bat '''
                             ./gradlew assembleRelease appDistributionUploadRelease
