@@ -73,7 +73,7 @@ android {
             firebaseAppDistribution {
                 releaseNotes = "Notes\n" + getCommitMessages()
                 groups = "android-testers"
-                serviceCredentialsFile = "$rootDir/service-credentials-Shahar.json"
+                serviceCredentialsFile = System.getenv("service-credentials-Shahar.json")
             }
         }
     }
