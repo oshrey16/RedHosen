@@ -35,7 +35,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 dir('android'){
-                    withEnv([$HOME/.android/service-credentials-Shahar.json]){
+                    withEnv(['$HOME/.android/service-credentials-Shahar.json']){
                         bat '''
                             ./gradlew assembleRelease appDistributionUploadRelease
                             echo %WORKSPACE%"
