@@ -35,14 +35,14 @@ pipeline {
         stage ('Deploy') {
             steps {
                 dir('android'){
-                    withEnv(GOOGLE_APPLICATION_CREDENTIALS){
+                    withEnv([$HOME/.android/service-credentials-Shahar.json]){
                         bat '''
                             ./gradlew assembleRelease appDistributionUploadRelease
                             echo %WORKSPACE%"
                         '''
                     }
                 }
-                // emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+                emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
             } 
         }
     }
