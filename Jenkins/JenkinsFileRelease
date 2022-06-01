@@ -14,11 +14,11 @@ pipeline {
                 bat 'echo %PATH%'
             }
         }
-        // stage('PubGet') {
-        //     steps {
-        //         bat '%flutterPATH% pub get'
-        //     }
-        // }
+        stage('PubGet') {
+            steps {
+                bat '%flutterPATH% pub get'
+            }
+        }
         // stage('Test') {
         //     steps {
         //         bat '%flutterPATH% test'
