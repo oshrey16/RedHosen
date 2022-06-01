@@ -35,7 +35,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 dir('android'){
-                    withEnv(['"GOOGLE_APPLICATION_CREDENTIALS=$HOME/seasonal-android-firebase.json"']){
+                    withEnv(['GOOGLE_APPLICATION_CREDENTIALS=$HOME/seasonal-android-firebase.json']){
                         bat '''
                             ./gradlew assembleRelease appDistributionUploadRelease
                             echo %WORKSPACE%"
