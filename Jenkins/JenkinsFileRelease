@@ -15,6 +15,7 @@ pipeline {
                 bat '%flutterPATH% --version'
                 bat 'echo %PATH%'
             }
+        }
         // }
         // stage('PubGet') {
         //     steps {
