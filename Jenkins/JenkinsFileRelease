@@ -34,13 +34,11 @@ pipeline {
         // }
         stage ('Deploy') {
             steps {
-                dir('android'){
-                    withEnv(['GOOGLE_APPLICATION_CREDENTIALS=seasonal-android-firebase.json']){
-                        bat '''
-                            ./gradlew assembleRelease appDistributionUploadRelease
-                            echo %WORKSPACE%"
-                        '''
-                    }
+                withEnv(['GOOGLE_APPLICATION_CREDENTIALS=$HOME/.android/seasonal-android-firebase.json']){
+                    bat '''
+                        ./gradlew assembleRelease appDistributionUploadRelease
+                        echo %WORKSPACE%"
+                    '''
                 }
                 emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
             } 
