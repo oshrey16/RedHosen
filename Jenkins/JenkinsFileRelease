@@ -1,15 +1,11 @@
 pipeline {
     agent any
-    script{
-        List environmentt = [
-            "GOOGLE_APPLICATION_CREDENTIALS=$HOME/.android/service-credentials-Shahar.json"
-        ]
-    }
     environment {
         ANDROID_SDK_ROOT = "C:\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
         dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
         JENKINS_HOME = "\\Users\\OshreyDell5590"
+        GOOGLE_APPLICATION_CREDENTIALS="$HOME/.android/service-credentials-Shahar.json"
     }
     stages {
         stage('Check') {
@@ -39,7 +35,7 @@ pipeline {
         stage ('Deploy') {
             steps {
                 dir('android'){
-                    withEnv(environmentt){
+                    withEnv(%GOOGLE_APPLICATION_CREDENTIALS%){
                         bat '''
                             ./gradlew assembleRelease appDistributionUploadRelease
                             echo %WORKSPACE%"
