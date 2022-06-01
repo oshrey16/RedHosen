@@ -9,43 +9,39 @@ pipeline {
     stages {
         stage('Check') {
             steps {
-                dir('android'){
-                    bat './gradlew appDistributionLogin'
-                }
                 bat '%flutterPATH% --version'
                 bat 'echo %PATH%'
             }
         }
-        // }
-        // stage('PubGet') {
-        //     steps {
-        //         bat '%flutterPATH% pub get'
-        //     }
-        // }
-        // stage('Test') {
-        //     steps {
-        //         bat '%flutterPATH% test'
-        //     }
-        // }
-        // stage ('Flutter Build APK') {
-        //     steps {
-        //             bat '''
-        //                 %flutterPATH% build apk
-        //                 echo %WORKSPACE%"
-        //             '''
-        //     }
-        // }
-        // stage ('Deploy') {
-        //     steps {
-        //         dir('android'){
-        //             bat '''
-        //                 ./gradlew assembleRelease appDistributionUploadRelease
-        //                 echo %WORKSPACE%"
-        //             '''
-        //         }
-        //         emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
-        //     } 
-        // }
+        stage('PubGet') {
+            steps {
+                bat '%flutterPATH% pub get'
+            }
+        }
+        stage('Test') {
+            steps {
+                bat '%flutterPATH% test'
+            }
+        }
+        stage ('Flutter Build APK') {
+            steps {
+                    bat '''
+                        %flutterPATH% build apk
+                        echo %WORKSPACE%"
+                    '''
+            }
+        }
+        stage ('Deploy') {
+            steps {
+                dir('android'){
+                    bat '''
+                        ./gradlew assembleRelease appDistributionUploadRelease
+                        echo %WORKSPACE%"
+                    '''
+                }
+                emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+            } 
+        }
     }
     post {
         always {
