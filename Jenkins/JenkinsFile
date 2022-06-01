@@ -32,12 +32,12 @@ pipeline {
             }
         }
         stage ('testit'){
-            script{
-            if(env.BRANCH_NAME == "main"){
-                steps {
-                    bat 'echo main'
+            steps {
+                script{
+                    if(env.BRANCH_NAME == "main"){
+                        bat 'echo main'
+                    }
                 }
-            }
             }
         }
     }
