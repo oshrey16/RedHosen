@@ -1,8 +1,10 @@
 pipeline {
     agent any
-    List environmentt = [
-        "GOOGLE_APPLICATION_CREDENTIALS=$HOME/.android/service-credentials-Shahar.json"
-    ]
+    script{
+        List environmentt = [
+            "GOOGLE_APPLICATION_CREDENTIALS=$HOME/.android/service-credentials-Shahar.json"
+        ]
+    }
     environment {
         ANDROID_SDK_ROOT = "C:\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
