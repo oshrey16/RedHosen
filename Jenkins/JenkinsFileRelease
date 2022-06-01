@@ -5,22 +5,20 @@ pipeline {
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
         dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
         JENKINS_HOME = "\\Users\\OshreyDell5590"
+        GOOGLE_APPLICATION_CREDENTIALS="$HOME/.android/service-credentials-Shahar.json"
     }
     stages {
         stage('Check') {
             steps {
-                dir('android'){
-                    bat './gradlew appDistributionLogin'
-                }
                 bat '%flutterPATH% --version'
                 bat 'echo %PATH%'
             }
-        // }
-        // stage('PubGet') {
-        //     steps {
-        //         bat '%flutterPATH% pub get'
-        //     }
-        // }
+        }
+        stage('PubGet') {
+            steps {
+                bat '%flutterPATH% pub get'
+            }
+        }
         // stage('Test') {
         //     steps {
         //         bat '%flutterPATH% test'
@@ -34,17 +32,19 @@ pipeline {
         //             '''
         //     }
         // }
-        // stage ('Deploy') {
-        //     steps {
-        //         dir('android'){
-        //             bat '''
-        //                 ./gradlew assembleRelease appDistributionUploadRelease
-        //                 echo %WORKSPACE%"
-        //             '''
-        //         }
-        //         emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
-        //     } 
-        // }
+        stage ('Deploy') {
+            steps {
+                withEnv(['GOOGLE_APPLICATION_CREDENTIALS=service-credentials-Shahar.json']){
+                    dir('android'){
+                        bat '''
+                            ./gradlew assembleRelease appDistributionUploadRelease
+                            echo %WORKSPACE%"
+                        '''
+                    }
+                }
+                emailext body: 'New Vesion of Shahar app Check Available Google Firebase Console', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'New Version of ShaharApp'
+            } 
+        }
     }
     post {
         always {
