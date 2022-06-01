@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    def isMainline = ["develop", "main"].contains(env.BRANCH_NAME)
+    def isMainline =["develop", "main"].contains(env.BRANCH_NAME)
     environment {
         ANDROID_SDK_ROOT = "C:\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
