@@ -26,6 +26,8 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
+// appdistribution
+apply plugin: 'com.google.firebase.appdistribution'
 
 android {
     // Add to build

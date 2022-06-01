@@ -25,11 +25,8 @@ pipeline {
         }
         stage ('Flutter Build APK') {
             steps {
-                
-                bat 'echo ${env.BRANCH_NAME}'
                 script{
                     if(env.GIT_BRANCH == 'main'){
-                    bat 'echo %env.BRANCH_NAME%'
                     bat '''
                         %flutterPATH% build apk
                         echo %WORKSPACE%"
@@ -37,7 +34,27 @@ pipeline {
                     }
                     else{
                         if(env.GIT_BRANCH == 'dev'){
-                            bat 'echo dev'
+                            bat 'echo pass'
+                        }
+                    }
+                }
+            }
+        }
+        stage ('Deploy') {
+            steps {
+                script{
+                    if(env.GIT_BRANCH == 'main'){
+                        dir('android'){
+                            bat '''
+                                ./gradlew assembleRelease appDistributionUploadRelease
+                                echo %WORKSPACE%"
+                            '''
+                        }
+                        emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
+                    }
+                    else{
+                        if(env.GIT_BRANCH == 'dev'){
+                            bat 'echo pass'
                         }
                     }
                 }
