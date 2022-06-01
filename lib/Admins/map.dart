@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:async';
@@ -13,6 +14,7 @@ class MapPage extends StatefulWidget {
 }
 
 class _MapPageState extends State<MapPage> {
+  List<LatLng> circless = [];
   List<LatLng> circles = [
     const LatLng(31.5270776, 34.595017),
     const LatLng(31.5270776, 34.595017),
@@ -58,7 +60,7 @@ class _MapPageState extends State<MapPage> {
   @override
   void initState() {
     // cirr = sderotPoints.toSet();
-    setRadius().then((value) => initPoints().then((value) => calcPoints()));
+    getPointsFromFireStore().then((value)=>setRadius().then((value) => initPoints().then((value) => calcPoints())));
     // calcPoints();
     super.initState();
   }
@@ -96,6 +98,16 @@ class _MapPageState extends State<MapPage> {
       radius[mark.circleId] = 0;
     }
   }
+  Future<void> getPointsFromFireStore() async {
+    FirebaseFirestore.instance.collection('Reports').get().then((value) {
+      for (var v in value.docs){
+        var point = v["points"] as GeoPoint;
+        circless.add(LatLng(point.latitude, point.longitude));;
+      }
+      print(circless);
+      // print(value.docs["points"]);
+    });
+  }
 
   Future<void> calcPoints() async {
     setRadius();
@@ -104,10 +116,10 @@ class _MapPageState extends State<MapPage> {
     Map<CircleId, int> counters = {};
     for (var mark in sderotPoints) {
       counters[mark.circleId] = 0;
-    }
-    for (var i = 0; i < circles.length; i++) {
+    }//ASD
+    for (var i = 0; i < circless.length; i++) {
       for (var mark in sderotPoints) {
-        g = calculateDistance(circles[i].latitude, circles[i].longitude,
+        g = calculateDistance(circless[i].latitude, circless[i].longitude,
             mark.center.latitude, mark.center.longitude);
         if (g <= 0.3) {
           int count = counters[mark.circleId]!;
