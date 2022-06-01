@@ -36,6 +36,7 @@ pipeline {
                     '''
                     }
                     else{
+                        
                         if(env.BRANCH_NAME == 'dev'){
                             bat 'echo dev'
                         }
