@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    List environmentt = [
+        "GOOGLE_APPLICATION_CREDENTIALS=$HOME/.android/service-credentials-Shahar.json"
+    ]
     environment {
         ANDROID_SDK_ROOT = "C:\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
         flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
@@ -13,31 +16,33 @@ pipeline {
                 bat 'echo %PATH%'
             }
         }
-        stage('PubGet') {
-            steps {
-                bat '%flutterPATH% pub get'
-            }
-        }
-        stage('Test') {
-            steps {
-                bat '%flutterPATH% test'
-            }
-        }
-        stage ('Flutter Build APK') {
-            steps {
-                    bat '''
-                        %flutterPATH% build apk
-                        echo %WORKSPACE%"
-                    '''
-            }
-        }
+        // stage('PubGet') {
+        //     steps {
+        //         bat '%flutterPATH% pub get'
+        //     }
+        // }
+        // stage('Test') {
+        //     steps {
+        //         bat '%flutterPATH% test'
+        //     }
+        // }
+        // stage ('Flutter Build APK') {
+        //     steps {
+        //             bat '''
+        //                 %flutterPATH% build apk
+        //                 echo %WORKSPACE%"
+        //             '''
+        //     }
+        // }
         stage ('Deploy') {
             steps {
                 dir('android'){
-                    bat '''
-                        ./gradlew assembleRelease appDistributionUploadRelease
-                        echo %WORKSPACE%"
-                    '''
+                    withEnv(environmentt){
+                        bat '''
+                            ./gradlew assembleRelease appDistributionUploadRelease
+                            echo %WORKSPACE%"
+                        '''
+                    }
                 }
                 emailext body: 'A Test EMail', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'Test'
             } 
