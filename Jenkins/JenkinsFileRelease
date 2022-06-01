@@ -32,6 +32,7 @@ pipeline {
             }
         }
         stage ('Deploy') {
+            
             steps {
                 dir('android'){
                     bat '''
