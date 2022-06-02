@@ -19,8 +19,13 @@ import 'dart:io' show Platform;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-const bool useEmulator = false;
-
+bool useEmulator = false;
+void getParameterEmulator(){
+  const param = String.fromEnvironment("useEmulator", defaultValue: "false");
+  if(param == "true"){
+    useEmulator = true;
+  }
+}
 Future _connectToFirebaseEmulator() async {
   final localHostString = Platform.isAndroid ? '10.0.2.2' : 'localhost';
   FirebaseFirestore.instance.useFirestoreEmulator(localHostString, 8080);
@@ -50,10 +55,10 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 );
 
 void main() async {
+  getParameterEmulator();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-
   await messaging.requestPermission(
     alert: true,
     announcement: false,
