@@ -190,7 +190,8 @@ class _ReportPageState extends State<ReportPage> {
                       });
                     },
                     child: const Text("שלח דיווח"),
-                  ))
+                  )),
+                  const SizedBox(height: 15),
             ]))));
   }
 
@@ -335,8 +336,7 @@ class _ReportPageState extends State<ReportPage> {
       await _speechToText.cancel();
       await _speechToText.listen(
           onResult: _onSpeechResult,
-          localeId: "he",
-          pauseFor: const Duration(seconds: 20));
+          localeId: "he");
     }
     setState(() {
       savedText = _textControllers[selectdSpeechTotext]!.text;
