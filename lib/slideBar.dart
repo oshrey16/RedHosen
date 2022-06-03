@@ -31,7 +31,7 @@ class NavDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.input),
             title: const Text('מסך ראשי'),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () => {Navigator.of(context).popUntil((route) => route.isFirst)},
           ),
           ListTile(
             leading: const Icon(Icons.verified_user,color: Colors.green),
