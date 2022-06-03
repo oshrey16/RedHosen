@@ -102,6 +102,10 @@ flutter:
   assets:
     - assets/sderot_streets.csv
     - assets/icon/icon.png
+  fonts:
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/CustomIcons.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

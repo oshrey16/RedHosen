@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:red_hosen/Admins/adminHosen/adminHome.dart';
 import 'package:red_hosen/Admins/adminHosen/mainManage.dart';
+import 'package:red_hosen/Admins/adminSocial/mainManage.dart';
 import 'package:red_hosen/Admins/export_reports.dart';
 import 'package:red_hosen/Admins/graphs.dart';
-import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
-import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
-import 'package:red_hosen/Admins/manageUsers/user_rejection.dart';
-import 'package:red_hosen/custom_icons_icons.dart';
-import 'package:red_hosen/in_progress.dart';
-import 'package:red_hosen/my_reports.dart';
-import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/Admins/map.dart';
+import 'package:red_hosen/custom_icons_icons.dart';
 import 'package:red_hosen/reporter/report_page.dart';
-import 'package:red_hosen/active_reports.dart';
 import 'package:red_hosen/slideBar.dart';
+import 'package:flutter/widgets.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class AdminHome extends StatefulWidget {
+  const AdminHome({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _AdminHomeState createState() => _AdminHomeState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AdminHomeState extends State<AdminHome> {
   @override
   void initState() {
     super.initState();
@@ -33,46 +27,18 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         drawer: NavDrawer(),
         appBar:
-            AppBar(title: const Text("מנהל חוסן - ראשי"), centerTitle: true),
+            AppBar(title: const Text("מנהל רווחה - דף מנהל"), centerTitle: true),
         body: Container(
             alignment: Alignment.center,
+            padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: SingleChildScrollView(
               child: Column(children: [
-                //TODO - DONT FORGET TO DELETE!!!!
-                // SizedBox(
-                //     height: 50,
-                //     child: ElevatedButton(
-                //       onPressed: () {
-                //         Navigator.push(
-                //           context,
-                //           MaterialPageRoute(
-                //               builder: (context) => const SecretPage()),
-                //         );
-                //       },
-                //       child: const Text("דף סודי"),
-                //     )),
-                // const SizedBox(height: 15),
-                //                 SizedBox(
-                //   height: 50,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(
-                //             builder: (context) => const UserConfirmation(
-                //                 type: UserType.reporter)),
-                //       );
-                //     },
-                //     child: const Text("אישור צח\"ש במערכת"),
-                //   ),
-                // ),
-                //TODO - DONT FORGET TO DELETE!!!!
                 GestureDetector(
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    color: Colors.red,
+                    color: Colors.orange.shade400,
                     elevation: 14.0,
                     child: Container(
                         height: 80,
@@ -84,16 +50,16 @@ class _HomePageState extends State<HomePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const [
-                                  Text("צור דיווח",
+                                  Text("ניהול משתמשים",
                                       style: TextStyle(fontSize: 25)),
-                                  Text("דווח על אירוע חירום"),
+                                  Text("נהל את המשמשים במערכת"),
                                 ],
                               ),
                               Container(
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    Icons.report_gmailerrorred,
+                                    Icons.manage_accounts,
                                     color: Colors.white,
                                     size: 40,
                                   ))
@@ -103,17 +69,18 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ReportPage()),
+                          builder: (context) => const MainMagnageSocialPage()),
                     );
                   },
                 ),
                 const SizedBox(height: 15),
+
                 GestureDetector(
                   child: Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15.0),
                     ),
-                    color: Colors.amber.shade900,
+                    color: Colors.red.shade400,
                     elevation: 14.0,
                     child: Container(
                         height: 80,
@@ -125,16 +92,16 @@ class _HomePageState extends State<HomePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const [
-                                  Text("דיווחים חדשים",
+                                  Text("מפת העיר",
                                       style: TextStyle(fontSize: 25)),
-                                  Text("צפה בדיווחים הדורשים טיפול"),
+                                  Text("מפה ממופה לפי איזורי נפגעים"),
                                 ],
                               ),
                               Container(
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.alarm_svgrepo_com__1_,
+                                    Icons.map_outlined,
                                     color: Colors.white,
                                     size: 40,
                                   ))
@@ -143,94 +110,12 @@ class _HomePageState extends State<HomePage> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const ActiveReports()),
+                      MaterialPageRoute(builder: (context) => const MapPage()),
                     );
                   },
                 ),
                 const SizedBox(height: 15),
-                GestureDetector(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    color: Colors.yellow.shade700,
-                    elevation: 14.0,
-                    child: Container(
-                        height: 80,
-                        padding: const EdgeInsets.all(10.0),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text("דיווחים בטיפול",
-                                      style: TextStyle(fontSize: 25)),
-                                  Text("צפה בדיווחים שבתהליך טיפול"),
-                                ],
-                              ),
-                              Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 10, 0),
-                                  child: const Icon(
-                                    CustomIcons.health_care_doctor_svgrepo_com,
-                                    color: Colors.white,
-                                    size: 40,
-                                  ))
-                            ])),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const InProgressReports()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 15),
-                GestureDetector(
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15.0),
-                    ),
-                    color: Colors.green,
-                    elevation: 14.0,
-                    child: Container(
-                        height: 80,
-                        padding: const EdgeInsets.all(10.0),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const [
-                                  Text("הדיווחים שלי",
-                                      style: TextStyle(fontSize: 25)),
-                                  Text("צפה בדיווחים שדווחו על ידי"),
-                                ],
-                              ),
-                              Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 0, 10, 0),
-                                  child: const Icon(
-                                    CustomIcons.documents_svgrepo_com,
-                                    color: Colors.white,
-                                    size: 40,
-                                  ))
-                            ])),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const MyReports()),
-                    );
-                  },
-                ),
-                const SizedBox(height: 15),
+
                 GestureDetector(
                   child: Card(
                     shape: RoundedRectangleBorder(
@@ -248,16 +133,15 @@ class _HomePageState extends State<HomePage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const [
-                                  Text("דף מנהלים",
-                                      style: TextStyle(fontSize: 25)),
-                                  Text("פעולות מנהלים במערכת"),
+                                  Text("גרפים", style: TextStyle(fontSize: 25)),
+                                  Text("צפה בגרפי מידע"),
                                 ],
                               ),
                               Container(
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.manager_svgrepo_com,
+                                    CustomIcons.monitor_graph_svgrepo_com,
                                     color: Colors.white,
                                     size: 40,
                                   ))
@@ -267,7 +151,48 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const AdminHome()),
+                          builder: (context) => const GrapghsPage()),
+                    );
+                  },
+                ),
+                const SizedBox(height: 15),
+                GestureDetector(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    color: Colors.green.shade300,
+                    elevation: 14.0,
+                    child: Container(
+                        height: 80,
+                        padding: const EdgeInsets.all(10.0),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("הפקת דוח",
+                                      style: TextStyle(fontSize: 25)),
+                                  Text("הפק דוחות השמורים במערכת"),
+                                ],
+                              ),
+                              Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                  child: const Icon(
+                                    CustomIcons.export_svgrepo_com,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ))
+                            ])),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ExportReportsPage()),
                     );
                   },
                 ),
