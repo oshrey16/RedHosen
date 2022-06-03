@@ -61,6 +61,8 @@ dependencies:
   # PATH
   path_provider: ^2.0.10
   open_file: ^3.2.1
+  # Send Email
+  flutter_email_sender: ^5.1.0
 
   # Test
   fake_cloud_firestore: ^1.2.2

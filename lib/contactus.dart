@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:red_hosen/slideBar.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class ContactUsPage extends StatefulWidget {
   const ContactUsPage({Key? key}) : super(key: key);
@@ -14,6 +15,15 @@ class _ContactUsPageState extends State<ContactUsPage> {
   late String useruid;
   String? name;
   final _message = TextEditingController();
+
+  final Email email = Email(
+    body: 'Email body',
+    subject: 'Email subject',
+    recipients: ['foxGdev@gmail.com'],
+    cc: ['cc@example.com'],
+    bcc: ['bcc@example.com'],
+    isHTML: false,
+  );
 
   @override
   void initState() {
@@ -39,7 +49,7 @@ class _ContactUsPageState extends State<ContactUsPage> {
               // textDirection: TextDirection.rtl,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(":שם"),
+                const Text("שם:"),
                 const SizedBox(width: 20),
                 Text(name ?? "אנונימי")
               ],
@@ -60,6 +70,18 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   maxLength: 400,
                   controller: _message,
                 )),
+                const SizedBox(height: 20),
+                ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          minimumSize: Size(MediaQuery.of(context).size.width / 2, 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.0),
+          )),
+      onPressed: () async {
+        await FlutterEmailSender.send(email);
+      },
+      child: const Text("שלח דיווח"),
+    ),
           ]),
         ));
   }
