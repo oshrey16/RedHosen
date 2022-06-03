@@ -33,17 +33,11 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 15),
               loginReglinePassword(_passwordController, "סיסמא"),
               const SizedBox(
-                height: 20,
+                height: 30,
               ),
-              ConstrainedBox(
-                  constraints:
-                      const BoxConstraints.tightFor(width: 160, height: 40),
-                  child: loginButton()),
+              loginButton(),
               const SizedBox(height: 15),
-              ConstrainedBox(
-                  constraints:
-                      const BoxConstraints.tightFor(width: 160, height: 40),
-                  child: registerButton()),
+              registerButton(),
               const SizedBox(height: 15),
               InkWell(
                 onTap: () {
@@ -63,6 +57,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget registerButton() {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          minimumSize: Size(MediaQuery.of(context).size.width / 2, 40),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14.0),
+          )),
       onPressed: () {
         Navigator.push(
           context,
@@ -75,7 +74,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget loginButton() {
     return ElevatedButton(
-      key: const Key("LoginButton"),
+        key: const Key("LoginButton"),
+        style: ElevatedButton.styleFrom(
+            minimumSize: Size(MediaQuery.of(context).size.width / 2, 50),
+            primary: Colors.green,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14.0),
+            )),
         onPressed: () async {
           final String email = _emailController.text.trim();
           final String password = _passwordController.text.trim();
@@ -98,72 +103,54 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget loginRegline(TextEditingController controller, String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(title + " :", style: const TextStyle(fontSize: 16)),
-        const SizedBox(width: 20),
-        SizedBox(
-          width: MediaQuery. of(context). size. width/2,
-          height: 60,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-          child: TextField(
-            key: const Key("Email"),
-            maxLength: 45,
-            textAlignVertical: TextAlignVertical.center,
-            controller: controller,
-            autofocus: true,
-            decoration: InputDecoration(
-              counterText: "",
-              border: const OutlineInputBorder(),
-              labelText: "הקלד " + title,
-            ),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: TextField(
+          key: const Key("Email"),
+          maxLength: 45,
+          textAlignVertical: TextAlignVertical.center,
+          controller: controller,
+          autofocus: false,
+          decoration: InputDecoration(
+            counterText: "",
+            border: const OutlineInputBorder(),
+            labelText: title,
           ),
         ),
-        ),
-      ],
+      ),
     );
   }
 
   Widget loginReglinePassword(TextEditingController controller, String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Text(title + " :", style: const TextStyle(fontSize: 16)),
-        const SizedBox(width: 20),
-        SizedBox(
-          width: MediaQuery. of(context). size. width/2,
-          height: 60,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: TextField(
-              maxLength: 45,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-              obscureText: _passwordVisible,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: "הקלד " + title,
-                  counterText: "",
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _passwordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.blue,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        _passwordVisible = !_passwordVisible;
-                      });
-                    },
-                  )),
-            ),
-          ),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.7,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: TextField(
+          maxLength: 45,
+          textAlignVertical: TextAlignVertical.center,
+          controller: controller,
+          autofocus: false,
+          obscureText: _passwordVisible,
+          decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              labelText: title,
+              counterText: "",
+              suffixIcon: IconButton(
+                icon: Icon(
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.blue,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
+              )),
         ),
-      ],
+      ),
     );
   }
 }
