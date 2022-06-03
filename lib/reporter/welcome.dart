@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:red_hosen/custom_icons_icons.dart';
+import 'package:red_hosen/my_reports.dart';
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/reporter/report_page.dart';
 import 'package:red_hosen/slideBar.dart';
@@ -21,23 +23,87 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             child: SingleChildScrollView(
                 child: Column(children: [
-              SizedBox(
-                height: 50,
-                width: 140,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                        primary: Colors.green
+                                  GestureDetector(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
-                  onPressed: () {
+                    color: Colors.red,
+                    elevation: 14.0,
+                    child: Container(
+                        height: 80,
+                        padding: const EdgeInsets.all(10.0),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("צור דיווח",
+                                      style: TextStyle(fontSize: 25)),
+                                  Text("דווח על אירוע חירום"),
+                                ],
+                              ),
+                              Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                  child: const Icon(
+                                    Icons.report_gmailerrorred,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ))
+                            ])),
+                  ),
+                  onTap: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const ReportPage()),
                     );
                   },
-                  child: const Text("צור דיווח"),
                 ),
-              ),
+                const SizedBox(height: 15),
+                  GestureDetector(
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    color: Colors.green,
+                    elevation: 14.0,
+                    child: Container(
+                        height: 80,
+                        padding: const EdgeInsets.all(10.0),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text("הדיווחים שלי",
+                                      style: TextStyle(fontSize: 25)),
+                                  Text("צפה בדיווחים שדווחו על ידי"),
+                                ],
+                              ),
+                              Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 0, 10, 0),
+                                  child: const Icon(
+                                    CustomIcons.documents_svgrepo_com,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ))
+                            ])),
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MyReports()),
+                    );
+                  },
+                ),
             ]))));
   }
 }
