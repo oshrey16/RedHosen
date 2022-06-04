@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+    environment {
+        ANDROID_SDK_ROOT = "C:\\Users\\OshreyDell5590\\AppData\\Local\\Android\\Sdk"
+        flutterPATH = "\\flutterSDK\\flutter\\bin\\flutter"
+        dartPATH = "\\flutterSDK\\flutter\\bin\\dart"
+        JENKINS_HOME = "\\Users\\OshreyDell5590"
+        GOOGLE_APPLICATION_CREDENTIALS="$HOME/.android/service-credentials-Shahar.json"
+    }
+    stages {
+        stage('Check') {
+            steps {
+                bat '%flutterPATH% --version'
+                bat 'echo %PATH%'
+            }
+        }
+        stage('PubGet') {
+            steps {
+                bat '%flutterPATH% pub get'
+            }
+        }
+        // stage('Test') {
+        //     steps {
+        //         bat '%flutterPATH% test'
+        //     }
+        // }
+        // stage ('Flutter Build APK') {
+        //     steps {
+        //             bat '''
+        //                 %flutterPATH% build apk
+        //                 echo %WORKSPACE%"
+        //             '''
+        //     }
+        // }
+        stage ('Deploy') {
+            steps {
+                withEnv(['GOOGLE_APPLICATION_CREDENTIALS=service-credentials-Shahar.json']){
+                    dir('android'){
+                        bat '''
+                            ./gradlew assembleRelease appDistributionUploadRelease
+                            echo %WORKSPACE%"
+                        '''
+                    }
+                }
+                emailext body: 'New Vesion !!TESTERS!! of Shahar app Check Available Google Firebase Console', recipientProviders: [[$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']], subject: 'New Version of ShaharApp'
+            } 
+        }
+    }
+    post {
+        always {
+            bat '%flutterPATH% clean'
+        }
+    }
+}
