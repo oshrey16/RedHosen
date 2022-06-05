@@ -90,6 +90,21 @@ extension UserTypeSam on UserType {
   }
 }
 
+extension UserTypeHeb on UserType {
+  String get collectionStrHeb {
+    switch (this) {
+      case UserType.hosen:
+        return "מטפל";
+      case UserType.social:
+        return "עובד סוציאלי";
+      case UserType.reporter:
+        return "מדווח";
+      case UserType.nil:
+        return "nil";
+    }
+  }
+}
+
 /////EorD - enabled or diabled
 enum EorD {
   enabled,

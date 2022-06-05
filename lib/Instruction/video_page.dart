@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:red_hosen/slideBar.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 class VideoPage extends StatefulWidget {
   const VideoPage({Key? key}) : super(key: key);
@@ -14,7 +15,7 @@ class _VideoPageState extends State<VideoPage> {
     initialVideoId: 'Fc652_hcipU',
     flags: const YoutubePlayerFlags(
       autoPlay: false,
-      mute: true,
+      mute: false,
     ),
   );
 
@@ -37,6 +38,7 @@ class _VideoPageState extends State<VideoPage> {
             ),
             onReady: () {},
           ),
-        ]));
+          ])
+        );
   }
 }

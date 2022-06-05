@@ -14,10 +14,18 @@ class AuthService {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password).then((value) {
             updateFCMToken(value);
+            setUserName();
           });
       return "Logged In";
     } catch (e) {
       return e.toString();
+    }
+  }
+
+  void setUserName() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      global.name = user.displayName ?? '';
     }
   }
 
@@ -73,6 +81,8 @@ class AuthService {
 
   Future<String> logout() async {
     global.usertype = UserType.nil;
+    global.name = "";
+    global.isAdmin = false;
     try {
       await FirebaseAuth.instance.signOut();
       return "Log Out";

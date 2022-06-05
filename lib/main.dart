@@ -152,6 +152,7 @@ Future _checkuser(BuildContext context) async {
         if (type == "Therapist") {
           global.usertype = UserType.hosen;
           if (roleadmin == true) {
+            global.isAdmin = true;
             await Navigator.of(context).pushReplacement(MaterialPageRoute(
                 builder: (context) => const admin_hosenpage.HomePage()));
           } else {
@@ -162,6 +163,7 @@ Future _checkuser(BuildContext context) async {
           if (type == "SocialWorker") {
             global.usertype = UserType.social;
             if (roleadmin == true) {
+              global.isAdmin = true;
               await Navigator.of(context).pushReplacement(MaterialPageRoute(
                   builder: (context) => const admin_socialpage.HomePage()));
             } else {

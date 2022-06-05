@@ -7,3 +7,6 @@ institution getinstitution(){
   if (usertype == UserType.social) return institution.social;
   return institution.nil;
 }
+
+String name = "";
+bool isAdmin = false;
