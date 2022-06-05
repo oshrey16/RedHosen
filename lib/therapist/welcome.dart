@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/secret_page.dart';
-import 'package:red_hosen/Admins/manageUsers/user_confirmation.dart';
 import 'package:red_hosen/active_reports.dart';
 import 'package:red_hosen/custom_icons_icons.dart';
 import 'package:red_hosen/in_progress.dart';
 import 'package:red_hosen/my_reports.dart';
-import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/reporter/report_page.dart';
 import 'package:red_hosen/slideBar.dart';
 
@@ -94,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.alarm_svgrepo_com__1_,
+                                    CustomIcons.alarmSvgrepo,
                                     color: Colors.white,
                                     size: 40,
                                   ))
@@ -135,7 +132,7 @@ class _HomePageState extends State<HomePage> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.health_care_doctor_svgrepo_com,
+                                    CustomIcons.healthCareDoctorSvgrepo,
                                     color: Colors.white,
                                     size: 40,
                                   ))
@@ -176,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.documents_svgrepo_com,
+                                    CustomIcons.documentsSvgrepo,
                                     color: Colors.white,
                                     size: 40,
                                   ))

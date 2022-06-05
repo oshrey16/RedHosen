@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:red_hosen/Instruction/pdf_read.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:red_hosen/contactus.dart';
 import 'package:red_hosen/main.dart';
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/Instruction/video_page.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import 'global.dart' as global;

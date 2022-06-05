@@ -124,7 +124,7 @@ class _ActiveReportsState extends State<ActiveReports> {
                       Text("כתובת דיווח: ${value['location']}"),
                       Text("מספר נפגעים: ${value['numberpeople'].toString()}"),
                       Text(
-                        "רמת החומרה: ${priority}",
+                        "רמת החומרה: $priority",
                         style: TextStyle(
                           color: priority == "גבוה"
                               ? Colors.red
@@ -134,24 +134,25 @@ class _ActiveReportsState extends State<ActiveReports> {
                         ),
                       ),
                       Visibility(
+                        visible: visiblebuttons[key]!,
                         child: Row(children: [ElevatedButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(builder: (context) => (ReportRead(reportid:key))));
                           },
-                          child: const Text("פתח דוח"),
                           style: ElevatedButton.styleFrom(primary: Colors.brown.shade300),
+                          child: const Text("פתח דוח"),
                         ),
                         const SizedBox(width: 40),
                         ElevatedButton(
                           onPressed: () {
                             navigateTo(_selectedPoints.latitude,_selectedPoints.longitude);
                           },
-                          child: const Text("ניווט"),
                           style: ElevatedButton.styleFrom(primary: Colors.green.shade300),
+                          child: const Text("ניווט"),
                         ),
                         
                       ],),
-                      visible: visiblebuttons[key]!,
+                      
                       )
                     ]),
                     const SizedBox(

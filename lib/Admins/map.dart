@@ -103,7 +103,7 @@ class _MapPageState extends State<MapPage> {
     FirebaseFirestore.instance.collection('Reports').get().then((value) {
       for (var v in value.docs){
         var point = v["points"] as GeoPoint;
-        circless.add(LatLng(point.latitude, point.longitude));;
+        circless.add(LatLng(point.latitude, point.longitude));
       }
       print(circless);
       // print(value.docs["points"]);
@@ -154,11 +154,11 @@ class _MapPageState extends State<MapPage> {
     return;
   }
 
-  double convertRange(double OldMax, double OldMin, double NewMax,
-      double NewMin, double OldValue) {
-    var OldRange = (OldMax - OldMin);
-    var NewRange = (NewMax - NewMin);
-    return ((((OldValue - OldMin) * NewRange) / OldRange) + NewMin);
+  double convertRange(double oldMax, double oldMin, double newMax,
+      double newMin, double oldValue) {
+    var oldRange = (oldMax - oldMin);
+    var newRange = (newMax - newMin);
+    return ((((oldValue - oldMin) * newRange) / oldRange) + newMin);
   }
 
   Future<void> initPoints() async {

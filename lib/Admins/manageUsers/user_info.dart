@@ -80,7 +80,7 @@ class _UserInfoState extends State<UserInfo> {
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
+        Text(title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }

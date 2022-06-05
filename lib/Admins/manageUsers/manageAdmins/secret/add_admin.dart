@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:red_hosen/Admins/manageUsers/user_info.dart';
 import 'package:red_hosen/Admins/manageUsers/manageAdmins/secret/make_admin.dart';
 import 'package:red_hosen/mytools.dart';
 

@@ -1,7 +1,4 @@
-// import 'dart:io';
-
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -10,7 +7,6 @@ import 'package:red_hosen/slideBar.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xls;
-import 'package:path_provider/path_provider.dart' as pp;
 import 'package:open_file/open_file.dart';
 
 class ExportReportsPage extends StatefulWidget {
@@ -44,14 +40,38 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
   }
 
   late String fileName;
-  List lettersiter = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"];
+  List lettersiter = [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L",
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H",
+    "I",
+    "J",
+    "K",
+    "L"
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: NavDrawer(),
-        appBar:
-            AppBar(title: const Text("הפקת דוחות"), centerTitle: true),
+        appBar: AppBar(title: const Text("הפקת דוחות"), centerTitle: true),
         body: Container(
           alignment: Alignment.center,
           child: SingleChildScrollView(
@@ -70,7 +90,9 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
               child: ElevatedButton(
                 onPressed: () {
                   fileName = DateTime.now().toString();
-                  _generateDoc().then((value) {_openExcel();});
+                  _generateDoc().then((value) {
+                    _openExcel();
+                  });
                 },
                 child: const Text("הפק דוח"),
               ),
@@ -79,7 +101,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
         ));
   }
 
-  Future <void> _generateDoc() {
+  Future<void> _generateDoc() {
     List<String> dates = _range.split(" - ");
     String fdate = dates[0];
     var dateTime1 = intl.DateFormat('dd/MM/yyyy').parse(fdate);
@@ -92,9 +114,8 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
         .get()
         .then((value) {
       if (value.docs.isNotEmpty) {
-        return _createExcel(value.docs);
-      }
-      else{
+        _createExcel(value.docs);
+      } else {
         showDialogMsg(context, MsgType.alert, "לא נמצאו דוחות בתאריכים אלה");
       }
     });
@@ -114,7 +135,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
   Future<File> _writeExcel(List<int> bytes) async {
     final file = await _localFile;
     // Write the file
-    print("SAVED! path: " + file.path);
+    // print("SAVED! path: " + file.path);
     return file.writeAsBytes(bytes);
   }
 
@@ -122,8 +143,6 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     try {
       final file = await _localFile;
       // Read the file
-      final contents = await file.readAsBytes();
-      // file.open();
       await OpenFile.open(file.path.toString());
       return 0;
     } catch (e) {
@@ -132,7 +151,8 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     }
   }
 
-  Future<void> _createExcel(List<QueryDocumentSnapshot<Map<String, dynamic>>> docs) async {
+  Future<void> _createExcel(
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> docs) async {
     // Create a new Excel document.
     final xls.Workbook workbook = xls.Workbook();
     //Accessing worksheet via index.
@@ -147,7 +167,9 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     sheet.getRangeByName('G1').setText('פרטים על קשישים שנפגעו');
     sheet.getRangeByName('H1').setText('תאור נזק לרכוש');
     sheet.getRangeByName('I1').setText('סוג המענה שניתן בסמוך לאירוע');
-    sheet.getRangeByName('J1').setText('פרוט המענה שניתן בסמוך לאירוע וע"י איזה גורם מקצוע');
+    sheet
+        .getRangeByName('J1')
+        .setText('פרוט המענה שניתן בסמוך לאירוע וע"י איזה גורם מקצוע');
     sheet.getRangeByName('K1').setText('המלצות להמשך טיפול ו/או מעקב');
     sheet.getRangeByName('L1').setText('הערות ותוספות');
     sheet.getRangeByName('N1:O1').merge();
@@ -156,21 +178,22 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     sheet.getRangeByName('N2').setDateTime(DateTime.now());
     sheet.getRangeByName('N3:O4').merge();
     sheet.getRangeByName('O4').setText('כאן יהיה לוגו');
-    // sheet.getRangeByName('N3').setText('כאן יהיה לוגו');
-    
+
     int row = 2;
-    for(var d in docs){
+    for (var d in docs) {
       var data = d.data();
-      if (data.isNotEmpty){
+      if (data.isNotEmpty) {
         int le = data.length;
-        for(int i=0;i<data.length;i++){
-          print('${lettersiter[i]}$row');
-          if(i<=12 && i>=0) {
-            if(data[i.toString()] != ""){
-              if(i!=8){
-              sheet.getRangeByName('${lettersiter[i]}$row').setText(data[i.toString()].toString());
-            }}
-            else{
+        // for(int i=0;i<data.length;i++){
+        for (int i = 0; i < le; i++) {
+          if (i <= 12 && i >= 0) {
+            if (data[i.toString()] != "") {
+              if (i != 8) {
+                sheet
+                    .getRangeByName('${lettersiter[i]}$row')
+                    .setText(data[i.toString()].toString());
+              }
+            } else {
               le++;
             }
           }

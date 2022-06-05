@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:red_hosen/auth_services.dart';
 import 'package:provider/provider.dart';
-import 'package:red_hosen/register.dart';
 import 'package:red_hosen/mytools.dart';
 
 class ForgotPassPage extends StatefulWidget {
@@ -49,7 +48,7 @@ class _LoginPageState extends State<ForgotPassPage> {
                         "אימייל נשלח! אנא בדוק את תיבת המייל")
                     .then((value) => Navigator.pop(context));
             }).catchError((error) {
-              showDialogMsg(context, MsgType.error, "תיאור השגיאה:"  + error.toString());
+              showDialogMsg(context, MsgType.error, "תיאור השגיאה: ${error.toString()}");
             });
           }
         },

@@ -70,7 +70,7 @@ class _UserInfoState extends State<MakeAdminconf> {
             ),
           ),
         ),
-        Text("   :" + title, style: const TextStyle(fontSize: 16)),
+        Text(title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }

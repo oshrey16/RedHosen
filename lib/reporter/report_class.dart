@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:intl/intl.dart';
 import 'package:red_hosen/mytools.dart';
 
 class ReportClass {

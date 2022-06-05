@@ -4,9 +4,7 @@ import 'package:red_hosen/Admins/export_reports.dart';
 import 'package:red_hosen/Admins/graphs.dart';
 import 'package:red_hosen/Admins/map.dart';
 import 'package:red_hosen/custom_icons_icons.dart';
-import 'package:red_hosen/reporter/report_page.dart';
 import 'package:red_hosen/slideBar.dart';
-import 'package:flutter/widgets.dart';
 
 class AdminHome extends StatefulWidget {
   const AdminHome({Key? key}) : super(key: key);
@@ -169,7 +167,7 @@ class _AdminHomeState extends State<AdminHome> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.monitor_graph_svgrepo_com,
+                                    CustomIcons.monitorGraphSvgrepo,
                                     color: Colors.white,
                                     size: 40,
                                   ))
@@ -210,7 +208,7 @@ class _AdminHomeState extends State<AdminHome> {
                                   padding:
                                       const EdgeInsets.fromLTRB(20, 0, 10, 0),
                                   child: const Icon(
-                                    CustomIcons.export_svgrepo_com,
+                                    CustomIcons.exportSvgrepo,
                                     color: Colors.white,
                                     size: 40,
                                   ))
