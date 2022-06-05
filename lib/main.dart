@@ -122,7 +122,7 @@ class MyApp extends StatelessWidget {
           // Locale('en', 'US'), // American English
           Locale('he', 'IL'), // Israeli Hebrew
         ],
-        title: 'test',
+        title: 'Shahar',
         home: AuthWrapper(),
       ),
     );
