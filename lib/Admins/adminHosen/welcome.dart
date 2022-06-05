@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         drawer: NavDrawer(),
         appBar:
-            AppBar(title: const Text("מנהל חוסן - ראשי"), centerTitle: true),
+            AppBar(title: const Text("מסך ראשי"), centerTitle: true),
         body: Container(
             alignment: Alignment.center,
             child: SingleChildScrollView(

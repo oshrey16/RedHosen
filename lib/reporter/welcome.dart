@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         drawer: NavDrawer(),
-        appBar: AppBar(title: const Text("מדווח - ראשי"), centerTitle: true),
+        appBar: AppBar(title: const Text("מסך ראשי"), centerTitle: true),
         body: Container(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             alignment: Alignment.center,

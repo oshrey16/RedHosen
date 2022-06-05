@@ -19,7 +19,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         drawer: NavDrawer(),
         appBar:
-            AppBar(title: const Text("עובד סוציאלי - ראשי"), centerTitle: true),
+            AppBar(title: const Text("מסך ראשי"), centerTitle: true),
         body: Container(
             padding: const EdgeInsets.fromLTRB(0, 50, 0, 0),
             alignment: Alignment.center,
