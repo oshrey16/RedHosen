@@ -109,7 +109,7 @@ class _ActiveReportsState extends State<ActiveReports> {
           _goToPoint();
         },
         child: Card(
-            color: Colors.blueGrey.shade200,
+            color: Colors.black12,
             elevation: 8.0,
             child: Container(
                 padding: const EdgeInsets.all(1.0),
@@ -121,11 +121,10 @@ class _ActiveReportsState extends State<ActiveReports> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(children: <Widget>[
-                      Text("ID: $key"),
-                      Text("כתובת דיווח: " + value['location']),
-                      Text("מספר נפגעים: " + value['numberpeople'].toString()),
+                      Text("כתובת דיווח: ${value['location']}"),
+                      Text("מספר נפגעים: ${value['numberpeople'].toString()}"),
                       Text(
-                        "רמת החומרה: " + priority,
+                        "רמת החומרה: ${priority}",
                         style: TextStyle(
                           color: priority == "גבוה"
                               ? Colors.red
