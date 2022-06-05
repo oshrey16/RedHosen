@@ -43,7 +43,7 @@ class NavDrawer extends StatelessWidget {
                           children: const <TextSpan>[
                             TextSpan(
                                 text: '- מנהל',
-                                style: TextStyle(color: Colors.red,fontWeight: FontWeight.bold,fontSize: 18)),
+                                style: TextStyle(color: Colors.red,fontSize: 16)),
                           ],
                         ),
                       )
