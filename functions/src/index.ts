@@ -341,11 +341,6 @@ interface Dictionary<T> {
   [Key: string]: T;
 }
 
-interface FcmArray {
-  address: string[];
-}
-
-
 exports.sendListenerPushNotification = functions.database
   .ref("/activeReports/{pushId}/ReportTo")
   .onWrite((data, context) => {
@@ -354,15 +349,18 @@ exports.sendListenerPushNotification = functions.database
     const reportToAfter = data.after.val();
     let beforeHosen;
     let beforeSocial;
+    console.log(reportToAfter);
     /* Get ReportTo to select who get the message */
-    if (reportToBefore && reportToAfter) {
-      for (const [k, v] of Object.entries(reportToBefore)) {
-        if (v) {
-          if (k == "hosen") {
-            beforeHosen = v;
-          } else {
-            if (k == "social") {
-              beforeSocial = v;
+    if (reportToAfter) {
+      if (reportToBefore) {
+        for (const [k, v] of Object.entries(reportToBefore)) {
+          if (v) {
+            if (k == "hosen") {
+              beforeHosen = v;
+            } else {
+              if (k == "social") {
+                beforeSocial = v;
+              }
             }
           }
         }
