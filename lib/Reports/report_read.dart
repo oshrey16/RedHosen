@@ -38,8 +38,9 @@ class _ReportReadState extends State<ReportRead> {
     report.then((value) {
       setDate(value.time!);
       _nameController.text = value.nameReporter.toString();
-      var phone = value.phoneReporter!.substring(value.phoneReporter!.length - 10);
-      _phoneController.text = phone;
+      var phone =
+          value.phoneReporter!.substring(value.phoneReporter!.length - 9);
+      _phoneController.text = "0$phone";
       _numberPeopleController.text = value.numberpeople.toString();
       _locationController.text = value.location.toString();
       for (var v in value.datamap.entries) {
@@ -83,6 +84,9 @@ class _ReportReadState extends State<ReportRead> {
               FutureBuilder(
                 future: report,
                 builder: (context, snapshot) {
+                  if(snapshot.connectionState == ConnectionState.waiting){
+                    return const Center(child: CircularProgressIndicator());
+                  }
                   return Column(children: [
                     buildReport(),
                     // Buttons
@@ -138,12 +142,12 @@ class _ReportReadState extends State<ReportRead> {
                           onPressed: () {
                             if (reportToValue[institution.hosen] != null) {
                               reportToValue[institution.hosen] == false
-                                  ? null
-                                  : _reportToHosen().then((value) {
-                                      setState(() {});
+                                  ? _reportToHosen().then((value) {
+                                      // setState(() {});
                                       showDialogMsg(context, MsgType.ok,
                                           "הדיווח למרכז חוסן בוצע בהצלחה");
-                                    });
+                                    })
+                                  : null;
                             }
                           },
                           child: reportToValue[institution.hosen] == false
@@ -191,12 +195,13 @@ class _ReportReadState extends State<ReportRead> {
                       ElevatedButton(
                         onPressed: () {
                           updateReport().then((value) {
-                            showDialogMsg(context, MsgType.ok,
-                                "עדכון הדוח בוצע בהצלחה");
-                                setState(() {
-                                  _disabledControllers.updateAll((name, value) => value = false);
-                                  enterToEditMode = false;
-                                });
+                            showDialogMsg(
+                                context, MsgType.ok, "עדכון הדוח בוצע בהצלחה");
+                            setState(() {
+                              _disabledControllers
+                                  .updateAll((name, value) => value = false);
+                              enterToEditMode = false;
+                            });
                           });
                         },
                         child: enterToEditMode
@@ -224,7 +229,7 @@ class _ReportReadState extends State<ReportRead> {
       reportedtoCheckBox(),
       const SizedBox(height: 10),
       for (var item in _dataControllers.entries)
-        line2Block(_dataControllers[item.key], translate[item.key]!, item.key)
+        translate[item.key] != null ? line2Block(_dataControllers[item.key], translate[item.key]!, item.key) : Text("@")
     ]);
   }
 
@@ -306,32 +311,30 @@ class _ReportReadState extends State<ReportRead> {
       ],
     );
   }
-  Widget lineBlockphone(
-      TextEditingController? controller, String title) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(title + " :", style: const TextStyle(fontSize: 16)),
-        const SizedBox(width: 10),
-        SizedBox(
-          width: MediaQuery. of(context). size. width/2,
-          height: 45.0,
-          child:
-        TextField(
-          readOnly: true,
-          textAlignVertical: TextAlignVertical.center ,
-          controller: controller,
-          decoration: InputDecoration(
-            suffixIcon: IconButton(onPressed: (){
-              launchUrlString("tel://${_phoneController.text}");
-            },
-            icon: const Icon(Icons.phone))
-          )
-        ),)
-      ]);
+
+  Widget lineBlockphone(TextEditingController? controller, String title) {
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      Text(title + " :", style: const TextStyle(fontSize: 16)),
+      const SizedBox(width: 10),
+      SizedBox(
+        width: MediaQuery.of(context).size.width / 2,
+        height: 45.0,
+        child: TextField(
+            readOnly: true,
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            decoration: InputDecoration(
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      launchUrlString("tel://${_phoneController.text}");
+                    },
+                    icon: const Icon(Icons.phone)))),
+      )
+    ]);
   }
 
   Widget line2Block(TextEditingController? controller, String title, int key) {
+    print(key);
     return FittedBox(
         fit: BoxFit.fitWidth,
         child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
