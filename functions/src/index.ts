@@ -386,7 +386,8 @@ exports.sendListenerPushNotification = functions.database
 
       FCMTokenHosen.then(async (v1) => {
         FCMTokenSocial.then((v2) => {
-        if (beforeHosen == undefined && afterHosen == true) {
+        if ((beforeHosen == null && afterHosen == true)||
+        (beforeHosen == false && afterHosen == true)) {
         const d1 = v1.val();
         if (d1 != null) {
           for (const [_, value] of Object.entries(d1)) {
@@ -397,7 +398,8 @@ exports.sendListenerPushNotification = functions.database
           }
         }
     }
-    if (beforeSocial == undefined && afterSocial == true) {
+    if ((beforeSocial == undefined && afterSocial == true)||
+    (beforeSocial == false && afterSocial == true)) {
         const d2 = v2.val();
         if (d2 != null) {
           for (const [_, value] of Object.entries(d2)) {
