@@ -400,7 +400,7 @@ class _ReportReadState extends State<ReportRead> {
                 controlAffinity: ListTileControlAffinity.leading,
                 title: const Text("רווחה"),
                 checkColor: Colors.white,
-                value: reportToValue[institution.hosen] ?? false,
+                value: reportToValue[institution.social] ?? false,
                 onChanged: null))
       ])
     ]);
