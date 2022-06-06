@@ -184,7 +184,8 @@ class _ActiveReportsState extends State<ActiveReports> {
   }
 
 static void navigateTo(double lat, double lng) async {
-   var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+  //  var uri = Uri.parse("google.navigation:q=$lat,$lng&mode=d");
+  var uri = Uri.parse("geo:$lat,$lng");
    if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
    } else {
