@@ -121,7 +121,6 @@ class _ActiveReportsState extends State<InProgressReports> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Column(children: <Widget>[
-                      Text("ID: $key"),
                       Text("כתובת דיווח: " + value['location']),
                       Text("מספר נפגעים: " + value['numberpeople'].toString()),
                       Text(
