@@ -686,7 +686,7 @@ class _ReportPageState extends State<ReportPage> {
     final String formatted = dateformat.format(now);
     _dateController.text = formatted;
 
-    final intl.DateFormat timeformat = intl.DateFormat('hh:mm');
+    final intl.DateFormat timeformat = intl.DateFormat('HH:mm');
     final String formattedtime = timeformat.format(now);
     _timeController.text = formattedtime;
   }

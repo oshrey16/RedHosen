@@ -229,7 +229,8 @@ class _ReportReadState extends State<ReportRead> {
       reportedtoCheckBox(),
       const SizedBox(height: 10),
       for (var item in _dataControllers.entries)
-        translate[item.key] != null ? line2Block(_dataControllers[item.key], translate[item.key]!, item.key) : Text("@")
+      // !!TODO!! item.key != 8
+        translate[item.key] != null && item.key != 8  ? line2Block(_dataControllers[item.key], translate[item.key]!, item.key) : const Text("")
     ]);
   }
 
