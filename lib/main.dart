@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,7 @@ import 'package:red_hosen/global.dart' as global;
 import 'dart:io' show Platform;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:page_transition/page_transition.dart';
 
 bool useEmulator = false;
 void getParameterEmulator(){
@@ -137,7 +139,15 @@ class AuthWrapper extends StatelessWidget {
     if (user != null) {
       _checkuser(context);
     }
-    return const LoginPage();
+    return AnimatedSplashScreen(
+      splash: 'assets/icon/splash.gif',
+      duration: 12000,
+      nextScreen: const LoginPage(),
+      pageTransitionType: PageTransitionType.fade,
+      splashIconSize: MediaQuery. of(context). size. height,
+    );
+    
+    // return const LoginPage();
   }
 }
 
