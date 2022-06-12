@@ -16,15 +16,6 @@ class _ContactUsPageState extends State<ContactUsPage> {
   String? name;
   final _message = TextEditingController();
 
-  final Email email = Email(
-    body: 'Email body',
-    subject: 'Email subject',
-    recipients: ['foxGdev@gmail.com'],
-    cc: ['cc@example.com'],
-    bcc: ['bcc@example.com'],
-    isHTML: false,
-  );
-
   @override
   void initState() {
     setUserName();
@@ -64,24 +55,30 @@ class _ContactUsPageState extends State<ContactUsPage> {
                   decoration:
                       const InputDecoration.collapsed(hintText: 'הקלד דיווח'),
                   keyboardType: TextInputType.multiline,
-                  
+
                   minLines: 4, //Normal textInputField will be displayed
                   maxLines: 5, // when user presses enter it will adapt to it
                   maxLength: 400,
                   controller: _message,
                 )),
-                const SizedBox(height: 20),
-                ElevatedButton(
-      style: ElevatedButton.styleFrom(
-          minimumSize: Size(MediaQuery.of(context).size.width / 2, 40),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14.0),
-          )),
-      onPressed: () async {
-        await FlutterEmailSender.send(email);
-      },
-      child: const Text("שלח דיווח"),
-    ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  minimumSize: Size(MediaQuery.of(context).size.width / 2, 40),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14.0),
+                  )),
+              onPressed: () async {
+                final Email email = Email(
+                  body: _message.text,
+                  subject: 'דיווח על תקלה',
+                  recipients: ['foxGdev@gmail.com'],
+                  isHTML: false,
+                );
+                await FlutterEmailSender.send(email);
+              },
+              child: const Text("שלח דיווח"),
+            ),
           ]),
         ));
   }
