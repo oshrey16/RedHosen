@@ -13,18 +13,11 @@ class UserConfirmation extends StatefulWidget {
 }
 
 class _UserConfirmationState extends State<UserConfirmation> {
-  @override
-  void initState() {
-    super.initState();
-    disabledUsers = {};
-    loadDisabledUsers();
-  }
-
   Map<String, String> disabledUsers = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
+        drawer: NavDrawer(),
         resizeToAvoidBottomInset: true,
         appBar: AppBar(title: Text(setTitle()), centerTitle: true),
         body: Padding(
@@ -32,49 +25,62 @@ class _UserConfirmationState extends State<UserConfirmation> {
             child: Container(
                 padding: const EdgeInsets.all(25),
                 alignment: Alignment.center,
-                child: disabledUsers.isNotEmpty
-                    ? ListView.separated(
-                        padding: const EdgeInsets.all(8),
-                        itemCount: disabledUsers.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserInfo(
-                                            uid: disabledUsers.keys
-                                                .elementAt(index),
-                                            userType: widget.type,
-                                          )),
-                                ).then((value) => refreshState());
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.all(10),
-                                child: ListTile(
-                                  title: Text(
-                                      disabledUsers.values.elementAt(index)),
-                                  //subtitle: Text("מספר: " + disabledUsersRegDate.values.elementAt(index)),
-                                  //isThreeLine: true,
-                                ),
-                              ));
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
-                      )
-                    : const Text("לא קיימים משתמשים חדשים"))));
+                child: FutureBuilder(
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasData) {
+                      if ((snapshot.data as Map<String, String>).isNotEmpty) {
+                        Map<String, String> t =
+                            snapshot.data as Map<String, String>;
+                        return ListView.separated(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: t.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserInfo(
+                                              uid: t.keys.elementAt(index),
+                                              userType: widget.type,
+                                            )),
+                                  ).then((value) => refreshState());
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                    title: Text(t.values.elementAt(index)),
+                                    //subtitle: Text("מספר: " + tRegDate.values.elementAt(index)),
+                                    //isThreeLine: true,
+                                  ),
+                                ));
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                        );
+                      } else {
+                        return const Text("אין משתמשים חדשים");
+                      }
+                    }
+                    return const Text('');
+                  },
+                  future: loadDisabledUsers(),
+                ))));
   }
 
-  void loadDisabledUsers() async {
-    await FirebaseFirestore.instance.terminate();
-    await FirebaseFirestore.instance.clearPersistence();
+  Future loadDisabledUsers() async {
+    // await FirebaseFirestore.instance.terminate();
+    // await FirebaseFirestore.instance.clearPersistence();
     FirebaseFirestore.instance
         .collection("Users")
         .doc(widget.type.collectionStr)
         .collection(widget.type.collectionStr)
         .where('enabled', isEqualTo: false)
-        .snapshots()
-        .listen((event) {
+        .get()
+        .then((event) {
       List<QueryDocumentSnapshot> docs = event.docs;
       for (var doc in docs) {
         if (doc.data() != null) {
@@ -83,8 +89,8 @@ class _UserConfirmationState extends State<UserConfirmation> {
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
-      setState(() {});
     });
+    return disabledUsers;
   }
 
   String setTitle() {

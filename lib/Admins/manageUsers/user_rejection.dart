@@ -12,19 +12,12 @@ class UserRejectionPage extends StatefulWidget {
 }
 
 class _UserRejectionPageState extends State<UserRejectionPage> {
-  @override
-  void initState() {
-    super.initState();
-    enabledUsers = {};
-    loadEnabledUsers();
-  }
-
   Map<String, String> enabledUsers = {};
   //Map<String, String> enabledUsersRegDate = {};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: NavDrawer(),
+        drawer: NavDrawer(),
         resizeToAvoidBottomInset: true,
         appBar: AppBar(title: Text(setTitle()), centerTitle: true),
         body: Padding(
@@ -32,49 +25,63 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
             child: Container(
                 padding: const EdgeInsets.all(25),
                 alignment: Alignment.center,
-                child: enabledUsers.isNotEmpty
-                    ? ListView.separated(
-                        padding: const EdgeInsets.all(8),
-                        itemCount: enabledUsers.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => UserInfo(
-                                            uid: enabledUsers.keys
-                                                .elementAt(index),
-                                            userType: widget.type,
-                                          )),
-                                ).then((value) => refreshState());
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.all(10),
-                                child: ListTile(
-                                  title: Text(
-                                      enabledUsers.values.elementAt(index)),
-                                  //subtitle: Text("מספר: " + enabledUsersRegDate.values.elementAt(index)),
-                                  //isThreeLine: true,
-                                ),
-                              ));
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
-                      )
-                    : const Text("לא קיימים משתמשים חדשים"))));
+                child: FutureBuilder(
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasData) {
+                      if ((snapshot.data as Map<String, String>).isNotEmpty) {
+                        Map<String, String> t = snapshot.data as Map<String, String>;
+                        return ListView.separated(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: t.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => UserInfo(
+                                              uid: t.keys
+                                                  .elementAt(index),
+                                              userType: widget.type,
+                                            )),
+                                  ).then((value) => refreshState());
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                    title: Text(
+                                        t.values.elementAt(index)),
+                                    //subtitle: Text("מספר: " + enabledUsersRegDate.values.elementAt(index)),
+                                    //isThreeLine: true,
+                                  ),
+                                ));
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                        );
+                      } else {
+                        return const Text("לא קיימים משתמשים להסרה");
+                      }
+                    }
+                    return const Text('');
+                  },
+                  future: loadEnabledUsers(),
+                ))));
   }
 
-  void loadEnabledUsers() async {
-    await FirebaseFirestore.instance.terminate();
-    await FirebaseFirestore.instance.clearPersistence();
+  Future<Map<String, String>> loadEnabledUsers() async {
+    // await FirebaseFirestore.instance.terminate();
+    // await FirebaseFirestore.instance.clearPersistence();
     FirebaseFirestore.instance
         .collection("Users")
         .doc(widget.type.collectionStr)
         .collection(widget.type.collectionStr)
         .where('enabled', isEqualTo: true)
-        .snapshots()
-        .listen((event) {
+        .get()
+        .then((event) {
       List<QueryDocumentSnapshot> docs = event.docs;
       for (var doc in docs) {
         if (doc.data() != null) {
@@ -83,8 +90,8 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
-      setState(() {});
     });
+    return enabledUsers;
   }
 
   String setTitle() {
@@ -99,7 +106,7 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
     }
     return "";
   }
-  
+
   refreshState() {
     setState(() {
       enabledUsers = {};

@@ -12,13 +12,6 @@ class AddAdminPage extends StatefulWidget {
 }
 
 class _UserConfirmationState extends State<AddAdminPage> {
-  @override
-  void initState() {
-    super.initState();
-    _users = {};
-    loadUsers();
-  }
-
   Map<String, String> _users = {};
   @override
   Widget build(BuildContext context) {
@@ -30,49 +23,62 @@ class _UserConfirmationState extends State<AddAdminPage> {
             child: Container(
                 padding: const EdgeInsets.all(25),
                 alignment: Alignment.center,
-                child: _users.isNotEmpty
-                    ? ListView.separated(
-                        padding: const EdgeInsets.all(8),
-                        itemCount: _users.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MakeAdminconf(
-                                            uid: _users.keys
-                                                .elementAt(index),
-                                            userType: widget.type,
-                                          )),
-                                ).then((value) => refreshState());
-                              },
-                              child: Card(
-                                margin: const EdgeInsets.all(10),
-                                child: ListTile(
-                                  title: Text(
-                                      _users.values.elementAt(index)),
-                                  //subtitle: Text("מספר: " + disabledUsersRegDate.values.elementAt(index)),
-                                  //isThreeLine: true,
-                                ),
-                              ));
-                        },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            const Divider(),
-                      )
-                    : const Text("לא קיימים משתמשים חדשים"))));
+                child: FutureBuilder(
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.hasData) {
+                      if ((snapshot.data as Map<String, String>).isNotEmpty) {
+                        Map<String, String> t =
+                            snapshot.data as Map<String, String>;
+                        return ListView.separated(
+                          padding: const EdgeInsets.all(8),
+                          itemCount: _users.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MakeAdminconf(
+                                              uid: _users.keys.elementAt(index),
+                                              userType: widget.type,
+                                            )),
+                                  ).then((value) => refreshState());
+                                },
+                                child: Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: ListTile(
+                                    title: Text(_users.values.elementAt(index)),
+                                    //subtitle: Text("מספר: " + disabledUsersRegDate.values.elementAt(index)),
+                                    //isThreeLine: true,
+                                  ),
+                                ));
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                        );
+                      } else {
+                        return const Text("לא נמצאו משתמשים");
+                      }
+                    }
+                    return const Text('');
+                  },
+                  future: loadUsers(),
+                ))));
   }
 
-  void loadUsers() async {
-    await FirebaseFirestore.instance.terminate();
-    await FirebaseFirestore.instance.clearPersistence();
+  Future<Map<String, String>> loadUsers() async {
+    // await FirebaseFirestore.instance.terminate();
+    // await FirebaseFirestore.instance.clearPersistence();
     FirebaseFirestore.instance
         .collection("Users")
         .doc(UserType.hosen.collectionStr)
         .collection(UserType.hosen.collectionStr)
         .where('enabled', isEqualTo: true)
-        .snapshots()
-        .listen((event) {
+        .get()
+        .then((event) {
       List<QueryDocumentSnapshot> docs = event.docs;
       for (var doc in docs) {
         if (doc.data() != null) {
@@ -82,7 +88,7 @@ class _UserConfirmationState extends State<AddAdminPage> {
         }
       }
     });
-        FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection("Users")
         .doc(UserType.social.collectionStr)
         .collection(UserType.social.collectionStr)
@@ -97,8 +103,8 @@ class _UserConfirmationState extends State<AddAdminPage> {
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
-      setState(() {});
     });
+    return _users;
   }
 
   refreshState() {

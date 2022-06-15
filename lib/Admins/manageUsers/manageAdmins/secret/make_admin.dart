@@ -28,7 +28,7 @@ class _UserInfoState extends State<MakeAdminconf> {
         centerTitle: true,
       ),
       body: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 10, 60, 10),
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,8 +53,10 @@ class _UserInfoState extends State<MakeAdminconf> {
 
   Widget detailUserLine(String title, String value) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
+        Text("$title:", style: const TextStyle(fontSize: 16)),
+        const SizedBox(width: 10,),
         SizedBox(
           width: 200,
           height: 45.0,
@@ -70,7 +72,6 @@ class _UserInfoState extends State<MakeAdminconf> {
             ),
           ),
         ),
-        Text(title, style: const TextStyle(fontSize: 16)),
       ],
     );
   }
