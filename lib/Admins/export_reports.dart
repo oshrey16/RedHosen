@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart' as spinkit;
 import 'package:path_provider/path_provider.dart';
 import 'package:red_hosen/mytools.dart';
 import 'package:red_hosen/slideBar.dart';
@@ -18,6 +19,7 @@ class ExportReportsPage extends StatefulWidget {
 }
 
 class _ExportReportsPageState extends State<ExportReportsPage> {
+  bool loading = false;
   String _selectedDate = '';
   String _dateCount = '';
   String _range = '';
@@ -77,7 +79,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
           alignment: Alignment.center,
           child: SingleChildScrollView(
               child: Column(children: [
-            const Text(":טווח תאריכים"),
+            const Text("טווח תאריכים:"),
             SfDateRangePicker(
               onSelectionChanged: _onSelectionChanged,
               selectionMode: DateRangePickerSelectionMode.range,
@@ -88,13 +90,17 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
             const SizedBox(height: 15),
             SizedBox(
               height: 50,
-              child: ElevatedButton(
+              child: loading ? const spinkit.SpinKitCircle(color: Colors.blue) : ElevatedButton(
                 onPressed: () {
                   fileName = DateTime.now().toString();
                   _generateDoc().whenComplete(() async {
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 5)).then((value) { 
+                      setState(() {
+                       loading = false;
+                    });
                     _openExcel();
                   });
+                });
                 },
                 child: const Text("הפק דוח"),
               ),
@@ -104,6 +110,9 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
   }
 
   Future<void> _generateDoc() {
+    setState(() {
+      loading = true;
+    });
     List<String> dates = _range.split(" - ");
     String fdate = dates[0];
     var dateTime1 = intl.DateFormat('dd/MM/yyyy').parse(fdate);
@@ -121,6 +130,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
         showDialogMsg(context, MsgType.alert, "לא נמצאו דוחות בתאריכים אלה");
       }
     });
+  
   }
 
   Future<String> get _localPath async {
@@ -212,12 +222,10 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
       }
       row++;
     }
-    print("HERE");
     //Set titles.
     // Save the document.
     final List<int> bytes = workbook.saveAsStream();
     return _writeExcel(bytes).then((value) async {
-      print(value);
       workbook.dispose();
       return;
     }
