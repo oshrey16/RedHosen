@@ -8,6 +8,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as xls;
 import 'package:open_file/open_file.dart';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
 
 class ExportReportsPage extends StatefulWidget {
   const ExportReportsPage({Key? key}) : super(key: key);
@@ -90,7 +91,8 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
               child: ElevatedButton(
                 onPressed: () {
                   fileName = DateTime.now().toString();
-                  _generateDoc().then((value) {
+                  _generateDoc().whenComplete(() async {
+                    await Future.delayed(Duration(seconds: 1));
                     _openExcel();
                   });
                 },
@@ -143,7 +145,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     try {
       final file = await _localFile;
       // Read the file
-      await OpenFile.open(file.path.toString());
+      await OpenFile.open(file.path.toString()).then((value) => print(value.type));
       return 0;
     } catch (e) {
       // If encountering an error, return 0
@@ -157,6 +159,7 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     final xls.Workbook workbook = xls.Workbook();
     //Accessing worksheet via index.
     final xls.Worksheet sheet = workbook.worksheets[0];
+    
     //Set titles.
     sheet.getRangeByName('A1').setText('שם נפגע');
     sheet.getRangeByName('B1').setText('טלפון נפגע');
@@ -167,33 +170,41 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
     sheet.getRangeByName('G1').setText('פרטים על קשישים שנפגעו');
     sheet.getRangeByName('H1').setText('תאור נזק לרכוש');
     sheet.getRangeByName('I1').setText('סוג המענה שניתן בסמוך לאירוע');
-    sheet
-        .getRangeByName('J1')
-        .setText('פרוט המענה שניתן בסמוך לאירוע וע"י איזה גורם מקצוע');
+    sheet.getRangeByName('J1').setText('פרוט המענה שניתן בסמוך לאירוע וע"י איזה גורם מקצוע');
     sheet.getRangeByName('K1').setText('המלצות להמשך טיפול ו/או מעקב');
     sheet.getRangeByName('L1').setText('הערות ותוספות');
     sheet.getRangeByName('N1:O1').merge();
-    sheet.getRangeByName('N1').setText(':תאריך הוצאת הדוח');
+    sheet.getRangeByName('N1').setText('תאריך הוצאת הדוח:');
     sheet.getRangeByName('N2:O2').merge();
     sheet.getRangeByName('N2').setDateTime(DateTime.now());
-    sheet.getRangeByName('N3:O4').merge();
-    sheet.getRangeByName('O4').setText('כאן יהיה לוגו');
+    // sheet.getRangeByName('N3:O4').merge();
+    // sheet.getRangeByName('O4').setText('כאן יהיה לוגו');
+
+    ByteData byteslogo = await rootBundle.load('assets/icon/icon.png');
+    var f = byteslogo.buffer.asUint8List();
+    sheet.pictures.addStream(4, 14, f);
+
+    // final root = await getApplicationDocumentsDirectory();
+    // final List<int> byteslogo = File('$root/assets/icon/icon.png').readAsBytesSync();
+
 
     int row = 2;
     for (var d in docs) {
       var data = d.data();
       if (data.isNotEmpty) {
         int le = data.length;
-        // for(int i=0;i<data.length;i++){
-        for (int i = 0; i < le; i++) {
+        int cur = 0;
+        for (int i = 0; i < le; i++,cur++) {
           if (i <= 12 && i >= 0) {
-            if (data[i.toString()] != "") {
+            if (data[i.toString()] != null) {
               if (i != 8) {
                 sheet
-                    .getRangeByName('${lettersiter[i]}$row')
+                    .getRangeByName('${lettersiter[cur]}$row')
                     .setText(data[i.toString()].toString());
               }
             } else {
+              print(i);
+              cur --;
               le++;
             }
           }
@@ -201,11 +212,17 @@ class _ExportReportsPageState extends State<ExportReportsPage> {
       }
       row++;
     }
+    print("HERE");
     //Set titles.
     // Save the document.
     final List<int> bytes = workbook.saveAsStream();
-    _writeExcel(bytes);
+    return _writeExcel(bytes).then((value) async {
+      print(value);
+      workbook.dispose();
+      return;
+    }
+    );
     //Dispose the workbook.
-    workbook.dispose();
+    
   }
 }

@@ -125,8 +125,23 @@ class MyApp extends StatelessWidget {
           Locale('he', 'IL'), // Israeli Hebrew
         ],
         title: 'Shahar',
-        home: AuthWrapper(),
+        home: SplashScreen(),
       ),
+    );
+  }
+}
+
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedSplashScreen(
+      splash: 'assets/icon/splash.gif',
+      duration: 12000,
+      nextScreen: const AuthWrapper(),
+      pageTransitionType: PageTransitionType.fade,
+      splashIconSize: MediaQuery. of(context). size. height,
     );
   }
 }
@@ -139,15 +154,7 @@ class AuthWrapper extends StatelessWidget {
     if (user != null) {
       _checkuser(context);
     }
-    return AnimatedSplashScreen(
-      splash: 'assets/icon/splash.gif',
-      duration: 12000,
-      nextScreen: const LoginPage(),
-      pageTransitionType: PageTransitionType.fade,
-      splashIconSize: MediaQuery. of(context). size. height,
-    );
-    
-    // return const LoginPage();
+    return const LoginPage();
   }
 }
 

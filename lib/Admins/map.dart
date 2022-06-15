@@ -56,7 +56,7 @@ class _MapPageState extends State<MapPage> {
     target: LatLng(31.525700, 34.600000),
     zoom: 14.2,
   );
-
+  
   List<Circle> nullPoint = [const Circle(circleId: CircleId("null"))];
   @override
   void initState() {
@@ -73,6 +73,12 @@ class _MapPageState extends State<MapPage> {
         appBar: AppBar(title: const Text("מפת העיר"), centerTitle: true),
         body: FutureBuilder(
           builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: Text("..טוען"));
+            }
+            else{
+              if (snapshot.data != null) {
+            
             return GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: shderotGooglePlex,
@@ -80,6 +86,11 @@ class _MapPageState extends State<MapPage> {
                   _controller.complete(controller);
                 },
                 circles: cirr ?? nullPoint.toSet());
+              }
+              else{
+                return Text("E");
+              }
+            }
           },
           future: calcPoints(),
         ));
@@ -102,15 +113,16 @@ class _MapPageState extends State<MapPage> {
   Future<void> getPointsFromFireStore() async {
     FirebaseFirestore.instance.collection('Reports').get().then((value) {
       for (var v in value.docs){
+        print("OK");
         var point = v["points"] as GeoPoint;
-        circless.add(LatLng(point.latitude, point.longitude));
+        circles.add(LatLng(point.latitude, point.longitude));
       }
-      print(circless);
+      print(circles);
       // print(value.docs["points"]);
     });
   }
 
-  Future<void> calcPoints() async {
+  Future<int> calcPoints() async {
     setRadius();
     double g;
     // SetUp Counters
@@ -118,10 +130,11 @@ class _MapPageState extends State<MapPage> {
     for (var mark in sderotPoints) {
       counters[mark.circleId] = 0;
     }//ASD
-    for (var i = 0; i < circless.length; i++) {
+    for (var i = 0; i < circles.length; i++) {
       for (var mark in sderotPoints) {
-        g = calculateDistance(circless[i].latitude, circless[i].longitude,
+        g = calculateDistance(circles[i].latitude, circles[i].longitude,
             mark.center.latitude, mark.center.longitude);
+            print(g);
         if (g <= 0.3) {
           int count = counters[mark.circleId]!;
           count++;
@@ -130,7 +143,7 @@ class _MapPageState extends State<MapPage> {
         }
       }
     }
-
+                print(counters);
     List<int> s = [];
     for (var value in counters.values) {
       s.add(value);
@@ -151,7 +164,10 @@ class _MapPageState extends State<MapPage> {
     setState(() {
       cirr = sderotPoints.toSet();
     });
-    return;
+    for(var d in sderotPoints){
+      print(d.circleId.toString() + " " + d.radius.toString());
+    }
+    return 0;
   }
 
   double convertRange(double oldMax, double oldMin, double newMax,
