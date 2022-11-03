@@ -35,100 +35,105 @@ class _RegisterPageState extends State<RegisterPage> {
             padding: const EdgeInsets.fromLTRB(0, 10, 30, 0),
             child: Column(children: [
               const SizedBox(height: 15),
-              loginRegline(_fnameController, "שם פרטי"),
+              loginRegline(_fnameController, "שם פרטי", TextInputType.name),
               const SizedBox(height: 15),
-              loginRegline(_lnameController, "שם משפחה"),
+              loginRegline(_lnameController, "שם משפחה", TextInputType.name),
               const SizedBox(height: 15),
-              loginRegline(_idController, "ת.ז"),
+              loginRegline(_idController, "ת.ז", TextInputType.number),
               const SizedBox(height: 15),
-              Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-                const Text("סוג משתמש:", style: TextStyle(fontSize: 16)),
-                const SizedBox(width: 10,),
-                DropdownButton<String>(
-                    value: selectedUsertype,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        selectedUsertype = newValue!;
-                      });
-                    },
-                    items:
-                        usertypes.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList()),
-                
-              ]),
+              loginRegline(_emailController, "דואר אלקטרוני",
+                  TextInputType.emailAddress),
               const SizedBox(height: 15),
-              loginRegline(_emailController, "דואר אלקטרוני"),
-              const SizedBox(height: 15),
-              loginRegline(_emailControllerValid, "אימות דואר אלקטרוני"),
+              loginRegline(_emailControllerValid, "אימות דואר אלקטרוני",
+                  TextInputType.emailAddress),
               const SizedBox(height: 15),
               loginReglinePassword(_passwordController, "סיסמא", _p1),
               const SizedBox(height: 15),
               loginReglinePassword(
                   _passwordControllerValid, "אימות סיסמא", _p2),
               const SizedBox(height: 15),
-              loginRegline(_phoneController, "מספר טלפון"),
+              loginRegline(
+                  _phoneController, "מספר טלפון", TextInputType.number),
+              const SizedBox(height: 15),
+              Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const Text("סוג משתמש:", style: TextStyle(fontSize: 16)),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    DropdownButton<String>(
+                        value: selectedUsertype,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            selectedUsertype = newValue!;
+                          });
+                        },
+                        items: usertypes
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList()),
+                  ]),
               const SizedBox(height: 20),
-              ElevatedButton(
-                  onPressed: () {
-                    mapvars = {
-                      'fname': _fnameController.text,
-                      'lname': _lnameController.text,
-                      'idcon': _idController.text,
-                      'email': _emailController.text.trim(),
-                      'emailv': _emailControllerValid.text.trim(),
-                      'password': _passwordController.text,
-                      'passwordv': _passwordControllerValid.text,
-                      'phone': _phoneController.text,
-                      'usertype': selectedUsertype == "בחר"
-                          ? mapvars['usertype'] = 'בחר'
-                          : userTypedb(),
-                      'claimtype': _convertusertype(),
-                    };
-                    if (procvars()) {
-                      context
-                          .read<AuthService>()
-                          .signUp(context, mapvars)
-                          .then((value) {
-                        showDialogMsg(context, MsgType.ok,
-                                "ההרשמה התבצעה בהצלחה\nתוכל להתחבר למערכת לאחר אישור המנהל")
-                            .then((value) => Navigator.pop(context));
-                        //Navigator.pop(context);
-                      });
-                    }
-                  },
-                  child: const Text('הירשם')),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: ElevatedButton(
+                    onPressed: () {
+                      mapvars = {
+                        'fname': _fnameController.text,
+                        'lname': _lnameController.text,
+                        'idcon': _idController.text,
+                        'email': _emailController.text.trim(),
+                        'emailv': _emailControllerValid.text.trim(),
+                        'password': _passwordController.text,
+                        'passwordv': _passwordControllerValid.text,
+                        'phone': _phoneController.text,
+                        'usertype': selectedUsertype == "בחר"
+                            ? mapvars['usertype'] = 'בחר'
+                            : userTypedb(),
+                        'claimtype': _convertusertype(),
+                      };
+                      if (procvars()) {
+                        context
+                            .read<AuthService>()
+                            .signUp(context, mapvars)
+                            .then((value) {
+                          showDialogMsg(context, MsgType.ok,
+                                  "ההרשמה התבצעה בהצלחה\nתוכל להתחבר למערכת לאחר אישור המנהל")
+                              .then((value) => Navigator.pop(context));
+                          //Navigator.pop(context);
+                        });
+                      }
+                    },
+                    child: const Text('הירשם')),
+              )
             ])));
   }
 
-  Widget loginRegline(TextEditingController controller, String title) {
+  Widget loginRegline(
+      TextEditingController controller, String title, TextInputType inputtype) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-                Text(title+" :", style: const TextStyle(fontSize: 16)),
-                const SizedBox(width: 10,),
         SizedBox(
-          width: 200,
-          height: 45.0,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: TextField(
-              maxLength: 45,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-              decoration: InputDecoration(
-                counterText: "",
-                border: const OutlineInputBorder(),
-                labelText: "הקלד " + title,
-              ),
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: 60.0,
+          child: TextField(
+            keyboardType: inputtype,
+            maxLength: 45,
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            autofocus: true,
+            decoration: InputDecoration(
+              counterText: "",
+              border: const OutlineInputBorder(),
+              labelText: "הקלד $title",
             ),
           ),
         ),
-
       ],
     );
   }
@@ -136,39 +141,35 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget loginReglinePassword(TextEditingController controller, String title,
       PasswordVisible passwordVisible) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-                Text(title+" :", style: const TextStyle(fontSize: 16)),
-                const SizedBox(width: 10,),
         SizedBox(
-          width: 200,
-          height: 45.0,
-          child: Directionality(
-            textDirection: TextDirection.ltr,
-            child: TextField(
-              maxLength: 45,
-              textAlignVertical: TextAlignVertical.center,
-              controller: controller,
-              autofocus: true,
-              obscureText: passwordVisible.value,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: "הקלד " + title,
-                  counterText: "",
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      passwordVisible.value
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.blue,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        passwordVisible.value = !passwordVisible.value;
-                      });
-                    },
-                  )),
-            ),
+          width: MediaQuery.of(context).size.width * 0.7,
+          height: 50.0,
+          child: TextField(
+            keyboardType: TextInputType.visiblePassword,
+            maxLength: 45,
+            textAlignVertical: TextAlignVertical.center,
+            controller: controller,
+            autofocus: true,
+            obscureText: passwordVisible.value,
+            decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                labelText: "הקלד $title",
+                counterText: "",
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    passwordVisible.value
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                    color: Colors.blue,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      passwordVisible.value = !passwordVisible.value;
+                    });
+                  },
+                )),
           ),
         ),
       ],
@@ -267,9 +268,8 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   _checkPassword() {
-    bool secure =
-        RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
-            .hasMatch(mapvars['password']);
+    bool secure = RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
+        .hasMatch(mapvars['password']);
     if (secure == false) {
       showDialogMsg(context, MsgType.error,
           "סיסמא לא תקינה, אנא הזן סיסמא בעלת לפחות:\n  -אות גדולה\n  -אות קטנה\n  -ספרות\n  -אורך הסיסמה: לפחות 8 תווים");
