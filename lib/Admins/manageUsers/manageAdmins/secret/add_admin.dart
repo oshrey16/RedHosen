@@ -88,13 +88,13 @@ class _UserConfirmationState extends State<AddAdminPage> {
         }
       }
     });
-    FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("Users")
         .doc(UserType.social.collectionStr)
         .collection(UserType.social.collectionStr)
         .where('enabled', isEqualTo: true)
-        .snapshots()
-        .listen((event) {
+        .get()
+        .then((event) {
       List<QueryDocumentSnapshot> docs = event.docs;
       for (var doc in docs) {
         if (doc.data() != null) {
@@ -103,8 +103,8 @@ class _UserConfirmationState extends State<AddAdminPage> {
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
+            return _users;
     });
-    return _users;
   }
 
   refreshState() {

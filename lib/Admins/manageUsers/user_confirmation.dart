@@ -14,6 +14,11 @@ class UserConfirmation extends StatefulWidget {
 
 class _UserConfirmationState extends State<UserConfirmation> {
   Map<String, String> disabledUsers = {};
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,23 +79,23 @@ class _UserConfirmationState extends State<UserConfirmation> {
   Future loadDisabledUsers() async {
     // await FirebaseFirestore.instance.terminate();
     // await FirebaseFirestore.instance.clearPersistence();
-    FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("Users")
         .doc(widget.type.collectionStr)
         .collection(widget.type.collectionStr)
         .where('enabled', isEqualTo: false)
         .get()
         .then((event) {
-      List<QueryDocumentSnapshot> docs = event.docs;
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> docs = event.docs;
       for (var doc in docs) {
         if (doc.data() != null) {
-          var data = doc.data() as Map<String, dynamic>;
+          var data = doc.data();
           disabledUsers.putIfAbsent(
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
+      return disabledUsers;
     });
-    return disabledUsers;
   }
 
   String setTitle() {

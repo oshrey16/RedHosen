@@ -75,7 +75,7 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
   Future<Map<String, String>> loadEnabledUsers() async {
     // await FirebaseFirestore.instance.terminate();
     // await FirebaseFirestore.instance.clearPersistence();
-    FirebaseFirestore.instance
+    return FirebaseFirestore.instance
         .collection("Users")
         .doc(widget.type.collectionStr)
         .collection(widget.type.collectionStr)
@@ -90,8 +90,8 @@ class _UserRejectionPageState extends State<UserRejectionPage> {
               data['uid'], () => data['fname'] + " " + data['lname']);
         }
       }
+            return enabledUsers;
     });
-    return enabledUsers;
   }
 
   String setTitle() {
